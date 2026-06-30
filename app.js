@@ -366,15 +366,15 @@ function renderCard() {
   document.querySelector("#cardLesson").textContent = `第 ${card.lesson || 1} 課・${card.type || "詞語"}`;
   updateCardProgress(normalizedIndex + 1, lessonCards.length);
   document.querySelector("#cardTerm").textContent = card.term;
-  document.querySelector("#cardPinyin").textContent = card.pinyin || "尚未填入拼音";
+  document.querySelector("#cardPinyin").textContent = formatTermPinyin(card.pinyin) || "尚未填入拼音";
   document.querySelector("#cardMeaning").innerHTML = `
     <span>${escapeHtml(card.meaningZh || "尚未填入中文說明")}</span>
-    <small>${escapeHtml(card.meaningPinyin || "尚未填入說明拼音")}</small>
+    <small>${escapeHtml(formatSentencePinyin(card.meaningPinyin) || "尚未填入說明拼音")}</small>
     <strong>${escapeHtml(card.meaningVi || "尚未填入越南語說明")}</strong>
   `;
   document.querySelector("#cardExample").innerHTML = `
     <span>${escapeHtml(card.example || "請匯入中文例句。")}</span>
-    <small>${escapeHtml(card.examplePinyin || "請匯入例句拼音。")}</small>
+    <small>${escapeHtml(formatSentencePinyin(card.examplePinyin) || "請匯入例句拼音。")}</small>
     <strong>${escapeHtml(card.exampleVi || "請匯入越南語例句翻譯。")}</strong>
   `;
 }
@@ -406,15 +406,15 @@ function renderGrammar() {
         <button class="mini-button" type="button" aria-label="播放語法例句">播放</button>
       </div>
       <h3>${escapeHtml(item.pattern)}</h3>
-      <p class="pinyin-line">${escapeHtml(item.patternPinyin || "尚未填入語法拼音")}</p>
+      <p class="pinyin-line">${escapeHtml(formatTermPinyin(item.patternPinyin) || "尚未填入語法拼音")}</p>
       <div class="explain-block">
         <p>${escapeHtml(item.explanationZh || "尚未填入中文說明")}</p>
-        <small>${escapeHtml(item.explanationPinyin || "尚未填入說明拼音")}</small>
+        <small>${escapeHtml(formatSentencePinyin(item.explanationPinyin) || "尚未填入說明拼音")}</small>
         <strong>${escapeHtml(item.explanationVi || "尚未填入越南語說明")}</strong>
       </div>
       <div class="example-block">
         <p>${escapeHtml(item.example || "尚未填入中文例句")}</p>
-        <small>${escapeHtml(item.examplePinyin || "尚未填入例句拼音")}</small>
+        <small>${escapeHtml(formatSentencePinyin(item.examplePinyin) || "尚未填入例句拼音")}</small>
         <strong>${escapeHtml(item.exampleVi || "尚未填入越南語例句翻譯")}</strong>
       </div>
     `;
@@ -618,7 +618,7 @@ function renderQuiz() {
 
   document.querySelector("#quizBox").innerHTML = `
     <h3>「${escapeHtml(question.term)}」的越南語說明是什麼？</h3>
-    <p class="pinyin-line">${escapeHtml(question.pinyin || "")}</p>
+    <p class="pinyin-line">${escapeHtml(formatTermPinyin(question.pinyin) || "")}</p>
     <div class="option-grid">
       ${options.map((option) => `<button type="button" data-answer="${escapeHtml(option)}">${escapeHtml(option)}</button>`).join("")}
     </div>
@@ -826,6 +826,71 @@ function shuffle(items) {
 
 function normalizeAnswer(value) {
   return String(value).replace(/\s+/g, "").replace(/[，。！？、,.!?]/g, "").trim();
+}
+
+function formatTermPinyin(value) {
+  const formatted = formatPinyin(value, { compact: true });
+  return formatted ? `(${formatted})` : "";
+}
+
+function formatSentencePinyin(value) {
+  return formatPinyin(value, { compact: false });
+}
+
+function formatPinyin(value, options = {}) {
+  if (!value) return "";
+  const converted = String(value)
+    .replace(/[A-Za-züÜvV:]+[1-5]/g, (syllable) => convertPinyinSyllable(syllable))
+    .replace(/\s+([,.;!?，。；！？、])/g, "$1")
+    .replace(/([,.;!?，。；！？、])\s*/g, "$1 ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return options.compact
+    ? converted.replace(/\s+/g, "").replace(/\s*\/\s*/g, "/")
+    : converted;
+}
+
+function convertPinyinSyllable(syllable) {
+  const tone = Number(syllable.at(-1));
+  let base = syllable.slice(0, -1).replace(/u:/gi, (match) => (match[0] === "U" ? "Ü" : "ü"));
+  base = base.replace(/v/g, "ü").replace(/V/g, "Ü");
+  if (!tone || tone === 5) return base;
+
+  const markIndex = getPinyinToneMarkIndex(base);
+  if (markIndex < 0) return base;
+
+  const marked = applyToneMark(base[markIndex], tone);
+  return `${base.slice(0, markIndex)}${marked}${base.slice(markIndex + 1)}`;
+}
+
+function getPinyinToneMarkIndex(syllable) {
+  const preferred = ["a", "A", "e", "E", "o", "O"];
+  for (const vowel of preferred) {
+    const index = syllable.indexOf(vowel);
+    if (index >= 0) return index;
+  }
+
+  const vowels = [...syllable.matchAll(/[iIuUüÜ]/g)];
+  return vowels.length ? vowels.at(-1).index : -1;
+}
+
+function applyToneMark(vowel, tone) {
+  const toneMarks = {
+    a: ["ā", "á", "ǎ", "à"],
+    e: ["ē", "é", "ě", "è"],
+    i: ["ī", "í", "ǐ", "ì"],
+    o: ["ō", "ó", "ǒ", "ò"],
+    u: ["ū", "ú", "ǔ", "ù"],
+    ü: ["ǖ", "ǘ", "ǚ", "ǜ"],
+    A: ["Ā", "Á", "Ǎ", "À"],
+    E: ["Ē", "É", "Ě", "È"],
+    I: ["Ī", "Í", "Ǐ", "Ì"],
+    O: ["Ō", "Ó", "Ǒ", "Ò"],
+    U: ["Ū", "Ú", "Ǔ", "Ù"],
+    Ü: ["Ǖ", "Ǘ", "Ǚ", "Ǜ"],
+  };
+  return toneMarks[vowel]?.[tone - 1] || vowel;
 }
 
 function escapeHtml(value) {
