@@ -73,7 +73,13 @@
               <p class="eyebrow">Flashcards</p>
               <h2>字詞卡</h2>
             </div>
-            <button class="text-button" id="resetProgress" type="button">重設進度</button>
+            <div class="heading-actions">
+              <label class="lesson-filter">
+                <span>課別</span>
+                <select id="cardLessonSelect" aria-label="選擇字詞卡課別"></select>
+              </label>
+              <button class="text-button" id="resetProgress" type="button">重設進度</button>
+            </div>
           </div>
           <article class="flashcard" id="flashcard" tabindex="0">
             <p class="tag" id="cardLesson">第 1 課</p>
@@ -95,7 +101,13 @@
               <p class="eyebrow">Ngữ pháp</p>
               <h2>語法說明與例句</h2>
             </div>
-            <span class="score" id="grammarCount">0 則</span>
+            <div class="heading-actions">
+              <label class="lesson-filter">
+                <span>課別</span>
+                <select id="grammarLessonSelect" aria-label="選擇語法課別"></select>
+              </label>
+              <span class="score" id="grammarCount">0 則</span>
+            </div>
           </div>
           <div class="grammar-list" id="grammarList"></div>
         </section>

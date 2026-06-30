@@ -166,6 +166,8 @@ let cards = state.cards?.length ? state.cards : defaultCards;
 let grammar = state.grammar?.length ? state.grammar : defaultGrammar;
 let exercises = state.exercises?.length ? state.exercises : defaultExercises;
 let currentCardIndex = 0;
+let currentCardLesson = Number(state.currentCardLesson || 1);
+let currentGrammarLesson = Number(state.currentGrammarLesson || 1);
 let currentPracticeLesson = Number(state.currentPracticeLesson || 1);
 let deferredInstallPrompt = null;
 let quiz = {
@@ -188,6 +190,8 @@ const installButton = document.querySelector("#installButton");
 const importNotice = document.querySelector("#importNotice");
 const grammarList = document.querySelector("#grammarList");
 const grammarCount = document.querySelector("#grammarCount");
+const cardLessonSelect = document.querySelector("#cardLessonSelect");
+const grammarLessonSelect = document.querySelector("#grammarLessonSelect");
 const practiceList = document.querySelector("#practiceList");
 const practiceLessonSelect = document.querySelector("#practiceLessonSelect");
 
@@ -202,6 +206,19 @@ document.querySelector("#resetProgress").addEventListener("click", resetProgress
 document.querySelector("#loadJson").addEventListener("click", importFromTextarea);
 document.querySelector("#contentFile").addEventListener("change", importFromFile);
 document.querySelector("#flashcard").addEventListener("click", speakCurrentCard);
+cardLessonSelect.addEventListener("change", () => {
+  currentCardLesson = Number(cardLessonSelect.value);
+  currentCardIndex = getCardsForCurrentLesson().length ? 0 : 0;
+  state.currentCardLesson = currentCardLesson;
+  saveState();
+  renderCard();
+});
+grammarLessonSelect.addEventListener("change", () => {
+  currentGrammarLesson = Number(grammarLessonSelect.value);
+  state.currentGrammarLesson = currentGrammarLesson;
+  saveState();
+  renderGrammar();
+});
 practiceLessonSelect.addEventListener("change", () => {
   currentPracticeLesson = Number(practiceLessonSelect.value);
   state.currentPracticeLesson = currentPracticeLesson;
@@ -221,9 +238,9 @@ if ("serviceWorker" in navigator) {
 }
 
 renderLessons();
+renderLessonSelectOptions();
 renderCard();
 renderGrammar();
-renderPracticeLessonOptions();
 renderPractice();
 renderQuiz();
 updateProgress();
@@ -271,10 +288,17 @@ function renderLessons() {
       <div class="lesson-status">${learned} 張</div>
     `;
     card.addEventListener("click", () => {
-      const found = cards.findIndex((item) => Number(item.lesson) === number);
-      currentCardIndex = found >= 0 ? found : 0;
+      currentCardLesson = number;
+      currentGrammarLesson = number;
       currentPracticeLesson = number;
+      currentCardIndex = 0;
+      cardLessonSelect.value = String(number);
+      grammarLessonSelect.value = String(number);
       practiceLessonSelect.value = String(number);
+      state.currentCardLesson = currentCardLesson;
+      state.currentGrammarLesson = currentGrammarLesson;
+      state.currentPracticeLesson = currentPracticeLesson;
+      saveState();
       renderCard();
       setView("cards");
     });
@@ -282,9 +306,21 @@ function renderLessons() {
   });
 }
 
+function getCardsForCurrentLesson() {
+  return cards.filter((item) => Number(item.lesson) === currentCardLesson);
+}
+
 function renderCard() {
-  if (!cards.length) return;
-  const card = cards[currentCardIndex % cards.length];
+  const lessonCards = getCardsForCurrentLesson();
+  if (!lessonCards.length) {
+    document.querySelector("#cardLesson").textContent = `第 ${currentCardLesson} 課`;
+    document.querySelector("#cardTerm").textContent = "尚未匯入";
+    document.querySelector("#cardPinyin").textContent = "";
+    document.querySelector("#cardMeaning").textContent = "這一課還沒有字詞卡。";
+    document.querySelector("#cardExample").textContent = "請從匯入頁加入 cards。";
+    return;
+  }
+  const card = lessonCards[currentCardIndex % lessonCards.length];
   document.querySelector("#cardLesson").textContent = `第 ${card.lesson || 1} 課・${card.type || "詞語"}`;
   document.querySelector("#cardTerm").textContent = card.term;
   document.querySelector("#cardPinyin").textContent = card.pinyin || "尚未填入拼音";
@@ -301,14 +337,15 @@ function renderCard() {
 }
 
 function renderGrammar() {
-  grammarCount.textContent = `${grammar.length} 則`;
+  const lessonGrammar = grammar.filter((item) => Number(item.lesson) === currentGrammarLesson);
+  grammarCount.textContent = `${lessonGrammar.length} 則`;
   grammarList.innerHTML = "";
-  if (!grammar.length) {
-    grammarList.innerHTML = "<p class=\"empty-state\">請先匯入語法內容。</p>";
+  if (!lessonGrammar.length) {
+    grammarList.innerHTML = "<p class=\"empty-state\">這一課還沒有語法內容。請從匯入頁加入 grammar。</p>";
     return;
   }
 
-  grammar.forEach((item) => {
+  lessonGrammar.forEach((item) => {
     const card = document.createElement("article");
     card.className = "grammar-card";
     card.innerHTML = `
@@ -334,10 +371,15 @@ function renderGrammar() {
   });
 }
 
-function renderPracticeLessonOptions() {
-  practiceLessonSelect.innerHTML = thirdEditionLessons
+function renderLessonSelectOptions() {
+  const options = thirdEditionLessons
     .map((_, index) => `<option value="${index + 1}">第 ${index + 1} 課</option>`)
     .join("");
+  cardLessonSelect.innerHTML = options;
+  grammarLessonSelect.innerHTML = options;
+  practiceLessonSelect.innerHTML = options;
+  cardLessonSelect.value = String(currentCardLesson);
+  grammarLessonSelect.value = String(currentGrammarLesson);
   practiceLessonSelect.value = String(currentPracticeLesson);
 }
 
@@ -460,7 +502,9 @@ function showExerciseFeedback(feedback, answerMask, exercise, result) {
 }
 
 function gradeCard(known) {
-  const card = cards[currentCardIndex % cards.length];
+  const lessonCards = getCardsForCurrentLesson();
+  if (!lessonCards.length) return;
+  const card = lessonCards[currentCardIndex % lessonCards.length];
   state.learnedCards ||= [];
   const id = getCardId(card);
   if (known && !state.learnedCards.includes(id)) {
@@ -469,7 +513,7 @@ function gradeCard(known) {
   if (!known) {
     state.learnedCards = state.learnedCards.filter((item) => item !== id);
   }
-  currentCardIndex = (currentCardIndex + 1) % cards.length;
+  currentCardIndex = (currentCardIndex + 1) % lessonCards.length;
   saveState();
   renderCard();
   renderLessons();
@@ -477,7 +521,9 @@ function gradeCard(known) {
 }
 
 function speakCurrentCard() {
-  const card = cards[currentCardIndex % cards.length];
+  const lessonCards = getCardsForCurrentLesson();
+  if (!lessonCards.length) return;
+  const card = lessonCards[currentCardIndex % lessonCards.length];
   speakText(`${card.term}。${card.meaningZh || ""}。${card.example || ""}`);
 }
 
@@ -587,7 +633,14 @@ function importContent(text) {
     state.customContent = true;
     state.contentVersion = CONTENT_VERSION;
     currentCardIndex = 0;
+    currentCardLesson = 1;
+    currentGrammarLesson = 1;
+    currentPracticeLesson = 1;
+    state.currentCardLesson = currentCardLesson;
+    state.currentGrammarLesson = currentGrammarLesson;
+    state.currentPracticeLesson = currentPracticeLesson;
     saveState();
+    renderLessonSelectOptions();
     renderLessons();
     renderCard();
     renderGrammar();

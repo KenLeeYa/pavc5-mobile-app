@@ -50,6 +50,7 @@ a {
 
 .topbar,
 .section-heading,
+.heading-actions,
 .button-row,
 .tabs,
 .book-facts {
@@ -269,6 +270,12 @@ select,
 
 .section-heading {
   margin: 10px 0 12px;
+}
+
+.heading-actions {
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .lesson-list {
@@ -728,14 +735,17 @@ footer {
   }
 
   .section-heading,
+  .heading-actions,
   .text-answer-row {
     align-items: stretch;
   }
 
-  .section-heading {
+  .section-heading,
+  .heading-actions {
     flex-direction: column;
   }
 
+  .heading-actions,
   .lesson-filter,
   .lesson-filter select,
   .text-answer-row button {
