@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#9a1f58" />
+    <title>新版實用視聽華語 5 學習 App</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Practical Audio-Visual Chinese, 3rd Edition</p>
+          <h1>新版實用視聽華語 5</h1>
+        </div>
+        <button class="icon-button" id="installButton" type="button" aria-label="安裝 App" title="安裝 App">
+          <span aria-hidden="true">+</span>
+        </button>
+      </header>
+
+      <main>
+        <section class="book-hero" aria-labelledby="bookTitle">
+          <img src="./assets/pavc5-cover.svg" alt="新版實用視聽華語 5 第三版封面" />
+          <div class="book-copy">
+            <p class="eyebrow">Vol. 5 / 第五冊</p>
+            <h2 id="bookTitle">給越南學生的手機複習工具</h2>
+            <p>依照你提供的第三版第五冊建立：14 課架構、字詞卡、語法卡、課後練習、中文朗讀、快測與合法內容匯入。</p>
+            <div class="book-facts" aria-label="版本資訊">
+              <span>第三版</span>
+              <span>14 課</span>
+              <span>內含 MP3</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="today-panel" aria-labelledby="todayTitle">
+          <div>
+            <p class="eyebrow">Hôm nay</p>
+            <h2 id="todayTitle">今天練 12 分鐘</h2>
+            <p>先聽、再看越南語提示，最後用三題快測檢查記憶。</p>
+          </div>
+          <div class="progress-ring" aria-label="今日進度">
+            <strong id="progressPercent">0%</strong>
+            <span>完成</span>
+          </div>
+        </section>
+
+        <nav class="tabs" aria-label="主要功能">
+          <button class="tab active" type="button" data-view="lessons">課程</button>
+          <button class="tab" type="button" data-view="cards">字詞卡</button>
+          <button class="tab" type="button" data-view="grammar">語法</button>
+          <button class="tab" type="button" data-view="practice">練習</button>
+          <button class="tab" type="button" data-view="quiz">測驗</button>
+          <button class="tab" type="button" data-view="import">匯入</button>
+        </nav>
+
+        <section class="view active" id="lessonsView">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Bài học</p>
+              <h2>第三版第五冊課程地圖</h2>
+            </div>
+            <span class="edition-pill">正中書局</span>
+          </div>
+          <div class="lesson-list" id="lessonList"></div>
+        </section>
+
+        <section class="view" id="cardsView">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Flashcards</p>
+              <h2>字詞卡</h2>
+            </div>
+            <button class="text-button" id="resetProgress" type="button">重設進度</button>
+          </div>
+          <article class="flashcard" id="flashcard" tabindex="0">
+            <p class="tag" id="cardLesson">第 1 課</p>
+            <h3 id="cardTerm">組段成篇</h3>
+            <p id="cardPinyin">zu3 duan4 cheng2 pian1</p>
+            <p id="cardMeaning">viết thành đoạn văn hoàn chỉnh</p>
+            <p class="card-example" id="cardExample">第五冊的學習目標之一，是能把句子組段成篇。</p>
+          </article>
+          <div class="button-row">
+            <button class="secondary" id="speakCard" type="button">播放</button>
+            <button class="secondary" id="againCard" type="button">再練</button>
+            <button class="primary" id="knowCard" type="button">會了</button>
+          </div>
+        </section>
+
+        <section class="view" id="grammarView">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Ngữ pháp</p>
+              <h2>語法說明與例句</h2>
+            </div>
+            <span class="score" id="grammarCount">0 則</span>
+          </div>
+          <div class="grammar-list" id="grammarList"></div>
+        </section>
+
+        <section class="view" id="practiceView">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Practice</p>
+              <h2>每課練習考題</h2>
+            </div>
+            <label class="lesson-filter">
+              <span>課別</span>
+              <select id="practiceLessonSelect" aria-label="選擇練習課別"></select>
+            </label>
+          </div>
+          <p class="practice-note">練習題不顯示拼音與越文翻譯；包含生詞理解、語法選擇與依生詞造句的語法練習，作答後才顯示正解或參考答案。</p>
+          <div class="practice-list" id="practiceList"></div>
+        </section>
+
+        <section class="view" id="quizView">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Kiểm tra nhanh</p>
+              <h2>三題快測</h2>
+            </div>
+            <span class="score" id="quizScore">0/0</span>
+          </div>
+          <div class="quiz-box" id="quizBox"></div>
+        </section>
+
+        <section class="view" id="importView">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Content</p>
+              <h2>匯入第三版第五冊內容</h2>
+            </div>
+          </div>
+          <div class="import-panel">
+            <p>
+              App 只內建公開版本資訊與示範卡片，不收錄課本全文、完整生詞表或音檔。請把你合法擁有或自行整理的內容做成
+              <a href="./content-template.json">content-template.json</a> 格式後匯入。
+            </p>
+            <label class="file-picker">
+              <span>選擇 JSON 檔</span>
+              <input id="contentFile" type="file" accept="application/json,.json" />
+            </label>
+            <textarea id="jsonInput" spellcheck="false" placeholder="或直接貼上 JSON 內容"></textarea>
+            <button class="primary wide" id="loadJson" type="button">載入內容</button>
+            <p class="notice" id="importNotice">練習題請只放中文題目、中文選項、答案、指定生詞與中文解析；不要放拼音或越文翻譯。</p>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>版本依據：新版實用視聽華語 5，第三版，正中書局，ISBN 9789860512007。完整教材內容請使用正版教材或授權資料。</p>
+      </footer>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

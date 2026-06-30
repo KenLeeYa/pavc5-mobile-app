@@ -1,0 +1,82 @@
+{
+  "title": "新版實用視聽華語 5 第三版自訂內容",
+  "edition": "3rd-vol-5",
+  "cards": [
+    {
+      "id": "1-001",
+      "lesson": 1,
+      "type": "成語",
+      "term": "因小失大",
+      "pinyin": "yin1 xiao3 shi1 da4",
+      "meaningZh": "為了小利益或小事情，反而失去更重要的東西。",
+      "meaningPinyin": "wei4 le xiao3 li4 yi4 huo4 xiao3 shi4 qing2, fan3 er2 shi1 qu4 geng4 zhong4 yao4 de dong1 xi.",
+      "meaningVi": "Vì chuyện nhỏ hoặc lợi ích nhỏ mà đánh mất điều quan trọng hơn.",
+      "example": "學語言不要因小失大，只背單字卻不練表達。",
+      "examplePinyin": "xue2 yu3 yan2 bu2 yao4 yin1 xiao3 shi1 da4, zhi3 bei4 dan1 zi4 que4 bu2 lian4 biao3 da2.",
+      "exampleVi": "Học ngôn ngữ đừng vì chuyện nhỏ mà mất điều lớn: chỉ học từ vựng mà không luyện diễn đạt.",
+      "audioUrl": ""
+    },
+    {
+      "id": "1-002",
+      "lesson": 1,
+      "type": "四字詞",
+      "term": "組段成篇",
+      "pinyin": "zu3 duan4 cheng2 pian1",
+      "meaningZh": "把句子組織成段落，再形成完整文章。",
+      "meaningPinyin": "ba3 ju4 zi zu3 zhi1 cheng2 duan4 luo4, zai4 xing2 cheng2 wan2 zheng3 wen2 zhang1.",
+      "meaningVi": "Sắp xếp câu thành đoạn rồi phát triển thành bài văn hoàn chỉnh.",
+      "example": "第五冊的學習目標之一，是能把句子組段成篇。",
+      "examplePinyin": "di4 wu3 ce4 de xue2 xi2 mu4 biao1 zhi1 yi1, shi4 neng2 ba3 ju4 zi zu3 duan4 cheng2 pian1.",
+      "exampleVi": "Một mục tiêu của quyển 5 là có thể sắp xếp câu thành đoạn và bài hoàn chỉnh.",
+      "audioUrl": ""
+    }
+  ],
+  "grammar": [
+    {
+      "id": "1-g001",
+      "lesson": 1,
+      "pattern": "不但...而且...",
+      "patternPinyin": "bu2 dan4... er2 qie3...",
+      "explanationZh": "用來連接兩個情況，後面的情況通常更進一步或更重要。",
+      "explanationPinyin": "yong4 lai2 lian2 jie1 liang3 ge qing2 kuang4, hou4 mian4 de qing2 kuang4 tong1 chang2 geng4 jin4 yi2 bu4 huo4 geng4 zhong4 yao4.",
+      "explanationVi": "Dùng để nối hai tình huống; vế sau thường tiến thêm một bước hoặc quan trọng hơn.",
+      "example": "他不但會說中文，而且會用中文寫報告。",
+      "examplePinyin": "ta1 bu2 dan4 hui4 shuo1 zhong1 wen2, er2 qie3 hui4 yong4 zhong1 wen2 xie3 bao4 gao4.",
+      "exampleVi": "Anh ấy không những biết nói tiếng Trung mà còn biết viết báo cáo bằng tiếng Trung."
+    }
+  ],
+  "exercises": [
+    {
+      "id": "1-e001",
+      "lesson": 1,
+      "type": "choice",
+      "prompt": "哪一個句子最適合正式報告的語氣？",
+      "options": [
+        "我想先說明本文的主要論點。",
+        "這個東西真的超好玩。",
+        "你們應該都知道吧。",
+        "反正大概就是這樣。"
+      ],
+      "answer": "我想先說明本文的主要論點。",
+      "explanation": "正式報告通常要清楚、客觀，避免太口語或太隨便的說法。"
+    },
+    {
+      "id": "1-e002",
+      "lesson": 1,
+      "type": "text",
+      "prompt": "請填入最合適的詞語：寫作時，要先提出清楚的____，再舉例說明。",
+      "answer": "論點",
+      "acceptedAnswers": ["論點"],
+      "explanation": "填充題只用中文訂正，不顯示拼音與越文翻譯。"
+    },
+    {
+      "id": "1-e003",
+      "lesson": 1,
+      "type": "sentence",
+      "prompt": "請用「論點」和「不但...而且...」造一個完整句子。",
+      "requiredTerms": ["論點", "不但", "而且"],
+      "answer": "這篇文章的論點不但清楚，而且很有說服力。",
+      "explanation": "造句題會自動檢查是否包含指定生詞與語法關鍵詞，作答後才顯示參考答案。"
+    }
+  ]
+}

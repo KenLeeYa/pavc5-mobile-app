@@ -1,0 +1,22 @@
+{
+  "name": "華語 5 隨身學",
+  "short_name": "華語5",
+  "description": "給越南學生使用的實用視聽華語第五冊手機學習 App。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f7f4",
+  "theme_color": "#0f766e",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%230f766e'/%3E%3Ctext x='96' y='116' text-anchor='middle' font-size='78' font-family='Arial,sans-serif' fill='white'%3E華%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%230f766e'/%3E%3Ctext x='256' y='306' text-anchor='middle' font-size='210' font-family='Arial,sans-serif' fill='white'%3E華%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
