@@ -71,12 +71,19 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Flashcards</p>
-              <h2>生詞</h2>
+              <h2 id="cardSectionTitle">生詞</h2>
             </div>
             <div class="heading-actions">
               <label class="lesson-filter">
                 <span>課別</span>
                 <select id="cardLessonSelect" aria-label="選擇生詞課別"></select>
+              </label>
+              <label class="lesson-filter">
+                <span>分類</span>
+                <select id="cardCategorySelect" aria-label="選擇生詞或成語分類">
+                  <option value="vocab">生詞</option>
+                  <option value="idioms">成語/俗語/四字詞</option>
+                </select>
               </label>
               <button class="text-button" id="resetProgress" type="button">重設進度</button>
             </div>
@@ -85,7 +92,7 @@
             <p class="tag" id="cardLesson">第 1 課</p>
             <div class="card-progress" aria-label="本課生詞進度">
               <div class="card-progress-meta">
-                <span>本課進度</span>
+                <span id="cardProgressLabel">本課進度</span>
                 <strong id="cardProgressText">1/1</strong>
               </div>
               <div class="card-progress-track">

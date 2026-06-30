@@ -2,6 +2,7 @@ import { lesson1Cards } from "./data/lesson1-cards.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
 const CONTENT_VERSION = "lesson1-vocab-20260630";
+const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 
 const thirdEditionLessons = [
   ["第 1 課", "第三版第五冊內容整理區"],
@@ -167,6 +168,7 @@ let grammar = state.grammar?.length ? state.grammar : defaultGrammar;
 let exercises = state.exercises?.length ? state.exercises : defaultExercises;
 let currentCardIndex = 0;
 let currentCardLesson = Number(state.currentCardLesson || 1);
+let currentCardCategory = state.currentCardCategory || "vocab";
 let currentGrammarLesson = Number(state.currentGrammarLesson || 1);
 let currentPracticeLesson = Number(state.currentPracticeLesson || 1);
 let currentQuizLesson = Number(state.currentQuizLesson || 1);
@@ -192,6 +194,7 @@ const importNotice = document.querySelector("#importNotice");
 const grammarList = document.querySelector("#grammarList");
 const grammarCount = document.querySelector("#grammarCount");
 const cardLessonSelect = document.querySelector("#cardLessonSelect");
+const cardCategorySelect = document.querySelector("#cardCategorySelect");
 const grammarLessonSelect = document.querySelector("#grammarLessonSelect");
 const practiceList = document.querySelector("#practiceList");
 const practiceLessonSelect = document.querySelector("#practiceLessonSelect");
@@ -210,8 +213,15 @@ document.querySelector("#contentFile").addEventListener("change", importFromFile
 document.querySelector("#flashcard").addEventListener("click", speakCurrentCard);
 cardLessonSelect.addEventListener("change", () => {
   currentCardLesson = Number(cardLessonSelect.value);
-  currentCardIndex = getCardsForCurrentLesson().length ? 0 : 0;
+  currentCardIndex = 0;
   state.currentCardLesson = currentCardLesson;
+  saveState();
+  renderCard();
+});
+cardCategorySelect.addEventListener("change", () => {
+  currentCardCategory = cardCategorySelect.value;
+  currentCardIndex = 0;
+  state.currentCardCategory = currentCardCategory;
   saveState();
   renderCard();
 });
@@ -284,7 +294,8 @@ function renderLessons() {
   thirdEditionLessons.forEach(([title, description], index) => {
     const number = index + 1;
     const learned = state.learnedCards?.filter((cardId) => cardId.startsWith(`${number}:`)).length || 0;
-    const lessonCards = cards.filter((item) => Number(item.lesson) === number).length;
+    const vocabCount = cards.filter((item) => Number(item.lesson) === number && !isIdiomCard(item)).length;
+    const idiomCount = cards.filter((item) => Number(item.lesson) === number && isIdiomCard(item)).length;
     const grammarItems = grammar.filter((item) => Number(item.lesson) === number).length;
     const exerciseItems = exercises.filter((item) => Number(item.lesson) === number).length;
     const card = document.createElement("article");
@@ -293,21 +304,24 @@ function renderLessons() {
       <div class="lesson-number">${number}</div>
       <div>
         <h3>${escapeHtml(title)}</h3>
-        <p>${escapeHtml(description)}・${lessonCards} 張表達卡・${grammarItems} 則語法・${exerciseItems} 題練習</p>
+        <p>${escapeHtml(description)}・生詞 ${vocabCount}・成語 ${idiomCount}・${grammarItems} 則語法・${exerciseItems} 題練習</p>
       </div>
       <div class="lesson-status">${learned} 張</div>
     `;
     card.addEventListener("click", () => {
       currentCardLesson = number;
+      currentCardCategory = "vocab";
       currentGrammarLesson = number;
       currentPracticeLesson = number;
       currentQuizLesson = number;
       currentCardIndex = 0;
       cardLessonSelect.value = String(number);
+      cardCategorySelect.value = currentCardCategory;
       grammarLessonSelect.value = String(number);
       practiceLessonSelect.value = String(number);
       quizLessonSelect.value = String(number);
       state.currentCardLesson = currentCardLesson;
+      state.currentCardCategory = currentCardCategory;
       state.currentGrammarLesson = currentGrammarLesson;
       state.currentPracticeLesson = currentPracticeLesson;
       state.currentQuizLesson = currentQuizLesson;
@@ -320,17 +334,30 @@ function renderLessons() {
 }
 
 function getCardsForCurrentLesson() {
-  return cards.filter((item) => Number(item.lesson) === currentCardLesson);
+  return cards.filter((item) => {
+    const sameLesson = Number(item.lesson) === currentCardLesson;
+    if (!sameLesson) return false;
+    return currentCardCategory === "idioms" ? isIdiomCard(item) : !isIdiomCard(item);
+  });
+}
+
+function isIdiomCard(card) {
+  return IDIOM_TYPES.has(card.type);
+}
+
+function getCardCategoryLabel() {
+  return currentCardCategory === "idioms" ? "成語/俗語/四字詞" : "生詞";
 }
 
 function renderCard() {
+  document.querySelector("#cardSectionTitle").textContent = getCardCategoryLabel();
   const lessonCards = getCardsForCurrentLesson();
   if (!lessonCards.length) {
     document.querySelector("#cardLesson").textContent = `第 ${currentCardLesson} 課`;
     updateCardProgress(0, 0);
     document.querySelector("#cardTerm").textContent = "尚未匯入";
     document.querySelector("#cardPinyin").textContent = "";
-    document.querySelector("#cardMeaning").textContent = "這一課還沒有生詞。";
+    document.querySelector("#cardMeaning").textContent = `這一課還沒有${getCardCategoryLabel()}。`;
     document.querySelector("#cardExample").textContent = "請從匯入頁加入 cards。";
     return;
   }
@@ -353,8 +380,10 @@ function renderCard() {
 }
 
 function updateCardProgress(current, total) {
+  const label = document.querySelector("#cardProgressLabel");
   const text = document.querySelector("#cardProgressText");
   const fill = document.querySelector("#cardProgressFill");
+  label.textContent = `${getCardCategoryLabel()}進度`;
   text.textContent = `${current}/${total}`;
   fill.style.width = total ? `${Math.round((current / total) * 100)}%` : "0%";
 }
@@ -403,6 +432,7 @@ function renderLessonSelectOptions() {
   practiceLessonSelect.innerHTML = options;
   quizLessonSelect.innerHTML = options;
   cardLessonSelect.value = String(currentCardLesson);
+  cardCategorySelect.value = currentCardCategory;
   grammarLessonSelect.value = String(currentGrammarLesson);
   practiceLessonSelect.value = String(currentPracticeLesson);
   quizLessonSelect.value = String(currentQuizLesson);
@@ -660,10 +690,12 @@ function importContent(text) {
     state.contentVersion = CONTENT_VERSION;
     currentCardIndex = 0;
     currentCardLesson = 1;
+    currentCardCategory = "vocab";
     currentGrammarLesson = 1;
     currentPracticeLesson = 1;
     currentQuizLesson = 1;
     state.currentCardLesson = currentCardLesson;
+    state.currentCardCategory = currentCardCategory;
     state.currentGrammarLesson = currentGrammarLesson;
     state.currentPracticeLesson = currentPracticeLesson;
     state.currentQuizLesson = currentQuizLesson;
