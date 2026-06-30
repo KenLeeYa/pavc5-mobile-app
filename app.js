@@ -327,14 +327,17 @@ function renderCard() {
   const lessonCards = getCardsForCurrentLesson();
   if (!lessonCards.length) {
     document.querySelector("#cardLesson").textContent = `第 ${currentCardLesson} 課`;
+    updateCardProgress(0, 0);
     document.querySelector("#cardTerm").textContent = "尚未匯入";
     document.querySelector("#cardPinyin").textContent = "";
     document.querySelector("#cardMeaning").textContent = "這一課還沒有生詞。";
     document.querySelector("#cardExample").textContent = "請從匯入頁加入 cards。";
     return;
   }
-  const card = lessonCards[currentCardIndex % lessonCards.length];
+  const normalizedIndex = currentCardIndex % lessonCards.length;
+  const card = lessonCards[normalizedIndex];
   document.querySelector("#cardLesson").textContent = `第 ${card.lesson || 1} 課・${card.type || "詞語"}`;
+  updateCardProgress(normalizedIndex + 1, lessonCards.length);
   document.querySelector("#cardTerm").textContent = card.term;
   document.querySelector("#cardPinyin").textContent = card.pinyin || "尚未填入拼音";
   document.querySelector("#cardMeaning").innerHTML = `
@@ -347,6 +350,13 @@ function renderCard() {
     <small>${escapeHtml(card.examplePinyin || "請匯入例句拼音。")}</small>
     <strong>${escapeHtml(card.exampleVi || "請匯入越南語例句翻譯。")}</strong>
   `;
+}
+
+function updateCardProgress(current, total) {
+  const text = document.querySelector("#cardProgressText");
+  const fill = document.querySelector("#cardProgressFill");
+  text.textContent = `${current}/${total}`;
+  fill.style.width = total ? `${Math.round((current / total) * 100)}%` : "0%";
 }
 
 function renderGrammar() {

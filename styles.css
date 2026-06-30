@@ -366,6 +366,43 @@ select,
   font-weight: 850;
 }
 
+.card-progress {
+  width: min(100%, 360px);
+  margin: 0 auto 4px;
+  display: grid;
+  gap: 6px;
+}
+
+.card-progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.card-progress-meta strong {
+  color: var(--magenta-dark);
+}
+
+.card-progress-track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1e7ec;
+}
+
+.card-progress-track span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--magenta), var(--blue));
+  transition: width 180ms ease;
+}
+
 #cardPinyin {
   margin-bottom: 0;
   color: var(--blue);
