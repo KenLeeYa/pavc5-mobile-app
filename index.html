@@ -134,13 +134,36 @@
               <p class="eyebrow">Practice</p>
               <h2>每課練習考題</h2>
             </div>
-            <label class="lesson-filter">
-              <span>課別</span>
-              <select id="practiceLessonSelect" aria-label="選擇練習課別"></select>
-            </label>
+            <div class="heading-actions">
+              <label class="lesson-filter">
+                <span>課別</span>
+                <select id="practiceLessonSelect" aria-label="選擇練習課別"></select>
+              </label>
+              <label class="lesson-filter">
+                <span>題型</span>
+                <select id="practiceModeSelect" aria-label="選擇練習題型">
+                  <option value="sentenceQuiz">測驗句子 5 題</option>
+                  <option value="vocabFill">生詞填充 10 題</option>
+                  <option value="sentenceMaking">造句 3 題</option>
+                </select>
+              </label>
+            </div>
           </div>
           <p class="practice-note">練習題不顯示拼音與越文翻譯；包含生詞理解、語法選擇與依生詞造句的語法練習，作答後才顯示正解或參考答案。</p>
+          <div class="card-progress practice-progress" aria-label="練習進度">
+            <div class="card-progress-meta">
+              <span id="practiceProgressLabel">測驗句子</span>
+              <strong id="practiceProgressText">1/5</strong>
+            </div>
+            <div class="card-progress-track">
+              <span id="practiceProgressFill"></span>
+            </div>
+          </div>
           <div class="practice-list" id="practiceList"></div>
+          <div class="button-row practice-nav">
+            <button class="secondary" id="practicePrev" type="button">上一題</button>
+            <button class="primary" id="practiceNext" type="button">下一題</button>
+          </div>
         </section>
 
         <section class="view" id="quizView">

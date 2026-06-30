@@ -569,6 +569,19 @@ select,
   line-height: 1.55;
 }
 
+.practice-progress {
+  margin: 0 0 12px;
+}
+
+.practice-nav {
+  margin-top: 12px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .answer-mask {
   min-height: 30px;
   display: inline-grid;

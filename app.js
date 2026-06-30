@@ -105,6 +105,54 @@ const defaultGrammar = [
     exampleVi: "Anh ấy không những biết nói tiếng Trung mà còn biết viết báo cáo bằng tiếng Trung.",
   },
   {
+    id: "demo-grammar-001b",
+    lesson: 1,
+    pattern: "為了...而...",
+    patternPinyin: "wei4 le... er2...",
+    explanationZh: "用來說明做某件事的目的，以及因此採取的行動或造成的結果。",
+    explanationPinyin: "yong4 lai2 shuo1 ming2 zuo4 mou3 jian4 shi4 de mu4 di4, yi3 ji2 yin1 ci3 cai3 qu3 de xing2 dong4 huo4 zao4 cheng2 de jie2 guo3.",
+    explanationVi: "Dùng để nói mục đích của một việc và hành động hoặc kết quả phát sinh từ mục đích đó.",
+    example: "他為了省錢而買了便宜的仿冒品。",
+    examplePinyin: "ta1 wei4 le sheng3 qian2 er2 mai3 le pian2 yi2 de fang3 mao4 pin3.",
+    exampleVi: "Anh ấy vì tiết kiệm tiền mà mua hàng nhái rẻ tiền.",
+  },
+  {
+    id: "demo-grammar-001c",
+    lesson: 1,
+    pattern: "如果...就...",
+    patternPinyin: "ru2 guo3... jiu4...",
+    explanationZh: "提出一個條件，再說明在這個條件下會發生的結果。",
+    explanationPinyin: "ti2 chu1 yi2 ge4 tiao2 jian4, zai4 shuo1 ming2 zai4 zhe4 ge4 tiao2 jian4 xia4 hui4 fa1 sheng1 de jie2 guo3.",
+    explanationVi: "Nêu một điều kiện, sau đó nói kết quả xảy ra trong điều kiện đó.",
+    example: "如果商品有瑕疵，就可以拿保證書去退換。",
+    examplePinyin: "ru2 guo3 shang1 pin3 you3 xia2 ci1, jiu4 ke3 yi3 na2 bao3 zheng4 shu1 qu4 tui4 huan4.",
+    exampleVi: "Nếu sản phẩm có lỗi, có thể mang giấy bảo hành đi đổi trả.",
+  },
+  {
+    id: "demo-grammar-001d",
+    lesson: 1,
+    pattern: "即使...也...",
+    patternPinyin: "ji2 shi3... ye3...",
+    explanationZh: "表示讓步；前面的情況成立，後面的結果仍然不改變。",
+    explanationPinyin: "biao3 shi4 rang4 bu4; qian2 mian4 de qing2 kuang4 cheng2 li4, hou4 mian4 de jie2 guo3 reng2 ran2 bu4 gai3 bian4.",
+    explanationVi: "Biểu thị nhượng bộ; dù tình huống phía trước xảy ra, kết quả phía sau vẫn không thay đổi.",
+    example: "即使快遞比較貴，我也希望文件能準時送到。",
+    examplePinyin: "ji2 shi3 kuai4 di4 bi3 jiao4 gui4, wo3 ye3 xi1 wang4 wen2 jian4 neng2 zhun3 shi2 song4 dao4.",
+    exampleVi: "Dù chuyển phát nhanh đắt hơn, tôi vẫn mong tài liệu được giao đúng giờ.",
+  },
+  {
+    id: "demo-grammar-001e",
+    lesson: 1,
+    pattern: "因為...所以...",
+    patternPinyin: "yin1 wei4... suo3 yi3...",
+    explanationZh: "說明原因和結果，是最常用的因果句型之一。",
+    explanationPinyin: "shuo1 ming2 yuan2 yin1 he2 jie2 guo3, shi4 zui4 chang2 yong4 de yin1 guo3 ju4 xing2 zhi1 yi1.",
+    explanationVi: "Dùng để nói nguyên nhân và kết quả, là một trong những mẫu câu nhân quả thường dùng nhất.",
+    example: "因為這條巷子太窄，所以卡車開不進來。",
+    examplePinyin: "yin1 wei4 zhe4 tiao2 xiang4 zi5 tai4 zhai3, suo3 yi3 ka3 che1 kai1 bu4 jin4 lai2.",
+    exampleVi: "Vì con hẻm này quá hẹp nên xe tải không vào được.",
+  },
+  {
     id: "demo-grammar-002",
     lesson: 2,
     pattern: "既然...就...",
@@ -171,6 +219,8 @@ let currentCardLesson = Number(state.currentCardLesson || 1);
 let currentCardCategory = state.currentCardCategory || "vocab";
 let currentGrammarLesson = Number(state.currentGrammarLesson || 1);
 let currentPracticeLesson = Number(state.currentPracticeLesson || 1);
+let currentPracticeMode = state.currentPracticeMode || "sentenceQuiz";
+let currentPracticeIndex = Number(state.currentPracticeIndex || 0);
 let currentQuizLesson = Number(state.currentQuizLesson || 1);
 let deferredInstallPrompt = null;
 let quiz = {
@@ -198,6 +248,9 @@ const cardCategorySelect = document.querySelector("#cardCategorySelect");
 const grammarLessonSelect = document.querySelector("#grammarLessonSelect");
 const practiceList = document.querySelector("#practiceList");
 const practiceLessonSelect = document.querySelector("#practiceLessonSelect");
+const practiceModeSelect = document.querySelector("#practiceModeSelect");
+const practicePrev = document.querySelector("#practicePrev");
+const practiceNext = document.querySelector("#practiceNext");
 const quizLessonSelect = document.querySelector("#quizLessonSelect");
 
 document.querySelectorAll(".tab").forEach((tab) => {
@@ -233,10 +286,22 @@ grammarLessonSelect.addEventListener("change", () => {
 });
 practiceLessonSelect.addEventListener("change", () => {
   currentPracticeLesson = Number(practiceLessonSelect.value);
+  currentPracticeIndex = 0;
   state.currentPracticeLesson = currentPracticeLesson;
+  state.currentPracticeIndex = currentPracticeIndex;
   saveState();
   renderPractice();
 });
+practiceModeSelect.addEventListener("change", () => {
+  currentPracticeMode = practiceModeSelect.value;
+  currentPracticeIndex = 0;
+  state.currentPracticeMode = currentPracticeMode;
+  state.currentPracticeIndex = currentPracticeIndex;
+  saveState();
+  renderPractice();
+});
+practicePrev.addEventListener("click", () => movePractice(-1));
+practiceNext.addEventListener("click", () => movePractice(1));
 quizLessonSelect.addEventListener("change", () => {
   currentQuizLesson = Number(quizLessonSelect.value);
   state.currentQuizLesson = currentQuizLesson;
@@ -297,7 +362,7 @@ function renderLessons() {
     const vocabCount = cards.filter((item) => Number(item.lesson) === number && !isIdiomCard(item)).length;
     const idiomCount = cards.filter((item) => Number(item.lesson) === number && isIdiomCard(item)).length;
     const grammarItems = grammar.filter((item) => Number(item.lesson) === number).length;
-    const exerciseItems = exercises.filter((item) => Number(item.lesson) === number).length;
+    const exerciseItems = getPracticeItemsForLesson(number).length;
     const card = document.createElement("article");
     card.className = "lesson-card";
     card.innerHTML = `
@@ -313,6 +378,7 @@ function renderLessons() {
       currentCardCategory = "vocab";
       currentGrammarLesson = number;
       currentPracticeLesson = number;
+      currentPracticeIndex = 0;
       currentQuizLesson = number;
       currentCardIndex = 0;
       cardLessonSelect.value = String(number);
@@ -324,6 +390,7 @@ function renderLessons() {
       state.currentCardCategory = currentCardCategory;
       state.currentGrammarLesson = currentGrammarLesson;
       state.currentPracticeLesson = currentPracticeLesson;
+      state.currentPracticeIndex = currentPracticeIndex;
       state.currentQuizLesson = currentQuizLesson;
       saveState();
       renderCard();
@@ -435,32 +502,165 @@ function renderLessonSelectOptions() {
   cardCategorySelect.value = currentCardCategory;
   grammarLessonSelect.value = String(currentGrammarLesson);
   practiceLessonSelect.value = String(currentPracticeLesson);
+  practiceModeSelect.value = currentPracticeMode;
   quizLessonSelect.value = String(currentQuizLesson);
 }
 
 function renderPractice() {
-  const lessonExercises = exercises.filter((item) => Number(item.lesson) === currentPracticeLesson);
+  const lessonExercises = getPracticeItemsForCurrentLesson();
   practiceList.innerHTML = "";
   if (!lessonExercises.length) {
-    practiceList.innerHTML = "<p class=\"empty-state\">這一課還沒有練習題。請從匯入頁加入 exercises。</p>";
+    updatePracticeProgress(0, 0);
+    practicePrev.disabled = true;
+    practiceNext.disabled = true;
+    practiceList.innerHTML = "<p class=\"empty-state\">這一課還沒有足夠的生詞或語法可產生此題型。</p>";
     return;
   }
 
-  lessonExercises.forEach((exercise, index) => {
-    const card = document.createElement("article");
-    card.className = "practice-card";
-    card.innerHTML = `
-      <div class="practice-head">
-        <span class="tag">第 ${escapeHtml(exercise.lesson)} 課・第 ${index + 1} 題</span>
-        <span class="answer-mask">答案已遮蔽</span>
-      </div>
-      <h3>${escapeHtml(exercise.prompt)}</h3>
-      ${renderExerciseControl(exercise)}
-      <div class="feedback" aria-live="polite"></div>
-    `;
-    wireExercise(card, exercise);
-    practiceList.appendChild(card);
+  currentPracticeIndex = Math.min(currentPracticeIndex, lessonExercises.length - 1);
+  const exercise = lessonExercises[currentPracticeIndex];
+  updatePracticeProgress(currentPracticeIndex + 1, lessonExercises.length);
+  practicePrev.disabled = currentPracticeIndex === 0;
+  practiceNext.disabled = currentPracticeIndex === lessonExercises.length - 1;
+
+  const card = document.createElement("article");
+  card.className = "practice-card";
+  card.innerHTML = `
+    <div class="practice-head">
+      <span class="tag">第 ${escapeHtml(exercise.lesson)} 課・第 ${currentPracticeIndex + 1} 題</span>
+      <span class="answer-mask">答案已遮蔽</span>
+    </div>
+    <h3>${escapeHtml(exercise.prompt)}</h3>
+    ${renderExerciseControl(exercise)}
+    <div class="feedback" aria-live="polite"></div>
+  `;
+  wireExercise(card, exercise);
+  practiceList.appendChild(card);
+}
+
+function getPracticeItemsForCurrentLesson() {
+  return getPracticeItemsForLesson(currentPracticeLesson);
+}
+
+function getPracticeItemsForLesson(lesson) {
+  const lessonCards = cards.filter((card) => Number(card.lesson) === Number(lesson) && card.example);
+  const lessonVocab = lessonCards.filter((card) => !isIdiomCard(card));
+  const lessonGrammar = grammar.filter((item) => Number(item.lesson) === Number(lesson));
+
+  if (currentPracticeMode === "vocabFill") {
+    return buildVocabFillExercises(lessonVocab, lesson).slice(0, 10);
+  }
+  if (currentPracticeMode === "sentenceMaking") {
+    return buildSentenceMakingExercises(lessonVocab, lessonGrammar, lesson).slice(0, 3);
+  }
+  return buildSentenceQuizExercises(lessonCards, lesson).slice(0, 5);
+}
+
+function buildSentenceQuizExercises(lessonCards, lesson) {
+  return lessonCards.slice(0, 5).map((card, index) => {
+    const options = shuffle([
+      card.example,
+      ...lessonCards.filter((item) => item.id !== card.id).slice(0, 3).map((item) => item.example),
+    ]).filter(Boolean);
+    return {
+      id: `auto-${lesson}-sentenceQuiz-${index + 1}`,
+      lesson,
+      type: "choice",
+      prompt: `哪一個句子正確使用「${card.term}」？`,
+      options,
+      answer: card.example,
+      explanation: `正確句子中有使用「${card.term}」。`,
+    };
   });
+}
+
+function buildVocabFillExercises(lessonVocab, lesson) {
+  return lessonVocab.slice(0, 10).map((card, index) => {
+    const promptSentence = card.example.includes(card.term)
+      ? card.example.replace(card.term, "____")
+      : `請填入最合適的生詞：${card.meaningZh}：____`;
+    return {
+      id: `auto-${lesson}-vocabFill-${index + 1}`,
+      lesson,
+      type: "text",
+      prompt: `請完成句子：${promptSentence}`,
+      answer: card.term,
+      acceptedAnswers: [card.term],
+      explanation: `本題答案是「${card.term}」。`,
+    };
+  });
+}
+
+function buildSentenceMakingExercises(lessonVocab, lessonGrammar, lesson) {
+  return lessonVocab.slice(0, 3).map((card, index) => {
+    const grammarItem = lessonGrammar[index % Math.max(lessonGrammar.length, 1)];
+    if (!grammarItem) {
+      return {
+        id: `auto-${lesson}-sentenceMaking-${index + 1}`,
+        lesson,
+        type: "sentence",
+        prompt: `請用「${card.term}」造一個完整句子。`,
+        requiredTerms: [card.term],
+        answer: card.example,
+        explanation: `造句至少要包含「${card.term}」，並且語意完整。`,
+      };
+    }
+
+    const requiredGrammarTerms = extractGrammarRequiredTerms(grammarItem.pattern);
+    return {
+      id: `auto-${lesson}-sentenceMaking-${index + 1}`,
+      lesson,
+      type: "sentence",
+      prompt: `請用「${card.term}」和語法「${grammarItem.pattern}」造一個完整句子。`,
+      requiredTerms: [card.term, ...requiredGrammarTerms],
+      answer: makeReferenceSentence(card.term, grammarItem.pattern),
+      explanation: `句子需包含生詞「${card.term}」與語法關鍵詞「${requiredGrammarTerms.join("、")}」。`,
+    };
+  });
+}
+
+function extractGrammarRequiredTerms(pattern) {
+  const terms = String(pattern).split("...").map((item) => item.trim()).filter(Boolean);
+  return terms.length ? terms : [String(pattern).trim()].filter(Boolean);
+}
+
+function makeReferenceSentence(term, pattern) {
+  if (pattern.includes("不但") && pattern.includes("而且")) {
+    return `這件事不但和${term}有關，而且值得大家討論。`;
+  }
+  if (pattern.includes("為了") && pattern.includes("而")) {
+    return `他為了處理${term}的問題而請朋友幫忙。`;
+  }
+  if (pattern.includes("如果") && pattern.includes("就")) {
+    return `如果遇到${term}的問題，就要先冷靜處理。`;
+  }
+  if (pattern.includes("即使") && pattern.includes("也")) {
+    return `即使碰到${term}的問題，也不要急著生氣。`;
+  }
+  if (pattern.includes("因為") && pattern.includes("所以")) {
+    return `因為${term}的問題還沒解決，所以大家都很擔心。`;
+  }
+  return `我想用${term}造一個完整的句子。`;
+}
+
+function movePractice(step) {
+  const items = getPracticeItemsForCurrentLesson();
+  if (!items.length) return;
+  currentPracticeIndex = Math.max(0, Math.min(items.length - 1, currentPracticeIndex + step));
+  state.currentPracticeIndex = currentPracticeIndex;
+  saveState();
+  renderPractice();
+}
+
+function updatePracticeProgress(current, total) {
+  const labels = {
+    sentenceQuiz: "測驗句子",
+    vocabFill: "生詞填充",
+    sentenceMaking: "造句",
+  };
+  document.querySelector("#practiceProgressLabel").textContent = labels[currentPracticeMode] || "練習";
+  document.querySelector("#practiceProgressText").textContent = `${current}/${total}`;
+  document.querySelector("#practiceProgressFill").style.width = total ? `${Math.round((current / total) * 100)}%` : "0%";
 }
 
 function renderExerciseControl(exercise) {
@@ -693,11 +893,15 @@ function importContent(text) {
     currentCardCategory = "vocab";
     currentGrammarLesson = 1;
     currentPracticeLesson = 1;
+    currentPracticeMode = "sentenceQuiz";
+    currentPracticeIndex = 0;
     currentQuizLesson = 1;
     state.currentCardLesson = currentCardLesson;
     state.currentCardCategory = currentCardCategory;
     state.currentGrammarLesson = currentGrammarLesson;
     state.currentPracticeLesson = currentPracticeLesson;
+    state.currentPracticeMode = currentPracticeMode;
+    state.currentPracticeIndex = currentPracticeIndex;
     state.currentQuizLesson = currentQuizLesson;
     saveState();
     renderLessonSelectOptions();
