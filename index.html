@@ -26,7 +26,7 @@
           <div class="book-copy">
             <p class="eyebrow">Vol. 5 / 第五冊</p>
             <h2 id="bookTitle">給越南學生的手機複習工具</h2>
-            <p>依照你提供的第三版第五冊建立：14 課架構、字詞卡、語法卡、課後練習、中文朗讀、快測與合法內容匯入。</p>
+            <p>依照你提供的第三版第五冊建立：14 課架構、生詞、語法卡、課後練習、中文朗讀、快測與合法內容匯入。</p>
             <div class="book-facts" aria-label="版本資訊">
               <span>第三版</span>
               <span>14 課</span>
@@ -49,7 +49,7 @@
 
         <nav class="tabs" aria-label="主要功能">
           <button class="tab active" type="button" data-view="lessons">課程</button>
-          <button class="tab" type="button" data-view="cards">字詞卡</button>
+          <button class="tab" type="button" data-view="cards">生詞</button>
           <button class="tab" type="button" data-view="grammar">語法</button>
           <button class="tab" type="button" data-view="practice">練習</button>
           <button class="tab" type="button" data-view="quiz">測驗</button>
@@ -71,12 +71,12 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Flashcards</p>
-              <h2>字詞卡</h2>
+              <h2>生詞</h2>
             </div>
             <div class="heading-actions">
               <label class="lesson-filter">
                 <span>課別</span>
-                <select id="cardLessonSelect" aria-label="選擇字詞卡課別"></select>
+                <select id="cardLessonSelect" aria-label="選擇生詞課別"></select>
               </label>
               <button class="text-button" id="resetProgress" type="button">重設進度</button>
             </div>
@@ -133,7 +133,13 @@
               <p class="eyebrow">Kiểm tra nhanh</p>
               <h2>三題快測</h2>
             </div>
-            <span class="score" id="quizScore">0/0</span>
+            <div class="heading-actions">
+              <label class="lesson-filter">
+                <span>課別</span>
+                <select id="quizLessonSelect" aria-label="選擇快測課別"></select>
+              </label>
+              <span class="score" id="quizScore">0/0</span>
+            </div>
           </div>
           <div class="quiz-box" id="quizBox"></div>
         </section>

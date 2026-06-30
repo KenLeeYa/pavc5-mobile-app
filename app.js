@@ -169,6 +169,7 @@ let currentCardIndex = 0;
 let currentCardLesson = Number(state.currentCardLesson || 1);
 let currentGrammarLesson = Number(state.currentGrammarLesson || 1);
 let currentPracticeLesson = Number(state.currentPracticeLesson || 1);
+let currentQuizLesson = Number(state.currentQuizLesson || 1);
 let deferredInstallPrompt = null;
 let quiz = {
   total: 0,
@@ -194,6 +195,7 @@ const cardLessonSelect = document.querySelector("#cardLessonSelect");
 const grammarLessonSelect = document.querySelector("#grammarLessonSelect");
 const practiceList = document.querySelector("#practiceList");
 const practiceLessonSelect = document.querySelector("#practiceLessonSelect");
+const quizLessonSelect = document.querySelector("#quizLessonSelect");
 
 document.querySelectorAll(".tab").forEach((tab) => {
   tab.addEventListener("click", () => setView(tab.dataset.view));
@@ -224,6 +226,14 @@ practiceLessonSelect.addEventListener("change", () => {
   state.currentPracticeLesson = currentPracticeLesson;
   saveState();
   renderPractice();
+});
+quizLessonSelect.addEventListener("change", () => {
+  currentQuizLesson = Number(quizLessonSelect.value);
+  state.currentQuizLesson = currentQuizLesson;
+  quiz = { total: 0, correct: 0 };
+  document.querySelector("#quizScore").textContent = "0/0";
+  saveState();
+  renderQuiz();
 });
 installButton.addEventListener("click", installApp);
 
@@ -291,13 +301,16 @@ function renderLessons() {
       currentCardLesson = number;
       currentGrammarLesson = number;
       currentPracticeLesson = number;
+      currentQuizLesson = number;
       currentCardIndex = 0;
       cardLessonSelect.value = String(number);
       grammarLessonSelect.value = String(number);
       practiceLessonSelect.value = String(number);
+      quizLessonSelect.value = String(number);
       state.currentCardLesson = currentCardLesson;
       state.currentGrammarLesson = currentGrammarLesson;
       state.currentPracticeLesson = currentPracticeLesson;
+      state.currentQuizLesson = currentQuizLesson;
       saveState();
       renderCard();
       setView("cards");
@@ -316,7 +329,7 @@ function renderCard() {
     document.querySelector("#cardLesson").textContent = `第 ${currentCardLesson} 課`;
     document.querySelector("#cardTerm").textContent = "尚未匯入";
     document.querySelector("#cardPinyin").textContent = "";
-    document.querySelector("#cardMeaning").textContent = "這一課還沒有字詞卡。";
+    document.querySelector("#cardMeaning").textContent = "這一課還沒有生詞。";
     document.querySelector("#cardExample").textContent = "請從匯入頁加入 cards。";
     return;
   }
@@ -378,9 +391,11 @@ function renderLessonSelectOptions() {
   cardLessonSelect.innerHTML = options;
   grammarLessonSelect.innerHTML = options;
   practiceLessonSelect.innerHTML = options;
+  quizLessonSelect.innerHTML = options;
   cardLessonSelect.value = String(currentCardLesson);
   grammarLessonSelect.value = String(currentGrammarLesson);
   practiceLessonSelect.value = String(currentPracticeLesson);
+  quizLessonSelect.value = String(currentQuizLesson);
 }
 
 function renderPractice() {
@@ -550,14 +565,15 @@ function updateProgress() {
 }
 
 function renderQuiz() {
-  if (cards.length < 3) {
-    document.querySelector("#quizBox").innerHTML = "<p>請先匯入至少 3 張字詞、成語、俗語或四字詞卡。</p>";
+  const lessonCards = cards.filter((card) => Number(card.lesson) === currentQuizLesson);
+  if (lessonCards.length < 3) {
+    document.querySelector("#quizBox").innerHTML = `<p>第 ${currentQuizLesson} 課至少需要 3 張生詞、成語、俗語或四字詞卡才能快測。</p>`;
     return;
   }
-  const question = cards[Math.floor(Math.random() * cards.length)];
+  const question = lessonCards[Math.floor(Math.random() * lessonCards.length)];
   const options = shuffle([
     question.meaningVi,
-    ...shuffle(cards.filter((card) => card.term !== question.term)).slice(0, 3).map((card) => card.meaningVi),
+    ...shuffle(lessonCards.filter((card) => card.term !== question.term)).slice(0, 3).map((card) => card.meaningVi),
   ]).filter(Boolean);
 
   document.querySelector("#quizBox").innerHTML = `
@@ -636,9 +652,11 @@ function importContent(text) {
     currentCardLesson = 1;
     currentGrammarLesson = 1;
     currentPracticeLesson = 1;
+    currentQuizLesson = 1;
     state.currentCardLesson = currentCardLesson;
     state.currentGrammarLesson = currentGrammarLesson;
     state.currentPracticeLesson = currentPracticeLesson;
+    state.currentQuizLesson = currentQuizLesson;
     saveState();
     renderLessonSelectOptions();
     renderLessons();
