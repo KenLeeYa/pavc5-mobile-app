@@ -1,6 +1,34 @@
 {
   "title": "新版實用視聽華語 5 第三版自訂內容",
   "edition": "3rd-vol-5",
+  "texts": [
+    {
+      "id": "1-text-001",
+      "lesson": 1,
+      "title": "因小失大",
+      "titlePinyin": "yin1 xiao3 shi1 da4",
+      "titleVi": "Vì cái lợi nhỏ mà mất cái lớn",
+      "note": "每一行可加 marks，系統會用不同顏色標出生詞、語法、專有名詞、成語/俗語/四字詞。",
+      "legend": [
+        ["vocab", "生詞"],
+        ["grammar", "語法"],
+        ["proper", "專有名詞"],
+        ["idiom", "成語/俗語/四字詞"]
+      ],
+      "lines": [
+        {
+          "speaker": "英",
+          "zh": "我只不過晚了五分鐘而已。",
+          "pinyin": "wo3 zhi3 bu2 guo4 wan3 le5 wu3 fen1 zhong1 er2 yi3.",
+          "vi": "Tôi chỉ trễ năm phút thôi.",
+          "marks": [
+            ["grammar", "只不過"],
+            ["grammar", "而已"]
+          ]
+        }
+      ]
+    }
+  ],
   "cards": [
     {
       "id": "1-001",
@@ -42,7 +70,13 @@
       "explanationVi": "Dùng để nối hai tình huống; vế sau thường tiến thêm một bước hoặc quan trọng hơn.",
       "example": "他不但會說中文，而且會用中文寫報告。",
       "examplePinyin": "ta1 bu2 dan4 hui4 shuo1 zhong1 wen2, er2 qie3 hui4 yong4 zhong1 wen2 xie3 bao4 gao4.",
-      "exampleVi": "Anh ấy không những biết nói tiếng Trung mà còn biết viết báo cáo bằng tiếng Trung."
+      "exampleVi": "Anh ấy không những biết nói tiếng Trung mà còn biết viết báo cáo bằng tiếng Trung.",
+      "practice": [
+        {
+          "prompt": "請用「不但...而且...」造一個句子。",
+          "answer": "他不但會說中文，而且會用中文寫報告。"
+        }
+      ]
     }
   ],
   "exercises": [

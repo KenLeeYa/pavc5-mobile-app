@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#9a1f58" />
     <title>新版實用視聽華語 5 學習 App</title>
+    <link rel="icon" href="./assets/pavc5-cover.svg" type="image/svg+xml" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -49,6 +50,7 @@
 
         <nav class="tabs" aria-label="主要功能">
           <button class="tab active" type="button" data-view="lessons">課程</button>
+          <button class="tab" type="button" data-view="text">課文</button>
           <button class="tab" type="button" data-view="cards">生詞</button>
           <button class="tab" type="button" data-view="grammar">語法</button>
           <button class="tab" type="button" data-view="practice">練習</button>
@@ -65,6 +67,22 @@
             <span class="edition-pill">正中書局</span>
           </div>
           <div class="lesson-list" id="lessonList"></div>
+        </section>
+
+        <section class="view" id="textView">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Bài khóa</p>
+              <h2>課文、拼音與越文翻譯</h2>
+            </div>
+            <div class="heading-actions">
+              <label class="lesson-filter">
+                <span>課別</span>
+                <select id="textLessonSelect" aria-label="選擇課文課別"></select>
+              </label>
+            </div>
+          </div>
+          <div class="text-list" id="textList"></div>
         </section>
 
         <section class="view" id="cardsView">
@@ -192,7 +210,7 @@
           </div>
           <div class="import-panel">
             <p>
-              App 只內建公開版本資訊與示範卡片，不收錄課本全文、完整生詞表或音檔。請把你合法擁有或自行整理的內容做成
+              App 內建你提供的第一課整理內容；其他課請把你合法擁有或自行整理的課文、生詞、語法、練習做成
               <a href="./content-template.json">content-template.json</a> 格式後匯入。
             </p>
             <label class="file-picker">

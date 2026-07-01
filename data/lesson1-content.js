@@ -1,0 +1,469 @@
+export const lesson1Texts = [
+  {
+    id: "lesson1-main",
+    lesson: 1,
+    title: "因小失大",
+    titlePinyin: "yin1 xiao3 shi1 da4",
+    titleVi: "Vì cái lợi nhỏ mà mất cái lớn",
+    note: "依你提供的第一課課文照片整理，方便手機閱讀與標註複習。",
+    legend: [
+      ["vocab", "生詞"],
+      ["grammar", "語法"],
+      ["proper", "專有名詞"],
+      ["idiom", "成語/俗語/四字詞"],
+    ],
+    lines: [
+      {
+        speaker: "英",
+        zh: "來了！來了！你幹嘛一直按喇叭！這是住宅區，很安靜的，不要製造噪音！",
+        pinyin: "lai2 le5! lai2 le5! ni3 gan4 ma2 yi4 zhi2 an4 la3 ba1! zhe4 shi4 zhu4 zhai2 qu1, hen3 an1 jing4 de5, bu2 yao4 zhi4 zao4 zao4 yin1!",
+        vi: "Đến rồi! Đến rồi! Anh làm gì mà bấm còi mãi vậy! Đây là khu dân cư, rất yên tĩnh, đừng tạo tiếng ồn!",
+        marks: [
+          ["vocab", "住宅區"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "誰叫你慢吞吞的，我等不及啊！",
+        pinyin: "shei2 jiao4 ni3 man4 tun1 tun1 de5, wo3 deng3 bu4 ji2 a5!",
+        vi: "Ai bảo em chậm chạp quá, anh chờ không nổi!",
+        marks: [
+          ["vocab", "慢吞吞"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "我只不過晚了五分鐘而已。怎麼那麼沒耐心！",
+        pinyin: "wo3 zhi3 bu2 guo4 wan3 le5 wu3 fen1 zhong1 er2 yi3. zen3 me5 na4 me5 mei2 nai4 xin1!",
+        vi: "Em chỉ trễ năm phút thôi mà. Sao anh thiếu kiên nhẫn vậy!",
+        marks: [
+          ["grammar", "只不過"],
+          ["grammar", "而已"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "美英，你別忘了，我在快遞公司上班，特別講究效率。",
+        pinyin: "mei3 ying1, ni3 bie2 wang4 le5, wo3 zai4 kuai4 di4 gong1 si1 shang4 ban1, te4 bie2 jiang3 jiu4 xiao4 lu4.",
+        vi: "Mỹ Anh, em đừng quên anh làm ở công ty chuyển phát nhanh, đặc biệt chú trọng hiệu suất.",
+        marks: [
+          ["proper", "美英"],
+          ["vocab", "快遞"],
+          ["vocab", "效率"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "平常只要遲到一、兩分鐘，客戶就會抱怨的。",
+        pinyin: "ping2 chang2 zhi3 yao4 chi2 dao4 yi4 liang3 fen1 zhong1, ke4 hu4 jiu4 hui4 bao4 yuan4 de5.",
+        vi: "Bình thường chỉ cần trễ một hai phút là khách hàng sẽ phàn nàn.",
+        marks: [
+          ["grammar", "只要"],
+          ["grammar", "就"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "你今天又不上班！",
+        pinyin: "ni3 jin1 tian1 you4 bu2 shang4 ban1!",
+        vi: "Hôm nay anh đâu có đi làm!",
+        marks: [],
+      },
+      {
+        speaker: "浩",
+        zh: "你怎麼沒背我送你的包包啊？",
+        pinyin: "ni3 zen3 me5 mei2 bei1 wo3 song4 ni3 de5 bao1 bao1 a5?",
+        vi: "Sao em không đeo cái túi anh tặng?",
+        marks: [],
+      },
+      {
+        speaker: "英",
+        zh: "你還好意思問呢！說什麼名牌包包，結果拉鍊沒幾天就壞了。",
+        pinyin: "ni3 hai2 hao3 yi4 si5 wen4 ne5! shuo1 shen2 me5 ming2 pai2 bao1 bao1, jie2 guo3 la1 lian4 mei2 ji3 tian1 jiu4 huai4 le5.",
+        vi: "Anh còn dám hỏi nữa! Nói là túi hàng hiệu, kết quả khóa kéo mới vài ngày đã hỏng.",
+        marks: [
+          ["vocab", "拉鍊"],
+          ["grammar", "就"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "拉鍊壞了？會不會是你太用力把它拉壞了？還是卡到什麼東西了？",
+        pinyin: "la1 lian4 huai4 le5? hui4 bu2 hui4 shi4 ni3 tai4 yong4 li4 ba3 ta1 la1 huai4 le5? hai2 shi4 ka3 dao4 shen2 me5 dong1 xi5 le5?",
+        vi: "Khóa kéo hỏng à? Có phải em kéo mạnh quá làm hỏng không? Hay bị kẹt vào thứ gì?",
+        marks: [
+          ["vocab", "拉鍊"],
+          ["vocab", "用力"],
+          ["vocab", "卡"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "太用力？卡到東西？我看那種包包不用太用力，只要小孩用力拉，就會拉壞。",
+        pinyin: "tai4 yong4 li4? ka3 dao4 dong1 xi5? wo3 kan4 na4 zhong3 bao1 bao1 bu2 yong4 tai4 yong4 li4, zhi3 yao4 xiao3 hai2 yong4 li4 la1, jiu4 hui4 la1 huai4.",
+        vi: "Kéo mạnh quá? Bị kẹt à? Em thấy loại túi đó không cần kéo mạnh, chỉ cần trẻ con kéo mạnh là hỏng.",
+        marks: [
+          ["vocab", "用力"],
+          ["vocab", "卡"],
+          ["grammar", "不用"],
+          ["grammar", "只要"],
+          ["grammar", "就"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "美英，我花那麼多錢買東西送給你，你不喜歡就算了，何必還諷刺我！",
+        pinyin: "mei3 ying1, wo3 hua1 na4 me5 duo1 qian2 mai3 dong1 xi5 song4 gei3 ni3, ni3 bu4 xi3 huan1 jiu4 suan4 le5, he2 bi4 hai2 feng3 ci4 wo3!",
+        vi: "Mỹ Anh, anh tốn nhiều tiền mua quà cho em, em không thích thì thôi, cần gì còn châm chọc anh!",
+        marks: [
+          ["proper", "美英"],
+          ["grammar", "就算了"],
+          ["grammar", "何必"],
+          ["vocab", "諷刺"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "我問你，正浩，那個包包在哪裡買的？",
+        pinyin: "wo3 wen4 ni3, zheng4 hao4, na4 ge5 bao1 bao1 zai4 na3 li3 mai3 de5?",
+        vi: "Em hỏi anh, Chính Hạo, cái túi đó mua ở đâu?",
+        marks: [
+          ["proper", "正浩"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "我在地攤買的，但是包包上有名牌標誌，又有保證書，我才買的。",
+        pinyin: "wo3 zai4 di4 tan1 mai3 de5, dan4 shi4 bao1 bao1 shang4 you3 ming2 pai2 biao1 zhi4, you4 you3 bao3 zheng4 shu1, wo3 cai2 mai3 de5.",
+        vi: "Anh mua ở quầy hàng ngoài đường, nhưng trên túi có logo hàng hiệu, lại có giấy bảo đảm nên anh mới mua.",
+        marks: [
+          ["vocab", "保證書"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "那保證書上蓋了店章沒有呢？",
+        pinyin: "na4 bao3 zheng4 shu1 shang4 gai4 le5 dian4 zhang1 mei2 you3 ne5?",
+        vi: "Vậy trên giấy bảo đảm có đóng dấu cửa hàng không?",
+        marks: [
+          ["vocab", "保證書"],
+          ["vocab", "蓋"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "沒啊！這一點我倒沒注意到。不過，它的價錢要比商店裡面賣的便宜一點，所以我就……",
+        pinyin: "mei2 a5! zhe4 yi4 dian3 wo3 dao4 mei2 zhu4 yi4 dao4. bu2 guo4, ta1 de5 jia4 qian2 yao4 bi3 shang1 dian4 li3 mian4 mai4 de5 pian2 yi2 yi4 dian3, suo3 yi3 wo3 jiu4...",
+        vi: "Không có! Điểm này anh lại không để ý. Nhưng giá của nó rẻ hơn trong cửa hàng một chút, cho nên anh mới...",
+        marks: [
+          ["grammar", "所以"],
+          ["grammar", "就"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "所以你貪它便宜一點，就買了。",
+        pinyin: "suo3 yi3 ni3 tan1 ta1 pian2 yi2 yi4 dian3, jiu4 mai3 le5.",
+        vi: "Cho nên anh ham nó rẻ hơn một chút rồi mua.",
+        marks: [
+          ["vocab", "貪"],
+          ["grammar", "所以"],
+          ["grammar", "就"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "是啊！貨比三家不吃虧嘛！",
+        pinyin: "shi4 a5! huo4 bi3 san1 jia1 bu4 chi1 kui1 ma5!",
+        vi: "Đúng vậy! So sánh nhiều nơi trước khi mua thì không bị thiệt mà!",
+        marks: [
+          ["idiom", "貨比三家不吃虧"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "我拿那個包包到名牌店修理的時候，老闆說我貪小便宜買了一個假貨，根本不能修理。",
+        pinyin: "wo3 na2 na4 ge5 bao1 bao1 dao4 ming2 pai2 dian4 xiu1 li3 de5 shi2 hou4, lao3 ban3 shuo1 wo3 tan1 xiao3 pian2 yi2 mai3 le5 yi2 ge4 jia3 huo4, gen1 ben3 bu4 neng2 xiu1 li3.",
+        vi: "Khi em mang cái túi đó đến cửa hàng hàng hiệu để sửa, ông chủ nói em ham rẻ mua phải hàng giả, căn bản không sửa được.",
+        marks: [
+          ["idiom", "貪小便宜"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "起初我以為他故意不幫我修理，要讓我再買一個新的，可是後來我連續跑了三家店，得到的答案都一樣。",
+        pinyin: "qi3 chu1 wo3 yi3 wei2 ta1 gu4 yi4 bu4 bang1 wo3 xiu1 li3, yao4 rang4 wo3 zai4 mai3 yi2 ge4 xin1 de5, ke3 shi4 hou4 lai2 wo3 lian2 xu4 pao3 le5 san1 jia1 dian4, de2 dao4 de5 da2 an4 dou1 yi2 yang4.",
+        vi: "Ban đầu em tưởng họ cố ý không sửa để bắt em mua cái mới, nhưng sau đó em chạy liên tiếp ba cửa hàng, câu trả lời đều giống nhau.",
+        marks: [
+          ["vocab", "起初"],
+          ["vocab", "連續"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "美英，對不起嘛！上一次當，學一次乖，我發誓下次再也不買地攤上的名牌包了。",
+        pinyin: "mei3 ying1, dui4 bu4 qi3 ma5! shang4 yi2 ci4 dang4, xue2 yi2 ci4 guai1, wo3 fa1 shi4 xia4 ci4 zai4 ye3 bu4 mai3 di4 tan1 shang4 de5 ming2 pai2 bao1 le5.",
+        vi: "Mỹ Anh, xin lỗi mà! Bị lừa một lần thì rút kinh nghiệm một lần, anh thề lần sau không mua túi hàng hiệu ngoài sạp nữa.",
+        marks: [
+          ["proper", "美英"],
+          ["idiom", "上一次當，學一次乖"],
+          ["vocab", "發誓"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "不光是名牌包，其他的東西也是一樣。",
+        pinyin: "bu4 guang1 shi4 ming2 pai2 bao1, qi2 ta1 de5 dong1 xi5 ye3 shi4 yi2 yang4.",
+        vi: "Không chỉ túi hàng hiệu, những thứ khác cũng giống vậy.",
+        marks: [
+          ["grammar", "不光是"],
+          ["grammar", "也是"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "地攤的東西比較便宜是沒錯，可是它們不是仿冒品，就是瑕疵品。",
+        pinyin: "di4 tan1 de5 dong1 xi5 bi3 jiao4 pian2 yi2 shi4 mei2 cuo4, ke3 shi4 ta1 men5 bu2 shi4 fang3 mao4 pin3, jiu4 shi4 xia2 ci1 pin3.",
+        vi: "Đồ ở sạp rẻ hơn là đúng, nhưng chúng không phải hàng nhái thì cũng là hàng lỗi.",
+        marks: [
+          ["vocab", "仿冒品"],
+          ["vocab", "瑕疵"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "就為了便宜那麼一點點，買到一堆爛東西，不是得不償失嗎？",
+        pinyin: "jiu4 wei4 le5 pian2 yi2 na4 me5 yi4 dian3 dian3, mai3 dao4 yi4 dui1 lan4 dong1 xi5, bu2 shi4 de2 bu4 chang2 shi1 ma5?",
+        vi: "Chỉ vì rẻ hơn một chút mà mua cả đống đồ tệ, chẳng phải cái mất lớn hơn cái được sao?",
+        marks: [
+          ["vocab", "堆"],
+          ["idiom", "得不償失"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "好啦！美英，你不要再說這些大道理了，好不好？",
+        pinyin: "hao3 la5! mei3 ying1, ni3 bu2 yao4 zai4 shuo1 zhe4 xie1 da4 dao4 li3 le5, hao3 bu4 hao3?",
+        vi: "Được rồi! Mỹ Anh, em đừng nói những đạo lý lớn lao này nữa được không?",
+        marks: [
+          ["proper", "美英"],
+          ["vocab", "大道理"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "你得陪我到巷口那家新開的運動用品店，買兩雙正版的運動鞋跟我賠罪。",
+        pinyin: "ni3 dei3 pei2 wo3 dao4 xiang4 kou3 na4 jia1 xin1 kai1 de5 yun4 dong4 yong4 pin3 dian4, mai3 liang3 shuang1 zheng4 ban3 de5 yun4 dong4 xie2 gen1 wo3 pei2 zui4.",
+        vi: "Anh phải đi cùng em đến cửa hàng đồ thể thao mới mở ở đầu hẻm, mua hai đôi giày thể thao chính hãng để xin lỗi em.",
+        marks: [
+          ["vocab", "巷口"],
+          ["vocab", "用品"],
+          ["vocab", "正版"],
+          ["vocab", "賠罪"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "為什麼非要到運動用品店不可？",
+        pinyin: "wei4 shen2 me5 fei1 yao4 dao4 yun4 dong4 yong4 pin3 dian4 bu4 ke3?",
+        vi: "Tại sao nhất định phải đến cửa hàng đồ thể thao?",
+        marks: [
+          ["vocab", "用品"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "免得買到仿冒品呀！正版跟盜版的差別，有時不容易看出來，還是到店裡面買比較安心。",
+        pinyin: "mian3 de2 mai3 dao4 fang3 mao4 pin3 ya5! zheng4 ban3 gen1 dao4 ban3 de5 cha1 bie2, you3 shi2 bu4 rong2 yi4 kan4 chu1 lai2, hai2 shi4 dao4 dian4 li3 mian4 mai3 bi3 jiao4 an1 xin1.",
+        vi: "Để khỏi mua phải hàng nhái! Sự khác biệt giữa bản chính và bản lậu đôi khi không dễ nhìn ra, mua trong cửa hàng vẫn yên tâm hơn.",
+        marks: [
+          ["vocab", "仿冒品"],
+          ["vocab", "正版"],
+          ["vocab", "差別"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "何況在店裡買東西，可以索取統一發票，運氣好的話，還可能會中獎呢！",
+        pinyin: "he2 kuang4 zai4 dian4 li3 mai3 dong1 xi5, ke3 yi3 suo3 qu3 tong3 yi1 fa1 piao4, yun4 qi5 hao3 de5 hua4, hai2 ke3 neng2 hui4 zhong4 jiang3 ne5!",
+        vi: "Huống chi mua trong cửa hàng có thể lấy hóa đơn thống nhất, nếu may mắn còn có thể trúng thưởng!",
+        marks: [
+          ["grammar", "何況"],
+          ["vocab", "索取"],
+          ["vocab", "統一發票"],
+          ["vocab", "中獎"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "這個月的發票，你對獎了嗎？",
+        pinyin: "zhe4 ge5 yue4 de5 fa1 piao4, ni3 dui4 jiang3 le5 ma5?",
+        vi: "Hóa đơn tháng này, anh đã dò số trúng thưởng chưa?",
+        marks: [
+          ["vocab", "對獎"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "啊！差點忘了，我現在來對獎。",
+        pinyin: "a5! cha4 dian3 wang4 le5, wo3 xian4 zai4 lai2 dui4 jiang3.",
+        vi: "À! Suýt nữa quên, bây giờ anh dò số.",
+        marks: [
+          ["vocab", "對獎"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "我也一起來幫忙！中了！中了！我中了一千塊。",
+        pinyin: "wo3 ye3 yi4 qi3 lai2 bang1 mang2! zhong4 le5! zhong4 le5! wo3 zhong4 le5 yi4 qian1 kuai4.",
+        vi: "Em cũng cùng giúp! Trúng rồi! Trúng rồi! Em trúng một nghìn đồng.",
+        marks: [
+          ["vocab", "中獎"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "你看吧！這就是買東西索取發票的好處。說不定你下次買禮物送我，會中更大的獎呢。",
+        pinyin: "ni3 kan4 ba5! zhe4 jiu4 shi4 mai3 dong1 xi5 suo3 qu3 fa1 piao4 de5 hao3 chu4. shuo1 bu2 ding4 ni3 xia4 ci4 mai3 li3 wu4 song4 wo3, hui4 zhong4 geng4 da4 de5 jiang3 ne5.",
+        vi: "Em thấy chưa! Đây chính là lợi ích của việc lấy hóa đơn khi mua đồ. Biết đâu lần sau em mua quà tặng anh sẽ trúng giải lớn hơn.",
+        marks: [
+          ["vocab", "索取"],
+        ],
+      },
+      {
+        speaker: "英",
+        zh: "這禮物當然沒問題！今天放假，我帶你去郊外玩，你剛好可以穿我送你的運動鞋。",
+        pinyin: "zhe4 li3 wu4 dang1 ran2 mei2 wen4 ti2! jin1 tian1 fang4 jia4, wo3 dai4 ni3 qu4 jiao1 wai4 wan2, ni3 gang1 hao3 ke3 yi3 chuan1 wo3 song4 ni3 de5 yun4 dong4 xie2.",
+        vi: "Món quà đó tất nhiên không vấn đề! Hôm nay nghỉ, em đưa anh ra ngoại ô chơi, anh vừa khéo có thể mang đôi giày thể thao em tặng.",
+        marks: [
+          ["vocab", "郊外"],
+          ["vocab", "剛好"],
+        ],
+      },
+      {
+        speaker: "浩",
+        zh: "好！中獎讓我出遊的興致更好了，走吧！",
+        pinyin: "hao3! zhong4 jiang3 rang4 wo3 chu1 you2 de5 xing4 zhi4 geng4 hao3 le5, zou3 ba5!",
+        vi: "Được! Trúng thưởng làm hứng thú đi chơi của anh càng cao, đi thôi!",
+        marks: [
+          ["vocab", "中獎"],
+          ["vocab", "出遊"],
+          ["vocab", "興致"],
+        ],
+      },
+    ],
+  },
+];
+
+export const lesson1Grammar = [
+  {
+    id: "lesson1-grammar-001",
+    lesson: 1,
+    pattern: "只不過...而已",
+    patternPinyin: "zhi3 bu2 guo4... er2 yi3",
+    explanationZh: "「只不過」放在主語後面，常和句尾的「而已」一起用，表示事情不大、不嚴重，語氣有時可用來謙虛或帶一點諷刺。",
+    explanationPinyin: "zhi3 bu2 guo4 fang4 zai4 zhu3 yu3 hou4 mian4, chang2 he2 ju4 wei3 de5 er2 yi3 yi4 qi3 yong4, biao3 shi4 shi4 qing2 bu2 da4, bu4 yan2 zhong4.",
+    explanationVi: "Đặt sau chủ ngữ, thường đi với 「而已」 ở cuối câu, nhấn mạnh việc đó chỉ nhỏ thôi, không nghiêm trọng; đôi khi dùng để khiêm tốn hoặc châm chọc nhẹ.",
+    example: "我只不過晚了五分鐘而已，怎麼那麼沒耐心！",
+    examplePinyin: "wo3 zhi3 bu2 guo4 wan3 le5 wu3 fen1 zhong1 er2 yi3, zen3 me5 na4 me5 mei2 nai4 xin1!",
+    exampleVi: "Tôi chỉ trễ năm phút thôi mà, sao thiếu kiên nhẫn vậy!",
+    practice: [
+      {
+        prompt: "請用「只不過...而已」改寫：這支手機才五百元，真便宜。",
+        answer: "這支手機只不過五百元而已，真便宜。",
+      },
+      {
+        prompt: "請用「只不過...而已」造句，描述一件小事。",
+        answer: "我只不過忘了帶保證書而已，還可以回家拿。",
+      },
+    ],
+  },
+  {
+    id: "lesson1-grammar-002",
+    lesson: 1,
+    pattern: "...不用...，只要...就...（了）",
+    patternPinyin: "bu2 yong4... zhi3 yao4... jiu4...",
+    explanationZh: "「不用」表示沒有必要做某事；「只要...就...」表示條件很簡單，只需符合前面的條件，後面的結果就會發生。",
+    explanationPinyin: "bu2 yong4 biao3 shi4 mei2 you3 bi4 yao4 zuo4 mou3 shi4; zhi3 yao4... jiu4... biao3 shi4 tiao2 jian4 hen3 jian3 dan1.",
+    explanationVi: "「不用」 nghĩa là không cần làm việc gì; 「只要...就...」 cho biết điều kiện rất đơn giản, chỉ cần đạt điều kiện phía trước thì kết quả phía sau xảy ra.",
+    example: "我看那種包包不用太用力，只要小孩用力拉，就會拉壞。",
+    examplePinyin: "wo3 kan4 na4 zhong3 bao1 bao1 bu2 yong4 tai4 yong4 li4, zhi3 yao4 xiao3 hai2 yong4 li4 la1, jiu4 hui4 la1 huai4.",
+    exampleVi: "Tôi thấy loại túi đó không cần kéo mạnh, chỉ cần trẻ con kéo mạnh là sẽ hỏng.",
+    practice: [
+      {
+        prompt: "請完成句子：你不用等我，只要告訴我是哪棟大樓，____。",
+        answer: "你不用等我，只要告訴我是哪棟大樓，我就可以自己上去。",
+      },
+      {
+        prompt: "請用「不用...，只要...就...」造一個買東西的句子。",
+        answer: "你不用急著買，只要貨比三家，就比較不會吃虧。",
+      },
+    ],
+  },
+  {
+    id: "lesson1-grammar-003",
+    lesson: 1,
+    pattern: "...就算了，何必（還）...",
+    patternPinyin: "jiu4 suan4 le5, he2 bi4 hai2...",
+    explanationZh: "前面表示某情況還可以接受，後面用反問語氣表示對方做得太過分、沒有必要。",
+    explanationPinyin: "qian2 mian4 biao3 shi4 mou3 qing2 kuang4 hai2 ke3 yi3 jie1 shou4, hou4 mian4 yong4 fan3 wen4 yu3 qi4 biao3 shi4 dui4 fang1 zuo4 de5 tai4 guo4 fen4.",
+    explanationVi: "Vế trước nói tình huống A còn có thể chấp nhận, vế sau dùng câu hỏi tu từ để nói hành động B là quá đáng hoặc không cần thiết.",
+    example: "你不喜歡就算了，何必還諷刺我！",
+    examplePinyin: "ni3 bu4 xi3 huan1 jiu4 suan4 le5, he2 bi4 hai2 feng3 ci4 wo3!",
+    exampleVi: "Không thích thì thôi, cần gì còn châm chọc tôi!",
+    practice: [
+      {
+        prompt: "請完成對話：小王：這個工作太難了，我不想做。小張：____。",
+        answer: "你不想做就算了，何必還一直抱怨。",
+      },
+      {
+        prompt: "請用「就算了，何必還」造一個完整句子。",
+        answer: "你不買就算了，何必還批評店員的態度。",
+      },
+    ],
+  },
+  {
+    id: "lesson1-grammar-004",
+    lesson: 1,
+    pattern: "不光是...，...也是...",
+    patternPinyin: "bu4 guang1 shi4..., ... ye3 shi4...",
+    explanationZh: "「不光是 A，B 也是」表示不只有 A 符合某情況，B 也有相同情況。語氣比「不只是」較正式。",
+    explanationPinyin: "bu4 guang1 shi4 A, B ye3 shi4 biao3 shi4 bu4 zhi3 you3 A fu2 he2 mou3 qing2 kuang4, B ye3 you3 xiang1 tong2 qing2 kuang4.",
+    explanationVi: "Mẫu câu này diễn tả không chỉ A có tình huống đó, B cũng giống vậy; sắc thái trang trọng hơn 「不只是」 một chút.",
+    example: "不光是名牌包，其他的東西也是一樣。",
+    examplePinyin: "bu4 guang1 shi4 ming2 pai2 bao1, qi2 ta1 de5 dong1 xi5 ye3 shi4 yi2 yang4.",
+    exampleVi: "Không chỉ túi hàng hiệu, những thứ khác cũng giống vậy.",
+    practice: [
+      {
+        prompt: "請完成句子：這個成語好難，____。",
+        answer: "這個成語好難，不光是我，其他同學也是不懂。",
+      },
+      {
+        prompt: "請用「不光是...，...也是...」說明正版與盜版的問題。",
+        answer: "不光是包包可能有仿冒品，運動鞋也是一樣。",
+      },
+    ],
+  },
+  {
+    id: "lesson1-grammar-005",
+    lesson: 1,
+    pattern: "...，何況...",
+    patternPinyin: "he2 kuang4",
+    explanationZh: "「何況」是連接詞，用來連接兩個小句。前一個情況已經成立，後一個情況更不用說，表示理由更充分。",
+    explanationPinyin: "he2 kuang4 shi4 lian2 jie1 ci2, yong4 lai2 lian2 jie1 liang3 ge4 xiao3 ju4; hou4 yi2 ge4 qing2 kuang4 geng4 bu4 yong4 shuo1.",
+    explanationVi: "「何況」 nối hai mệnh đề; khi tình huống trước đã đúng, tình huống sau càng khỏi phải nói, làm lý do mạnh hơn.",
+    example: "正版跟盜版的差別有時不容易看出來，何況在店裡買東西可以索取統一發票。",
+    examplePinyin: "zheng4 ban3 gen1 dao4 ban3 de5 cha1 bie2 you3 shi2 bu4 rong2 yi4 kan4 chu1 lai2, he2 kuang4 zai4 dian4 li3 mai3 dong1 xi5 ke3 yi3 suo3 qu3 tong3 yi1 fa1 piao4.",
+    exampleVi: "Sự khác biệt giữa bản chính và bản lậu đôi khi không dễ nhìn ra, huống chi mua trong cửa hàng còn có thể lấy hóa đơn.",
+    practice: [
+      {
+        prompt: "請改寫：連學了十年中文的人都不一定完全了解中華文化，我才學了半年，當然只懂一些而已。",
+        answer: "連學了十年中文的人都不一定完全了解中華文化，何況我才學了半年中文，當然只懂一些而已。",
+      },
+      {
+        prompt: "請用「何況」造一個和買東西有關的句子。",
+        answer: "網路上的商品有時都不一定可靠，何況沒有保證書的地攤貨，更要小心。",
+      },
+    ],
+  },
+];
