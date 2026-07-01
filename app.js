@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-mobile-spacing-collapse-20260701";
+const CONTENT_VERSION = "lesson2-handwriting-audio-toggle-20260701";
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -239,6 +239,7 @@ let currentPracticeMode = state.currentPracticeMode || "sentenceQuiz";
 let currentPracticeIndex = Number(state.currentPracticeIndex || 0);
 let currentQuizLesson = Number(state.currentQuizLesson || 1);
 let deferredInstallPrompt = null;
+let activeSpeech = null;
 let quiz = {
   total: 0,
   correct: 0,
@@ -272,6 +273,7 @@ const practiceModeSelect = document.querySelector("#practiceModeSelect");
 const practicePrev = document.querySelector("#practicePrev");
 const practiceNext = document.querySelector("#practiceNext");
 const quizLessonSelect = document.querySelector("#quizLessonSelect");
+const speakCardButton = document.querySelector("#speakCard");
 
 document.querySelectorAll(".admin-only").forEach((element) => {
   element.hidden = !adminMode;
@@ -283,11 +285,11 @@ document.querySelectorAll(".tab").forEach((tab) => {
 
 document.querySelector("#knowCard").addEventListener("click", () => gradeCard(true));
 document.querySelector("#againCard").addEventListener("click", () => gradeCard(false));
-document.querySelector("#speakCard").addEventListener("click", speakCurrentCard);
+speakCardButton.addEventListener("click", () => speakCurrentCard(speakCardButton));
 document.querySelector("#resetProgress").addEventListener("click", resetProgress);
 document.querySelector("#loadJson").addEventListener("click", importFromTextarea);
 document.querySelector("#contentFile").addEventListener("change", importFromFile);
-document.querySelector("#flashcard").addEventListener("click", speakCurrentCard);
+document.querySelector("#flashcard").addEventListener("click", () => speakCurrentCard(speakCardButton));
 cardLessonSelect.addEventListener("change", () => {
   currentCardLesson = Number(cardLessonSelect.value);
   currentCardIndex = 0;
@@ -359,7 +361,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-collapse").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-handwriting").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -381,6 +383,7 @@ renderCard();
 renderGrammar();
 renderPractice();
 renderQuiz();
+setupHandwritingPanels(document);
 updateProgress();
 
 function loadState() {
@@ -523,7 +526,7 @@ function renderText() {
       ${renderTextExtras(text.extras || [])}
     `;
     article.querySelector("button").addEventListener("click", () => {
-      speakText((text.lines || []).map((line) => line.zh).join("。"));
+      speakText((text.lines || []).map((line) => line.zh).join("。"), article.querySelector("button"));
     });
     textList.appendChild(article);
   });
@@ -620,6 +623,7 @@ function renderCard() {
       ? `找不到符合「${currentCardSearch}」的${getCardCategoryLabel()}。`
       : `這一課還沒有${getCardCategoryLabel()}。`;
     document.querySelector("#cardExample").textContent = "請換一個搜尋字，或切換課別與分類。";
+    document.querySelector("#cardHandwritingTitle").textContent = "手寫練習板";
     return;
   }
   const normalizedIndex = currentCardIndex % lessonCards.length;
@@ -627,6 +631,7 @@ function renderCard() {
   document.querySelector("#cardLesson").textContent = `第 ${card.lesson || 1} 課・${card.type || "詞語"}`;
   updateCardProgress(normalizedIndex + 1, lessonCards.length);
   document.querySelector("#cardTerm").textContent = card.term;
+  document.querySelector("#cardHandwritingTitle").textContent = `手寫練習：${card.term}`;
   document.querySelector("#cardPinyin").textContent = formatTermPinyin(card.pinyin) || "尚未填入拼音";
   document.querySelector("#cardMeaning").innerHTML = `
     <span>${escapeHtml(card.meaningZh || "尚未填入中文說明")}</span>
@@ -695,7 +700,7 @@ function renderGrammar() {
       toggle.setAttribute("aria-expanded", String(isCollapsed));
       toggleLabel.textContent = isCollapsed ? "收起" : "展開";
     });
-    card.querySelector(".grammar-speak").addEventListener("click", () => speakText(`${item.pattern}。${item.example || ""}`));
+    card.querySelector(".grammar-speak").addEventListener("click", (event) => speakText(`${item.pattern}。${item.example || ""}`, event.currentTarget));
     card.querySelectorAll(".grammar-practice-item").forEach((practiceCard) => {
       const input = practiceCard.querySelector(".grammar-practice-input");
       const checkButton = practiceCard.querySelector(".grammar-check");
@@ -719,6 +724,7 @@ function renderGrammar() {
         toggleButton.textContent = isHidden ? "隱藏答案" : "顯示答案";
       });
     });
+    setupHandwritingPanels(card);
     grammarList.appendChild(card);
   });
 }
@@ -738,9 +744,25 @@ function renderGrammarPractice(item) {
           </div>
           <p class="grammar-answer" hidden>${escapeHtml(practice.answer || "")}</p>
           <p class="grammar-feedback" aria-live="polite"></p>
+          ${renderHandwritingPanel(`語法手寫練習 ${index + 1}`)}
         </div>
       `).join("")}
     </div>
+  `;
+}
+
+function renderHandwritingPanel(title = "手寫練習板") {
+  return `
+    <section class="handwriting-panel">
+      <button class="handwriting-toggle" type="button" aria-expanded="false">
+        <span>${escapeHtml(title)}</span>
+        <small>展開</small>
+      </button>
+      <div class="handwriting-body" hidden>
+        <canvas class="handwriting-canvas" aria-label="手寫練習區"></canvas>
+        <button class="mini-button handwriting-clear" type="button">清除</button>
+      </div>
+    </section>
   `;
 }
 
@@ -1063,20 +1085,134 @@ function gradeCard(known) {
   updateProgress();
 }
 
-function speakCurrentCard() {
+function speakCurrentCard(button = null) {
   const lessonCards = getCardsForCurrentLesson();
   if (!lessonCards.length) return;
   const card = lessonCards[currentCardIndex % lessonCards.length];
-  speakText(`${card.term}。${card.meaningZh || ""}。${card.example || ""}`);
+  speakText(`${card.term}。${card.meaningZh || ""}。${card.example || ""}`, button);
 }
 
-function speakText(text) {
+function speakText(text, button = null) {
   if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
+  const normalizedText = String(text || "").trim();
+  if (!normalizedText) return;
+  if (activeSpeech && window.speechSynthesis.speaking && activeSpeech.text === normalizedText) {
+    stopSpeech();
+    return;
+  }
+  stopSpeech();
+  const utterance = new SpeechSynthesisUtterance(normalizedText);
+  activeSpeech = { text: normalizedText, button, utterance };
+  if (button) button.textContent = "停止";
+  utterance.addEventListener("end", () => {
+    if (activeSpeech?.utterance === utterance) resetSpeechButton();
+  });
+  utterance.addEventListener("error", () => {
+    if (activeSpeech?.utterance === utterance) resetSpeechButton();
+  });
   utterance.lang = "zh-TW";
   utterance.rate = 0.78;
   window.speechSynthesis.speak(utterance);
+}
+
+function stopSpeech() {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  resetSpeechButton();
+}
+
+function resetSpeechButton() {
+  if (activeSpeech?.button) activeSpeech.button.textContent = "播放";
+  activeSpeech = null;
+}
+
+function setupHandwritingPanels(root = document) {
+  root.querySelectorAll(".handwriting-panel").forEach((panel) => {
+    if (panel.dataset.ready === "true") return;
+    panel.dataset.ready = "true";
+    const toggle = panel.querySelector(".handwriting-toggle");
+    const body = panel.querySelector(".handwriting-body");
+    const label = toggle.querySelector("small");
+    const canvas = panel.querySelector(".handwriting-canvas");
+    const clearButton = panel.querySelector(".handwriting-clear");
+    const board = createHandwritingBoard(canvas);
+
+    toggle.addEventListener("click", () => {
+      const isClosed = body.hidden;
+      body.hidden = !isClosed;
+      toggle.setAttribute("aria-expanded", String(isClosed));
+      label.textContent = isClosed ? "收起" : "展開";
+      if (isClosed) requestAnimationFrame(board.resize);
+    });
+    clearButton.addEventListener("click", board.clear);
+  });
+}
+
+function createHandwritingBoard(canvas) {
+  const context = canvas.getContext("2d");
+  let drawing = false;
+  let lastPoint = null;
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    const ratio = window.devicePixelRatio || 1;
+    const image = canvas.width && canvas.height ? context.getImageData(0, 0, canvas.width, canvas.height) : null;
+    canvas.width = Math.max(1, Math.round(rect.width * ratio));
+    canvas.height = Math.max(1, Math.round(rect.height * ratio));
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.lineWidth = 5;
+    context.strokeStyle = "#20161a";
+    if (image) context.putImageData(image, 0, 0);
+  }
+
+  function clear() {
+    resize();
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function getPoint(event) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+  }
+
+  function start(event) {
+    event.preventDefault();
+    canvas.setPointerCapture(event.pointerId);
+    drawing = true;
+    lastPoint = getPoint(event);
+  }
+
+  function draw(event) {
+    if (!drawing || !lastPoint) return;
+    event.preventDefault();
+    const point = getPoint(event);
+    context.beginPath();
+    context.moveTo(lastPoint.x, lastPoint.y);
+    context.lineTo(point.x, point.y);
+    context.stroke();
+    lastPoint = point;
+  }
+
+  function stop(event) {
+    if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+    drawing = false;
+    lastPoint = null;
+  }
+
+  canvas.addEventListener("pointerdown", start);
+  canvas.addEventListener("pointermove", draw);
+  canvas.addEventListener("pointerup", stop);
+  canvas.addEventListener("pointercancel", stop);
+  window.addEventListener("resize", () => {
+    if (!canvas.closest(".handwriting-body")?.hidden) resize();
+  });
+
+  return { resize, clear };
 }
 
 function resetProgress() {
