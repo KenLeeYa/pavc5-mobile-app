@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-tap-line-playback-20260701";
+const CONTENT_VERSION = "lesson-sync-20260701";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -234,15 +234,16 @@ let grammar = state.grammar?.length ? state.grammar : defaultGrammar;
 let texts = state.texts?.length ? state.texts : defaultTexts;
 let exercises = state.exercises?.length ? state.exercises : defaultExercises;
 let currentCardIndex = 0;
-let currentCardLesson = Number(state.currentCardLesson || 1);
+let currentLesson = normalizeLessonNumber(state.currentLesson || state.currentTextLesson || state.currentCardLesson || 1);
+let currentCardLesson = currentLesson;
 let currentCardCategory = state.currentCardCategory || "vocab";
 let currentCardSearch = state.currentCardSearch || "";
-let currentTextLesson = Number(state.currentTextLesson || 1);
-let currentGrammarLesson = Number(state.currentGrammarLesson || 1);
-let currentPracticeLesson = Number(state.currentPracticeLesson || 1);
+let currentTextLesson = currentLesson;
+let currentGrammarLesson = currentLesson;
+let currentPracticeLesson = currentLesson;
 let currentPracticeMode = state.currentPracticeMode || "sentenceQuiz";
 let currentPracticeIndex = Number(state.currentPracticeIndex || 0);
-let currentQuizLesson = Number(state.currentQuizLesson || 1);
+let currentQuizLesson = currentLesson;
 let deferredInstallPrompt = null;
 let activeSpeech = null;
 let activeTextPlayback = null;
@@ -298,14 +299,7 @@ document.querySelector("#loadJson").addEventListener("click", importFromTextarea
 document.querySelector("#contentFile").addEventListener("change", importFromFile);
 document.querySelector("#flashcard").addEventListener("click", () => speakCurrentCard(speakCardButton));
 cardLessonSelect.addEventListener("change", () => {
-  currentCardLesson = Number(cardLessonSelect.value);
-  currentCardIndex = 0;
-  currentCardSearch = "";
-  cardSearchInput.value = "";
-  state.currentCardLesson = currentCardLesson;
-  state.currentCardSearch = currentCardSearch;
-  saveState();
-  renderCard();
+  setCurrentLesson(cardLessonSelect.value, { resetCard: true, resetPractice: true, resetQuiz: true, render: true });
 });
 cardCategorySelect.addEventListener("change", () => {
   currentCardCategory = cardCategorySelect.value;
@@ -322,24 +316,13 @@ cardSearchInput.addEventListener("input", () => {
   renderCard();
 });
 textLessonSelect.addEventListener("change", () => {
-  currentTextLesson = Number(textLessonSelect.value);
-  state.currentTextLesson = currentTextLesson;
-  saveState();
-  renderText();
+  setCurrentLesson(textLessonSelect.value, { resetCard: true, resetPractice: true, resetQuiz: true, render: true });
 });
 grammarLessonSelect.addEventListener("change", () => {
-  currentGrammarLesson = Number(grammarLessonSelect.value);
-  state.currentGrammarLesson = currentGrammarLesson;
-  saveState();
-  renderGrammar();
+  setCurrentLesson(grammarLessonSelect.value, { resetCard: true, resetPractice: true, resetQuiz: true, render: true });
 });
 practiceLessonSelect.addEventListener("change", () => {
-  currentPracticeLesson = Number(practiceLessonSelect.value);
-  currentPracticeIndex = 0;
-  state.currentPracticeLesson = currentPracticeLesson;
-  state.currentPracticeIndex = currentPracticeIndex;
-  saveState();
-  renderPractice();
+  setCurrentLesson(practiceLessonSelect.value, { resetCard: true, resetPractice: true, resetQuiz: true, render: true });
 });
 practiceModeSelect.addEventListener("change", () => {
   currentPracticeMode = practiceModeSelect.value;
@@ -352,12 +335,7 @@ practiceModeSelect.addEventListener("change", () => {
 practicePrev.addEventListener("click", () => movePractice(-1));
 practiceNext.addEventListener("click", () => movePractice(1));
 quizLessonSelect.addEventListener("change", () => {
-  currentQuizLesson = Number(quizLessonSelect.value);
-  state.currentQuizLesson = currentQuizLesson;
-  quiz = { total: 0, correct: 0 };
-  document.querySelector("#quizScore").textContent = "0/0";
-  saveState();
-  renderQuiz();
+  setCurrentLesson(quizLessonSelect.value, { resetCard: true, resetPractice: true, resetQuiz: true, render: true });
 });
 installButton.addEventListener("click", installApp);
 
@@ -368,7 +346,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-tap-line-playback").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-lesson-sync").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -403,6 +381,68 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function normalizeLessonNumber(value) {
+  const lesson = Number(value);
+  if (!Number.isFinite(lesson)) return 1;
+  return Math.min(Math.max(Math.trunc(lesson), 1), thirdEditionLessons.length);
+}
+
+function syncLessonControls() {
+  const value = String(currentLesson);
+  cardLessonSelect.value = value;
+  textLessonSelect.value = value;
+  grammarLessonSelect.value = value;
+  practiceLessonSelect.value = value;
+  quizLessonSelect.value = value;
+}
+
+function persistCurrentLesson() {
+  state.currentLesson = currentLesson;
+  state.currentCardLesson = currentLesson;
+  state.currentTextLesson = currentLesson;
+  state.currentGrammarLesson = currentLesson;
+  state.currentPracticeLesson = currentLesson;
+  state.currentQuizLesson = currentLesson;
+  state.currentCardCategory = currentCardCategory;
+  state.currentCardSearch = currentCardSearch;
+  state.currentPracticeMode = currentPracticeMode;
+  state.currentPracticeIndex = currentPracticeIndex;
+}
+
+function setCurrentLesson(lesson, options = {}) {
+  const nextLesson = normalizeLessonNumber(lesson);
+  const changed = nextLesson !== currentLesson;
+  currentLesson = nextLesson;
+  currentCardLesson = nextLesson;
+  currentTextLesson = nextLesson;
+  currentGrammarLesson = nextLesson;
+  currentPracticeLesson = nextLesson;
+  currentQuizLesson = nextLesson;
+
+  if (changed || options.resetCard) {
+    currentCardIndex = 0;
+    currentCardSearch = "";
+    cardSearchInput.value = "";
+  }
+  if (changed || options.resetPractice) currentPracticeIndex = 0;
+  if (changed || options.resetQuiz) {
+    quiz = { total: 0, correct: 0 };
+    document.querySelector("#quizScore").textContent = "0/0";
+  }
+
+  syncLessonControls();
+  persistCurrentLesson();
+  saveState();
+
+  if (options.render) {
+    renderText();
+    renderCard();
+    renderGrammar();
+    renderPractice();
+    renderQuiz();
+  }
 }
 
 function setView(viewName) {
@@ -442,33 +482,9 @@ function renderLessons() {
       <div class="lesson-status">${learned} 張</div>
     `;
     card.addEventListener("click", () => {
-      currentCardLesson = number;
       currentCardCategory = "vocab";
-      currentTextLesson = number;
-      currentGrammarLesson = number;
-      currentPracticeLesson = number;
-      currentPracticeIndex = 0;
-      currentQuizLesson = number;
-      currentCardIndex = 0;
-      currentCardSearch = "";
-      cardLessonSelect.value = String(number);
       cardCategorySelect.value = currentCardCategory;
-      cardSearchInput.value = currentCardSearch;
-      textLessonSelect.value = String(number);
-      grammarLessonSelect.value = String(number);
-      practiceLessonSelect.value = String(number);
-      quizLessonSelect.value = String(number);
-      state.currentCardLesson = currentCardLesson;
-      state.currentCardCategory = currentCardCategory;
-      state.currentCardSearch = currentCardSearch;
-      state.currentTextLesson = currentTextLesson;
-      state.currentGrammarLesson = currentGrammarLesson;
-      state.currentPracticeLesson = currentPracticeLesson;
-      state.currentPracticeIndex = currentPracticeIndex;
-      state.currentQuizLesson = currentQuizLesson;
-      saveState();
-      renderText();
-      renderCard();
+      setCurrentLesson(number, { resetCard: true, resetPractice: true, resetQuiz: true, render: true });
       setView("text");
     });
     lessonList.appendChild(card);
@@ -803,14 +819,10 @@ function renderLessonSelectOptions() {
   grammarLessonSelect.innerHTML = options;
   practiceLessonSelect.innerHTML = options;
   quizLessonSelect.innerHTML = options;
-  cardLessonSelect.value = String(currentCardLesson);
   cardCategorySelect.value = currentCardCategory;
   cardSearchInput.value = currentCardSearch;
-  textLessonSelect.value = String(currentTextLesson);
-  grammarLessonSelect.value = String(currentGrammarLesson);
-  practiceLessonSelect.value = String(currentPracticeLesson);
+  syncLessonControls();
   practiceModeSelect.value = currentPracticeMode;
-  quizLessonSelect.value = String(currentQuizLesson);
 }
 
 function renderPractice() {
@@ -1449,17 +1461,14 @@ function navigateToMarkedTerm(type, term, lesson) {
 
 function navigateToCardTerm(type, term, lesson) {
   const category = type === "proper" ? "proper" : type === "idiom" ? "idioms" : "vocab";
-  currentCardLesson = lesson;
   currentCardCategory = category;
-  currentCardSearch = "";
-  currentCardIndex = 0;
-  state.currentCardLesson = currentCardLesson;
-  state.currentCardCategory = currentCardCategory;
-  state.currentCardSearch = currentCardSearch;
+  setCurrentLesson(lesson, { resetCard: true, resetPractice: true, resetQuiz: true });
+  currentCardCategory = category;
+  cardCategorySelect.value = currentCardCategory;
   const lessonCards = getCardsForCurrentLesson();
   const index = lessonCards.findIndex((card) => card.term === term || card.term.includes(term) || term.includes(card.term));
   if (index >= 0) currentCardIndex = index;
-  renderLessonSelectOptions();
+  persistCurrentLesson();
   renderCard();
   saveState();
   setView("cards");
@@ -1467,11 +1476,8 @@ function navigateToCardTerm(type, term, lesson) {
 }
 
 function navigateToGrammarTerm(term, lesson) {
-  currentGrammarLesson = lesson;
-  state.currentGrammarLesson = currentGrammarLesson;
-  renderLessonSelectOptions();
+  setCurrentLesson(lesson, { resetCard: true, resetPractice: true, resetQuiz: true });
   renderGrammar();
-  saveState();
   setView("grammar");
   const target = grammar
     .filter((item) => Number(item.lesson) === lesson)
@@ -1713,24 +1719,26 @@ function importContent(text) {
     state.customContent = true;
     state.contentVersion = CONTENT_VERSION;
     currentCardIndex = 0;
-    currentCardLesson = 1;
     currentCardCategory = "vocab";
     currentCardSearch = "";
-    currentTextLesson = 1;
-    currentGrammarLesson = 1;
-    currentPracticeLesson = 1;
     currentPracticeMode = "sentenceQuiz";
     currentPracticeIndex = 0;
-    currentQuizLesson = 1;
-    state.currentCardLesson = currentCardLesson;
+    currentLesson = 1;
+    currentCardLesson = currentLesson;
+    currentTextLesson = currentLesson;
+    currentGrammarLesson = currentLesson;
+    currentPracticeLesson = currentLesson;
+    currentQuizLesson = currentLesson;
+    state.currentLesson = currentLesson;
+    state.currentCardLesson = currentLesson;
     state.currentCardCategory = currentCardCategory;
     state.currentCardSearch = currentCardSearch;
-    state.currentTextLesson = currentTextLesson;
-    state.currentGrammarLesson = currentGrammarLesson;
-    state.currentPracticeLesson = currentPracticeLesson;
+    state.currentTextLesson = currentLesson;
+    state.currentGrammarLesson = currentLesson;
+    state.currentPracticeLesson = currentLesson;
     state.currentPracticeMode = currentPracticeMode;
     state.currentPracticeIndex = currentPracticeIndex;
-    state.currentQuizLesson = currentQuizLesson;
+    state.currentQuizLesson = currentLesson;
     saveState();
     renderLessonSelectOptions();
     renderLessons();
