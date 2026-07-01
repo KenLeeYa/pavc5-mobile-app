@@ -3,11 +3,12 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-speech-units-20260701";
+const CONTENT_VERSION = "lesson2-speech-phrases-20260701";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
 const SPEECH_ESTIMATED_CHARS_PER_SECOND = 4.5;
+const SPEECH_SYMBOL_PATTERN = /[\s\uFF0C,\u3002\uFF1B;\uFF1A:\u3001\uFF01!\uFF1F?\u300C\u300D\u300E\u300F\uFF08\uFF09()\u3010\u3011\uFF3B\uFF3D\u300A\u300B\u3008\u3009\u2014\u2013\-\u2026\u22EF\uFF0E.\u00B7\u2027/\\|]/;
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -366,7 +367,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-speech-units").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-speech-phrases").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -1266,7 +1267,7 @@ function buildSpeechParts(text) {
 
 function addSpeechPart(parts, source, start, end) {
   if (end <= start) return;
-  const text = sanitizeSpeechText(source.slice(start, end));
+  const text = source.slice(start, end);
   if (!text.trim()) return;
   splitSpeechTextIntoUnits(text, start).forEach((part) => parts.push(part));
 }
@@ -1279,30 +1280,51 @@ function sanitizeSpeechText(text) {
 
 function splitSpeechTextIntoUnits(text, start) {
   const units = [];
+  let buffer = "";
+  let bufferStart = start;
   let cursor = 0;
   while (cursor < text.length) {
-    const remaining = text.slice(cursor);
-    let chunkLength = Math.min(SPEECH_MAX_UNIT_CHARS, remaining.length);
-    const punctuationIndex = remaining.slice(0, SPEECH_MAX_UNIT_CHARS + 1).search(/[，,；;：:、！？!?]/);
-    if (punctuationIndex >= 1) chunkLength = punctuationIndex + 1;
-    const chunk = remaining.slice(0, chunkLength);
-    if (chunk.trim()) {
-      units.push({
-        type: "speech",
-        text: chunk,
-        start: start + cursor,
-        end: start + cursor + chunkLength,
-      });
+    const char = text[cursor];
+    if (isSpeechSymbol(char)) {
+      pushSpeechUnit(units, buffer, bufferStart, start + cursor);
+      buffer = "";
+      bufferStart = start + cursor + 1;
+      cursor += 1;
+      continue;
     }
-    cursor += chunkLength || 1;
+    if (!buffer) bufferStart = start + cursor;
+    buffer += char;
+    if (buffer.length >= SPEECH_MAX_UNIT_CHARS) {
+      pushSpeechUnit(units, buffer, bufferStart, start + cursor + 1);
+      buffer = "";
+      bufferStart = start + cursor + 1;
+    }
+    cursor += 1;
   }
+  pushSpeechUnit(units, buffer, bufferStart, start + text.length);
   return units;
 }
 
+function pushSpeechUnit(units, text, start, end) {
+  const spokenText = sanitizeSpeechText(text).trim();
+  if (!spokenText) return;
+  units.push({ type: "speech", text: spokenText, start, end });
+}
+
+function isSpeechSymbol(char) {
+  return SPEECH_SYMBOL_PATTERN.test(char);
+}
+
 function findSpeechPartIndex(parts, resumeOffset) {
-  const offset = Math.max(0, Number(resumeOffset || 0));
+  const offset = skipSpeechSymbols(parts, Math.max(0, Number(resumeOffset || 0)));
   const index = parts.findIndex((part) => part.end > offset);
   return index >= 0 ? index : parts.length;
+}
+
+function skipSpeechSymbols(parts, offset) {
+  const speechPart = parts.find((part) => part.type === "speech" && part.end > offset);
+  if (!speechPart) return offset;
+  return Math.max(offset, speechPart.start);
 }
 
 function playSpeechPart(speech) {
@@ -1325,6 +1347,7 @@ function playSpeechPart(speech) {
     return;
   }
 
+  if (speech.resumeOffset <= part.start) speech.resumeOffset = part.start;
   const offsetInPart = Math.max(0, Math.min(part.text.length, speech.resumeOffset - part.start));
   const textToSpeak = part.text.slice(offsetInPart);
   if (!textToSpeak.trim()) {
