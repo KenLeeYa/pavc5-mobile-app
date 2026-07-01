@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-card-nav-handwriting-20260701";
+const CONTENT_VERSION = "lesson2-tap-line-playback-20260701";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -368,7 +368,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-card-nav-handwriting").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-tap-line-playback").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -537,6 +537,9 @@ function renderText() {
     `;
     article.querySelector(".text-play-toggle").addEventListener("click", (event) => toggleTextPlayback(text, article, event.currentTarget));
     article.querySelector(".text-restart").addEventListener("click", () => startTextPlayback(text, article, 0));
+    article.querySelectorAll(".dialogue-line").forEach((line) => {
+      line.addEventListener("click", () => startTextPlayback(text, article, Number(line.dataset.lineIndex || 0)));
+    });
     article.querySelectorAll(".mark-link").forEach((button) => {
       button.addEventListener("click", (event) => {
         event.stopPropagation();

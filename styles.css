@@ -389,6 +389,13 @@ select,
   padding: 12px;
   border-radius: 8px;
   background: #fbf9fa;
+  cursor: pointer;
+  transition: background 0.16s ease, transform 0.16s ease;
+}
+
+.dialogue-line:active {
+  background: #fff0f6;
+  transform: scale(0.995);
 }
 
 .dialogue-line.playing {
