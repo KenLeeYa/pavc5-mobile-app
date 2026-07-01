@@ -47,7 +47,6 @@ export const lesson1Texts = [
         pinyin: "mei3 ying1, ni3 bie2 wang4 le5, wo3 zai4 kuai4 di4 gong1 si1 shang4 ban1, te4 bie2 jiang3 jiu4 xiao4 lu4.",
         vi: "Mỹ Anh, em đừng quên anh làm ở công ty chuyển phát nhanh, đặc biệt chú trọng hiệu suất.",
         marks: [
-          ["proper", "美英"],
           ["vocab", "快遞"],
           ["vocab", "效率"],
         ],
@@ -116,7 +115,6 @@ export const lesson1Texts = [
         pinyin: "mei3 ying1, wo3 hua1 na4 me5 duo1 qian2 mai3 dong1 xi5 song4 gei3 ni3, ni3 bu4 xi3 huan1 jiu4 suan4 le5, he2 bi4 hai2 feng3 ci4 wo3!",
         vi: "Mỹ Anh, anh tốn nhiều tiền mua quà cho em, em không thích thì thôi, cần gì còn châm chọc anh!",
         marks: [
-          ["proper", "美英"],
           ["grammar", "就算了"],
           ["grammar", "何必"],
           ["vocab", "諷刺"],
@@ -127,9 +125,7 @@ export const lesson1Texts = [
         zh: "我問你，正浩，那個包包在哪裡買的？",
         pinyin: "wo3 wen4 ni3, zheng4 hao4, na4 ge5 bao1 bao1 zai4 na3 li3 mai3 de5?",
         vi: "Em hỏi anh, Chính Hạo, cái túi đó mua ở đâu?",
-        marks: [
-          ["proper", "正浩"],
-        ],
+        marks: [],
       },
       {
         speaker: "浩",
@@ -205,7 +201,6 @@ export const lesson1Texts = [
         pinyin: "mei3 ying1, dui4 bu4 qi3 ma5! shang4 yi2 ci4 dang4, xue2 yi2 ci4 guai1, wo3 fa1 shi4 xia4 ci4 zai4 ye3 bu4 mai3 di4 tan1 shang4 de5 ming2 pai2 bao1 le5.",
         vi: "Mỹ Anh, xin lỗi mà! Bị lừa một lần thì rút kinh nghiệm một lần, anh thề lần sau không mua túi hàng hiệu ngoài sạp nữa.",
         marks: [
-          ["proper", "美英"],
           ["idiom", "上一次當，學一次乖"],
           ["vocab", "發誓"],
         ],
@@ -246,7 +241,6 @@ export const lesson1Texts = [
         pinyin: "hao3 la5! mei3 ying1, ni3 bu2 yao4 zai4 shuo1 zhe4 xie1 da4 dao4 li3 le5, hao3 bu4 hao3?",
         vi: "Được rồi! Mỹ Anh, em đừng nói những đạo lý lớn lao này nữa được không?",
         marks: [
-          ["proper", "美英"],
           ["vocab", "大道理"],
         ],
       },

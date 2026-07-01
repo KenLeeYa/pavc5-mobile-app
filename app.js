@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-text-playback-links-20260701";
+const CONTENT_VERSION = "lesson2-sticky-text-controls-20260701";
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -362,7 +362,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-text-links").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-sticky-controls").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -515,12 +515,12 @@ function renderText() {
           <p class="pinyin-line">${escapeHtml(formatTermPinyin(text.titlePinyin) || "")}</p>
           <strong>${escapeHtml(text.titleVi || "")}</strong>
         </div>
-        <div class="text-audio-actions">
-          <button class="mini-button text-play-toggle" type="button" aria-label="播放或暫停課文">播放</button>
-          <button class="mini-button text-restart" type="button" aria-label="從頭播放課文">重頭播放</button>
-        </div>
       </div>
       <p class="text-note">${escapeHtml(text.note || "")}</p>
+      <div class="text-audio-actions" role="group" aria-label="課文播放控制">
+        <button class="mini-button text-play-toggle" type="button" aria-label="播放或暫停課文">播放</button>
+        <button class="mini-button text-restart" type="button" aria-label="從頭播放課文">重頭播放</button>
+      </div>
       <div class="text-legend">
         ${(text.legend || []).map(([type, label]) => `<span class="mark mark-${escapeHtml(type)}">${escapeHtml(label)}</span>`).join("")}
       </div>
@@ -1227,6 +1227,7 @@ function resetSpeechButton() {
 
 function navigateToMarkedTerm(type, term, lesson) {
   if (!term) return;
+  stopSpeech();
   if (type === "grammar") {
     navigateToGrammarTerm(term, lesson);
     return;

@@ -457,10 +457,23 @@ select,
 }
 
 .text-audio-actions {
+  position: sticky;
+  top: calc(8px + env(safe-area-inset-top));
+  z-index: 8;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
   gap: 8px;
+  margin: 10px 0 12px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 18px rgba(32, 22, 26, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.text-audio-actions button {
+  flex: 1;
 }
 
 .speaker {
