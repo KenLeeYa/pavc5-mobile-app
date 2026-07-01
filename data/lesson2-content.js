@@ -104,7 +104,7 @@ export const lesson2Texts = [
     title: "歡樂過春節",
     titlePinyin: "huan1 le4 guo4 chun1 jie2",
     titleVi: "Vui vẻ đón Tết xuân",
-    note: "依你提供的第二課課文照片整理，方便手機閱讀與標註複習。",
+    note: "",
     legend: [
       ["vocab", "生詞"],
       ["grammar", "語法"],

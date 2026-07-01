@@ -5,7 +5,7 @@ export const lesson1Texts = [
     title: "因小失大",
     titlePinyin: "yin1 xiao3 shi1 da4",
     titleVi: "Vì cái lợi nhỏ mà mất cái lớn",
-    note: "依你提供的第一課課文照片整理，方便手機閱讀與標註複習。",
+    note: "",
     legend: [
       ["vocab", "生詞"],
       ["grammar", "語法"],

@@ -1,4 +1,4 @@
-const CACHE_NAME = "pavc5-mobile-v10-20260701-sticky-controls";
+const CACHE_NAME = "pavc5-mobile-v11-20260701-audio-resume";
 const ASSETS = [
   "./",
   "./index.html",

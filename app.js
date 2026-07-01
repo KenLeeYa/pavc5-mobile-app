@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-sticky-text-controls-20260701";
+const CONTENT_VERSION = "lesson2-audio-resume-note-20260701";
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -362,7 +362,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-sticky-controls").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-audio-resume").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -516,7 +516,7 @@ function renderText() {
           <strong>${escapeHtml(text.titleVi || "")}</strong>
         </div>
       </div>
-      <p class="text-note">${escapeHtml(text.note || "")}</p>
+      ${renderTextNote(text.note)}
       <div class="text-audio-actions" role="group" aria-label="課文播放控制">
         <button class="mini-button text-play-toggle" type="button" aria-label="播放或暫停課文">播放</button>
         <button class="mini-button text-restart" type="button" aria-label="從頭播放課文">重頭播放</button>
@@ -555,6 +555,12 @@ function renderTextExtras(extras) {
       `).join("")}
     </div>
   `;
+}
+
+function renderTextNote(note) {
+  const safeNote = String(note || "").trim();
+  if (!safeNote || safeNote.includes("依你提供")) return "";
+  return `<p class="text-note">${escapeHtml(safeNote)}</p>`;
 }
 
 function renderTextExtraItems(items) {
@@ -1105,10 +1111,11 @@ function speakCurrentCard(button = null) {
 function toggleTextPlayback(text, article, button) {
   if (activeTextPlayback?.article === article) {
     if (activeTextPlayback.paused) {
-      window.speechSynthesis.resume();
-      activeTextPlayback.paused = false;
-      if (activeSpeech) activeSpeech.paused = false;
-      button.textContent = "暫停";
+      resumeSpeechOrRestart(button, () => {
+        if (!activeTextPlayback) return;
+        activeTextPlayback.paused = false;
+        playCurrentTextLine();
+      });
       return;
     }
     window.speechSynthesis.pause();
@@ -1139,6 +1146,7 @@ function startTextPlayback(text, article, startIndex = 0) {
 function playCurrentTextLine() {
   if (!activeTextPlayback) return;
   const playback = activeTextPlayback;
+  playback.paused = false;
   if (playback.index >= playback.lines.length) {
     finishTextPlayback();
     return;
@@ -1159,6 +1167,30 @@ function playCurrentTextLine() {
   utterance.lang = "zh-TW";
   utterance.rate = 0.78;
   window.speechSynthesis.speak(utterance);
+}
+
+function resumeSpeechOrRestart(button, restart) {
+  if (!("speechSynthesis" in window)) return;
+  const speech = activeSpeech;
+  if (!speech) {
+    restart();
+    return;
+  }
+  window.speechSynthesis.resume();
+  speech.paused = false;
+  if (activeTextPlayback?.playButton === button) activeTextPlayback.paused = false;
+  if (button) button.textContent = "暫停";
+  window.setTimeout(() => {
+    if (activeSpeech !== speech) return;
+    if (window.speechSynthesis.paused || !window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      activeSpeech = null;
+      restart();
+      return;
+    }
+    activeSpeech.paused = false;
+    if (activeTextPlayback?.playButton === button) activeTextPlayback.paused = false;
+  }, 220);
 }
 
 function highlightTextLine(article, index) {
@@ -1186,9 +1218,7 @@ function speakText(text, button = null) {
   if (!normalizedText) return;
   if (activeSpeech && activeSpeech.text === normalizedText) {
     if (activeSpeech.paused) {
-      window.speechSynthesis.resume();
-      activeSpeech.paused = false;
-      if (button) button.textContent = "暫停";
+      resumeSpeechOrRestart(button, () => startSingleSpeech(normalizedText, button));
       return;
     }
     window.speechSynthesis.pause();
@@ -1196,6 +1226,10 @@ function speakText(text, button = null) {
     if (button) button.textContent = "播放";
     return;
   }
+  startSingleSpeech(normalizedText, button);
+}
+
+function startSingleSpeech(normalizedText, button = null) {
   stopSpeech();
   const utterance = new SpeechSynthesisUtterance(normalizedText);
   activeSpeech = { text: normalizedText, button, utterance, mode: "single", paused: false };
