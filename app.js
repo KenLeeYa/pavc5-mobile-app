@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-content-search-20260701";
+const CONTENT_VERSION = "lesson2-mobile-spacing-collapse-20260701";
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -359,7 +359,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-lesson2").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-collapse").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -660,27 +660,42 @@ function renderGrammar() {
 
   lessonGrammar.forEach((item) => {
     const card = document.createElement("article");
-    card.className = "grammar-card";
+    card.className = "grammar-card collapsed";
     card.innerHTML = `
-      <div class="grammar-head">
-        <span class="tag">第 ${escapeHtml(item.lesson || 1)} 課</span>
-        <button class="mini-button" type="button" aria-label="播放語法例句">播放</button>
+      <button class="grammar-toggle" type="button" aria-expanded="false">
+        <span>${escapeHtml(item.pattern)}</span>
+        <small>展開</small>
+      </button>
+      <div class="grammar-body" hidden>
+        <div class="grammar-head">
+          <span class="tag">第 ${escapeHtml(item.lesson || 1)} 課</span>
+          <button class="mini-button grammar-speak" type="button" aria-label="播放語法例句">播放</button>
+        </div>
+        <p class="pinyin-line">${escapeHtml(formatTermPinyin(item.patternPinyin) || "尚未填入語法拼音")}</p>
+        <div class="explain-block">
+          <p>${escapeHtml(item.explanationZh || "尚未填入中文說明")}</p>
+          <small>${escapeHtml(formatSentencePinyin(item.explanationPinyin) || "尚未填入說明拼音")}</small>
+          <strong>${escapeHtml(item.explanationVi || "尚未填入越南語說明")}</strong>
+        </div>
+        <div class="example-block">
+          <p>${escapeHtml(item.example || "尚未填入中文例句")}</p>
+          <small>${escapeHtml(formatSentencePinyin(item.examplePinyin) || "尚未填入例句拼音")}</small>
+          <strong>${escapeHtml(item.exampleVi || "尚未填入越南語例句翻譯")}</strong>
+        </div>
+        ${renderGrammarPractice(item)}
       </div>
-      <h3>${escapeHtml(item.pattern)}</h3>
-      <p class="pinyin-line">${escapeHtml(formatTermPinyin(item.patternPinyin) || "尚未填入語法拼音")}</p>
-      <div class="explain-block">
-        <p>${escapeHtml(item.explanationZh || "尚未填入中文說明")}</p>
-        <small>${escapeHtml(formatSentencePinyin(item.explanationPinyin) || "尚未填入說明拼音")}</small>
-        <strong>${escapeHtml(item.explanationVi || "尚未填入越南語說明")}</strong>
-      </div>
-      <div class="example-block">
-        <p>${escapeHtml(item.example || "尚未填入中文例句")}</p>
-        <small>${escapeHtml(formatSentencePinyin(item.examplePinyin) || "尚未填入例句拼音")}</small>
-        <strong>${escapeHtml(item.exampleVi || "尚未填入越南語例句翻譯")}</strong>
-      </div>
-      ${renderGrammarPractice(item)}
     `;
-    card.querySelector("button").addEventListener("click", () => speakText(`${item.pattern}。${item.example || ""}`));
+    const toggle = card.querySelector(".grammar-toggle");
+    const body = card.querySelector(".grammar-body");
+    const toggleLabel = toggle.querySelector("small");
+    toggle.addEventListener("click", () => {
+      const isCollapsed = body.hidden;
+      body.hidden = !isCollapsed;
+      card.classList.toggle("collapsed", !isCollapsed);
+      toggle.setAttribute("aria-expanded", String(isCollapsed));
+      toggleLabel.textContent = isCollapsed ? "收起" : "展開";
+    });
+    card.querySelector(".grammar-speak").addEventListener("click", () => speakText(`${item.pattern}。${item.example || ""}`));
     card.querySelectorAll(".grammar-practice-item").forEach((practiceCard) => {
       const input = practiceCard.querySelector(".grammar-practice-input");
       const checkButton = practiceCard.querySelector(".grammar-check");

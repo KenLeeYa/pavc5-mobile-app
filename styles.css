@@ -614,6 +614,47 @@ select,
   padding: 16px;
 }
 
+.grammar-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.grammar-toggle {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 0;
+  background: white;
+  color: var(--ink);
+  text-align: left;
+}
+
+.grammar-toggle span {
+  font-size: 1.08rem;
+  font-weight: 950;
+  line-height: 1.4;
+}
+
+.grammar-toggle small {
+  flex: 0 0 auto;
+  min-height: 28px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #f4edf1;
+  color: var(--magenta-dark);
+  font-weight: 900;
+}
+
+.grammar-body {
+  padding: 0 16px 16px;
+}
+
 .grammar-head,
 .practice-head,
 .lesson-filter,
@@ -1049,6 +1090,30 @@ footer {
 
   .heading-actions {
     gap: 8px;
+  }
+
+  #cardsView .heading-actions {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    column-gap: 10px;
+    row-gap: 8px;
+  }
+
+  #cardsView .lesson-filter {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+  }
+
+  #cardsView .lesson-filter span {
+    text-align: left;
+  }
+
+  #cardsView .lesson-filter,
+  #cardsView .search-filter,
+  #cardsView #resetProgress {
+    grid-column: 1 / -1;
   }
 
   .search-filter {
