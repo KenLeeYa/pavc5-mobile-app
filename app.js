@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-audio-resume-note-20260701";
+const CONTENT_VERSION = "lesson2-speech-restart-20260701";
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -362,7 +362,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-audio-resume").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-speech-restart").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -1111,16 +1111,12 @@ function speakCurrentCard(button = null) {
 function toggleTextPlayback(text, article, button) {
   if (activeTextPlayback?.article === article) {
     if (activeTextPlayback.paused) {
-      resumeSpeechOrRestart(button, () => {
-        if (!activeTextPlayback) return;
-        activeTextPlayback.paused = false;
-        playCurrentTextLine();
-      });
+      activeTextPlayback.paused = false;
+      playCurrentTextLine();
       return;
     }
-    window.speechSynthesis.pause();
     activeTextPlayback.paused = true;
-    if (activeSpeech) activeSpeech.paused = true;
+    pauseActiveSpeech(button);
     button.textContent = "播放";
     return;
   }
@@ -1154,43 +1150,28 @@ function playCurrentTextLine() {
   const text = playback.lines[playback.index];
   highlightTextLine(playback.article, playback.index);
   const utterance = new SpeechSynthesisUtterance(text);
-  activeSpeech = { text, button: playback.playButton, utterance, mode: "text", paused: false };
+  activeSpeech = { text, button: playback.playButton, utterance, mode: "text", paused: false, cancelled: false };
   playback.playButton.textContent = "暫停";
   utterance.addEventListener("end", () => {
-    if (activeSpeech?.utterance !== utterance || !activeTextPlayback || activeTextPlayback.paused) return;
+    if (activeSpeech?.utterance !== utterance || activeSpeech.cancelled || !activeTextPlayback || activeTextPlayback.paused) return;
     activeTextPlayback.index += 1;
     playCurrentTextLine();
   });
   utterance.addEventListener("error", () => {
-    if (activeSpeech?.utterance === utterance) finishTextPlayback();
+    if (activeSpeech?.utterance === utterance && !activeSpeech.cancelled) finishTextPlayback();
   });
   utterance.lang = "zh-TW";
   utterance.rate = 0.78;
   window.speechSynthesis.speak(utterance);
 }
 
-function resumeSpeechOrRestart(button, restart) {
+function pauseActiveSpeech(button = null) {
   if (!("speechSynthesis" in window)) return;
-  const speech = activeSpeech;
-  if (!speech) {
-    restart();
-    return;
-  }
-  window.speechSynthesis.resume();
-  speech.paused = false;
-  if (activeTextPlayback?.playButton === button) activeTextPlayback.paused = false;
-  if (button) button.textContent = "暫停";
-  window.setTimeout(() => {
-    if (activeSpeech !== speech) return;
-    if (window.speechSynthesis.paused || !window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      activeSpeech = null;
-      restart();
-      return;
-    }
-    activeSpeech.paused = false;
-    if (activeTextPlayback?.playButton === button) activeTextPlayback.paused = false;
-  }, 220);
+  if (!activeSpeech) return;
+  activeSpeech.paused = true;
+  activeSpeech.cancelled = true;
+  window.speechSynthesis.cancel();
+  if (button || activeSpeech.button) (button || activeSpeech.button).textContent = "播放";
 }
 
 function highlightTextLine(article, index) {
@@ -1218,27 +1199,25 @@ function speakText(text, button = null) {
   if (!normalizedText) return;
   if (activeSpeech && activeSpeech.text === normalizedText) {
     if (activeSpeech.paused) {
-      resumeSpeechOrRestart(button, () => startSingleSpeech(normalizedText, button));
+      startSingleSpeech(normalizedText, button, false);
       return;
     }
-    window.speechSynthesis.pause();
-    activeSpeech.paused = true;
-    if (button) button.textContent = "播放";
+    pauseActiveSpeech(button);
     return;
   }
   startSingleSpeech(normalizedText, button);
 }
 
-function startSingleSpeech(normalizedText, button = null) {
-  stopSpeech();
+function startSingleSpeech(normalizedText, button = null, resetCurrent = true) {
+  if (resetCurrent) stopSpeech();
   const utterance = new SpeechSynthesisUtterance(normalizedText);
-  activeSpeech = { text: normalizedText, button, utterance, mode: "single", paused: false };
+  activeSpeech = { text: normalizedText, button, utterance, mode: "single", paused: false, cancelled: false };
   if (button) button.textContent = "暫停";
   utterance.addEventListener("end", () => {
-    if (activeSpeech?.utterance === utterance) resetSpeechButton();
+    if (activeSpeech?.utterance === utterance && !activeSpeech.cancelled) resetSpeechButton();
   });
   utterance.addEventListener("error", () => {
-    if (activeSpeech?.utterance === utterance) resetSpeechButton();
+    if (activeSpeech?.utterance === utterance && !activeSpeech.cancelled) resetSpeechButton();
   });
   utterance.lang = "zh-TW";
   utterance.rate = 0.78;
