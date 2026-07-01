@@ -3,7 +3,8 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-speech-restart-20260701";
+const CONTENT_VERSION = "lesson2-speech-cursor-20260701";
+const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -362,7 +363,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-speech-restart").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-speech-cursor").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -1112,7 +1113,7 @@ function toggleTextPlayback(text, article, button) {
   if (activeTextPlayback?.article === article) {
     if (activeTextPlayback.paused) {
       activeTextPlayback.paused = false;
-      playCurrentTextLine();
+      playCurrentTextLine(activeTextPlayback.lineOffset || 0);
       return;
     }
     activeTextPlayback.paused = true;
@@ -1134,12 +1135,13 @@ function startTextPlayback(text, article, startIndex = 0) {
     lines,
     index: startIndex,
     playButton: article.querySelector(".text-play-toggle"),
+    lineOffset: 0,
     paused: false,
   };
   playCurrentTextLine();
 }
 
-function playCurrentTextLine() {
+function playCurrentTextLine(resumeOffset = 0) {
   if (!activeTextPlayback) return;
   const playback = activeTextPlayback;
   playback.paused = false;
@@ -1149,25 +1151,28 @@ function playCurrentTextLine() {
   }
   const text = playback.lines[playback.index];
   highlightTextLine(playback.article, playback.index);
-  const utterance = new SpeechSynthesisUtterance(text);
-  activeSpeech = { text, button: playback.playButton, utterance, mode: "text", paused: false, cancelled: false };
   playback.playButton.textContent = "暫停";
-  utterance.addEventListener("end", () => {
-    if (activeSpeech?.utterance !== utterance || activeSpeech.cancelled || !activeTextPlayback || activeTextPlayback.paused) return;
-    activeTextPlayback.index += 1;
-    playCurrentTextLine();
+  startSpeechSequence(text, playback.playButton, "text", resumeOffset, {
+    onFinish: () => {
+      if (!activeTextPlayback || activeTextPlayback.paused) return;
+      activeTextPlayback.lineOffset = 0;
+      activeTextPlayback.index += 1;
+      playCurrentTextLine();
+    },
+    onError: finishTextPlayback,
   });
-  utterance.addEventListener("error", () => {
-    if (activeSpeech?.utterance === utterance && !activeSpeech.cancelled) finishTextPlayback();
-  });
-  utterance.lang = "zh-TW";
-  utterance.rate = 0.78;
-  window.speechSynthesis.speak(utterance);
 }
 
 function pauseActiveSpeech(button = null) {
   if (!("speechSynthesis" in window)) return;
   if (!activeSpeech) return;
+  if (activeSpeech.pauseTimer) {
+    window.clearTimeout(activeSpeech.pauseTimer);
+    activeSpeech.pauseTimer = null;
+  }
+  if (activeTextPlayback && activeSpeech.mode === "text") {
+    activeTextPlayback.lineOffset = activeSpeech.resumeOffset || 0;
+  }
   activeSpeech.paused = true;
   activeSpeech.cancelled = true;
   window.speechSynthesis.cancel();
@@ -1199,7 +1204,7 @@ function speakText(text, button = null) {
   if (!normalizedText) return;
   if (activeSpeech && activeSpeech.text === normalizedText) {
     if (activeSpeech.paused) {
-      startSingleSpeech(normalizedText, button, false);
+      startSingleSpeech(normalizedText, button, false, activeSpeech.resumeOffset || 0);
       return;
     }
     pauseActiveSpeech(button);
@@ -1208,16 +1213,113 @@ function speakText(text, button = null) {
   startSingleSpeech(normalizedText, button);
 }
 
-function startSingleSpeech(normalizedText, button = null, resetCurrent = true) {
+function startSingleSpeech(normalizedText, button = null, resetCurrent = true, resumeOffset = 0) {
   if (resetCurrent) stopSpeech();
-  const utterance = new SpeechSynthesisUtterance(normalizedText);
-  activeSpeech = { text: normalizedText, button, utterance, mode: "single", paused: false, cancelled: false };
   if (button) button.textContent = "暫停";
+  startSpeechSequence(normalizedText, button, "single", resumeOffset, {
+    onFinish: resetSpeechButton,
+    onError: resetSpeechButton,
+  });
+}
+
+function startSpeechSequence(rawText, button, mode, resumeOffset = 0, handlers = {}) {
+  const text = String(rawText || "").trim();
+  const parts = buildSpeechParts(text);
+  activeSpeech = {
+    text,
+    button,
+    mode,
+    parts,
+    partIndex: findSpeechPartIndex(parts, resumeOffset),
+    resumeOffset,
+    paused: false,
+    cancelled: false,
+    utterance: null,
+    pauseTimer: null,
+    handlers,
+  };
+  playSpeechPart(activeSpeech);
+}
+
+function buildSpeechParts(text) {
+  const parts = [];
+  const ellipsisPattern = /(\.{2,}|\u2026+)/g;
+  let cursor = 0;
+  let match;
+  while ((match = ellipsisPattern.exec(text)) !== null) {
+    addSpeechPart(parts, text, cursor, match.index);
+    parts.push({
+      type: "pause",
+      start: match.index,
+      end: match.index + match[0].length,
+      duration: SPEECH_ELLIPSIS_PAUSE_MS,
+    });
+    cursor = match.index + match[0].length;
+  }
+  addSpeechPart(parts, text, cursor, text.length);
+  return parts;
+}
+
+function addSpeechPart(parts, source, start, end) {
+  if (end <= start) return;
+  const text = source.slice(start, end);
+  if (!text.trim()) return;
+  parts.push({ type: "speech", text, start, end });
+}
+
+function findSpeechPartIndex(parts, resumeOffset) {
+  const offset = Math.max(0, Number(resumeOffset || 0));
+  const index = parts.findIndex((part) => part.end > offset);
+  return index >= 0 ? index : parts.length;
+}
+
+function playSpeechPart(speech) {
+  if (!speech || activeSpeech !== speech || speech.cancelled || speech.paused) return;
+  if (speech.partIndex >= speech.parts.length) {
+    activeSpeech = null;
+    speech.handlers.onFinish?.();
+    return;
+  }
+
+  const part = speech.parts[speech.partIndex];
+  if (part.type === "pause") {
+    speech.resumeOffset = part.end;
+    speech.pauseTimer = window.setTimeout(() => {
+      speech.pauseTimer = null;
+      if (activeSpeech !== speech || speech.cancelled || speech.paused) return;
+      speech.partIndex += 1;
+      playSpeechPart(speech);
+    }, part.duration);
+    return;
+  }
+
+  const offsetInPart = Math.max(0, Math.min(part.text.length, speech.resumeOffset - part.start));
+  const textToSpeak = part.text.slice(offsetInPart);
+  if (!textToSpeak.trim()) {
+    speech.resumeOffset = part.end;
+    speech.partIndex += 1;
+    playSpeechPart(speech);
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  speech.utterance = utterance;
+  utterance.addEventListener("boundary", (event) => {
+    if (activeSpeech !== speech || speech.cancelled) return;
+    if (typeof event.charIndex === "number") {
+      speech.resumeOffset = part.start + offsetInPart + event.charIndex;
+    }
+  });
   utterance.addEventListener("end", () => {
-    if (activeSpeech?.utterance === utterance && !activeSpeech.cancelled) resetSpeechButton();
+    if (activeSpeech !== speech || speech.cancelled || speech.paused) return;
+    speech.resumeOffset = part.end;
+    speech.partIndex += 1;
+    playSpeechPart(speech);
   });
   utterance.addEventListener("error", () => {
-    if (activeSpeech?.utterance === utterance && !activeSpeech.cancelled) resetSpeechButton();
+    if (activeSpeech !== speech || speech.cancelled) return;
+    activeSpeech = null;
+    speech.handlers.onError?.();
   });
   utterance.lang = "zh-TW";
   utterance.rate = 0.78;
@@ -1226,6 +1328,11 @@ function startSingleSpeech(normalizedText, button = null, resetCurrent = true) {
 
 function stopSpeech() {
   if (!("speechSynthesis" in window)) return;
+  if (activeSpeech?.pauseTimer) {
+    window.clearTimeout(activeSpeech.pauseTimer);
+    activeSpeech.pauseTimer = null;
+  }
+  if (activeSpeech) activeSpeech.cancelled = true;
   window.speechSynthesis.cancel();
   if (activeTextPlayback?.playButton) activeTextPlayback.playButton.textContent = "播放";
   activeTextPlayback = null;
