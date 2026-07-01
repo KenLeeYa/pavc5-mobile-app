@@ -1047,6 +1047,14 @@ footer {
     flex-direction: column;
   }
 
+  .heading-actions {
+    gap: 8px;
+  }
+
+  .search-filter {
+    flex: 0 0 auto;
+  }
+
   .text-card-head,
   .update-notice {
     flex-direction: column;
