@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#9a1f58" />
     <title>新版實用視聽華語 5 學習 App</title>
     <link rel="icon" href="./assets/pavc5-cover.svg" type="image/svg+xml" />
-    <link rel="manifest" href="./manifest.webmanifest?v=20260701-speech-phrases" />
-    <link rel="stylesheet" href="./styles.css?v=20260701-speech-phrases" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260701-card-nav-handwriting" />
+    <link rel="stylesheet" href="./styles.css?v=20260701-card-nav-handwriting" />
   </head>
   <body>
     <div class="app-shell">
@@ -120,12 +120,16 @@
             </button>
             <div class="handwriting-body" hidden>
               <canvas class="handwriting-canvas" aria-label="手寫練習區"></canvas>
-              <button class="mini-button handwriting-clear" type="button">清除</button>
+              <div class="handwriting-actions">
+                <button class="mini-button handwriting-undo" type="button">復原</button>
+                <button class="mini-button handwriting-clear" type="button">清除</button>
+              </div>
             </div>
           </section>
           <div class="button-row">
             <button class="secondary" id="speakCard" type="button">播放</button>
-            <button class="secondary" id="againCard" type="button">再練</button>
+            <button class="secondary" id="prevCard" type="button">上一個</button>
+            <button class="secondary" id="nextCard" type="button">下一個</button>
             <button class="primary" id="knowCard" type="button">會了</button>
           </div>
         </section>
@@ -230,6 +234,6 @@
       </footer>
     </div>
 
-    <script src="./app.js?v=20260701-speech-phrases" type="module"></script>
+    <script src="./app.js?v=20260701-card-nav-handwriting" type="module"></script>
   </body>
 </html>

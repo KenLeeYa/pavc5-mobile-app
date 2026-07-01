@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-speech-phrases-20260701";
+const CONTENT_VERSION = "lesson2-card-nav-handwriting-20260701";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -290,7 +290,8 @@ document.querySelectorAll(".tab").forEach((tab) => {
 });
 
 document.querySelector("#knowCard").addEventListener("click", () => gradeCard(true));
-document.querySelector("#againCard").addEventListener("click", () => gradeCard(false));
+document.querySelector("#prevCard").addEventListener("click", () => moveCard(-1));
+document.querySelector("#nextCard").addEventListener("click", () => moveCard(1));
 speakCardButton.addEventListener("click", () => speakCurrentCard(speakCardButton));
 document.querySelector("#resetProgress").addEventListener("click", resetProgress);
 document.querySelector("#loadJson").addEventListener("click", importFromTextarea);
@@ -367,7 +368,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-speech-phrases").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-card-nav-handwriting").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -781,7 +782,10 @@ function renderHandwritingPanel(title = "手寫練習板") {
       </button>
       <div class="handwriting-body" hidden>
         <canvas class="handwriting-canvas" aria-label="手寫練習區"></canvas>
-        <button class="mini-button handwriting-clear" type="button">清除</button>
+        <div class="handwriting-actions">
+          <button class="mini-button handwriting-undo" type="button">復原</button>
+          <button class="mini-button handwriting-clear" type="button">清除</button>
+        </div>
       </div>
     </section>
   `;
@@ -1104,6 +1108,14 @@ function gradeCard(known) {
   renderCard();
   renderLessons();
   updateProgress();
+}
+
+function moveCard(direction) {
+  const lessonCards = getCardsForCurrentLesson();
+  if (!lessonCards.length) return;
+  stopSpeech();
+  currentCardIndex = (currentCardIndex + direction + lessonCards.length) % lessonCards.length;
+  renderCard();
 }
 
 function speakCurrentCard(button = null) {
@@ -1485,6 +1497,7 @@ function setupHandwritingPanels(root = document) {
     const body = panel.querySelector(".handwriting-body");
     const label = toggle.querySelector("small");
     const canvas = panel.querySelector(".handwriting-canvas");
+    const undoButton = panel.querySelector(".handwriting-undo");
     const clearButton = panel.querySelector(".handwriting-clear");
     const board = createHandwritingBoard(canvas);
 
@@ -1495,6 +1508,7 @@ function setupHandwritingPanels(root = document) {
       label.textContent = isClosed ? "收起" : "展開";
       if (isClosed) requestAnimationFrame(board.resize);
     });
+    undoButton?.addEventListener("click", board.undo);
     clearButton.addEventListener("click", board.clear);
   });
 }
@@ -1503,11 +1517,12 @@ function createHandwritingBoard(canvas) {
   const context = canvas.getContext("2d");
   let drawing = false;
   let lastPoint = null;
+  let currentStroke = null;
+  let strokes = [];
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
     const ratio = window.devicePixelRatio || 1;
-    const image = canvas.width && canvas.height ? context.getImageData(0, 0, canvas.width, canvas.height) : null;
     canvas.width = Math.max(1, Math.round(rect.width * ratio));
     canvas.height = Math.max(1, Math.round(rect.height * ratio));
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -1515,12 +1530,36 @@ function createHandwritingBoard(canvas) {
     context.lineJoin = "round";
     context.lineWidth = 5;
     context.strokeStyle = "#20161a";
-    if (image) context.putImageData(image, 0, 0);
+    redraw();
+  }
+
+  function redraw() {
+    const rect = canvas.getBoundingClientRect();
+    context.clearRect(0, 0, rect.width, rect.height);
+    strokes.forEach(drawStroke);
+  }
+
+  function drawStroke(points) {
+    if (!points.length) return;
+    context.beginPath();
+    context.moveTo(points[0].x, points[0].y);
+    if (points.length === 1) {
+      context.lineTo(points[0].x + 0.1, points[0].y + 0.1);
+    } else {
+      points.slice(1).forEach((point) => context.lineTo(point.x, point.y));
+    }
+    context.stroke();
   }
 
   function clear() {
-    resize();
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    strokes = [];
+    currentStroke = null;
+    redraw();
+  }
+
+  function undo() {
+    strokes.pop();
+    redraw();
   }
 
   function getPoint(event) {
@@ -1536,6 +1575,7 @@ function createHandwritingBoard(canvas) {
     canvas.setPointerCapture(event.pointerId);
     drawing = true;
     lastPoint = getPoint(event);
+    currentStroke = [lastPoint];
   }
 
   function draw(event) {
@@ -1546,13 +1586,16 @@ function createHandwritingBoard(canvas) {
     context.moveTo(lastPoint.x, lastPoint.y);
     context.lineTo(point.x, point.y);
     context.stroke();
+    currentStroke.push(point);
     lastPoint = point;
   }
 
   function stop(event) {
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+    if (currentStroke?.length) strokes.push(currentStroke);
     drawing = false;
     lastPoint = null;
+    currentStroke = null;
   }
 
   canvas.addEventListener("pointerdown", start);
@@ -1563,7 +1606,7 @@ function createHandwritingBoard(canvas) {
     if (!canvas.closest(".handwriting-body")?.hidden) resize();
   });
 
-  return { resize, clear };
+  return { resize, clear, undo };
 }
 
 function resetProgress() {

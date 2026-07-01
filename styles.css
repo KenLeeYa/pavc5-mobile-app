@@ -619,6 +619,12 @@ select,
   background-size: 40px 40px;
 }
 
+.handwriting-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .handwriting-clear {
   justify-self: end;
 }
@@ -626,6 +632,7 @@ select,
 .button-row {
   gap: 10px;
   margin-top: 12px;
+  flex-wrap: wrap;
 }
 
 button,
@@ -665,6 +672,7 @@ select,
 
 .button-row button {
   flex: 1;
+  min-width: 92px;
 }
 
 .score {
