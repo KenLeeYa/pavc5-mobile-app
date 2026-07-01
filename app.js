@@ -3,8 +3,11 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-speech-cursor-20260701";
+const CONTENT_VERSION = "lesson2-speech-units-20260701";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
+const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
+const SPEECH_MAX_UNIT_CHARS = 8;
+const SPEECH_ESTIMATED_CHARS_PER_SECOND = 4.5;
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -363,7 +366,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-speech-cursor").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-speech-units").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -1170,6 +1173,7 @@ function pauseActiveSpeech(button = null) {
     window.clearTimeout(activeSpeech.pauseTimer);
     activeSpeech.pauseTimer = null;
   }
+  updateSpeechResumeOffsetFromTime(activeSpeech);
   if (activeTextPlayback && activeSpeech.mode === "text") {
     activeTextPlayback.lineOffset = activeSpeech.resumeOffset || 0;
   }
@@ -1243,7 +1247,7 @@ function startSpeechSequence(rawText, button, mode, resumeOffset = 0, handlers =
 
 function buildSpeechParts(text) {
   const parts = [];
-  const ellipsisPattern = /(\.{2,}|\u2026+)/g;
+  const ellipsisPattern = new RegExp(SPEECH_ELLIPSIS_PATTERN);
   let cursor = 0;
   let match;
   while ((match = ellipsisPattern.exec(text)) !== null) {
@@ -1262,9 +1266,37 @@ function buildSpeechParts(text) {
 
 function addSpeechPart(parts, source, start, end) {
   if (end <= start) return;
-  const text = source.slice(start, end);
+  const text = sanitizeSpeechText(source.slice(start, end));
   if (!text.trim()) return;
-  parts.push({ type: "speech", text, start, end });
+  splitSpeechTextIntoUnits(text, start).forEach((part) => parts.push(part));
+}
+
+function sanitizeSpeechText(text) {
+  return String(text || "")
+    .replace(SPEECH_ELLIPSIS_PATTERN, "")
+    .replace(/\s+/g, " ");
+}
+
+function splitSpeechTextIntoUnits(text, start) {
+  const units = [];
+  let cursor = 0;
+  while (cursor < text.length) {
+    const remaining = text.slice(cursor);
+    let chunkLength = Math.min(SPEECH_MAX_UNIT_CHARS, remaining.length);
+    const punctuationIndex = remaining.slice(0, SPEECH_MAX_UNIT_CHARS + 1).search(/[，,；;：:、！？!?]/);
+    if (punctuationIndex >= 1) chunkLength = punctuationIndex + 1;
+    const chunk = remaining.slice(0, chunkLength);
+    if (chunk.trim()) {
+      units.push({
+        type: "speech",
+        text: chunk,
+        start: start + cursor,
+        end: start + cursor + chunkLength,
+      });
+    }
+    cursor += chunkLength || 1;
+  }
+  return units;
 }
 
 function findSpeechPartIndex(parts, resumeOffset) {
@@ -1304,9 +1336,18 @@ function playSpeechPart(speech) {
 
   const utterance = new SpeechSynthesisUtterance(textToSpeak);
   speech.utterance = utterance;
+  speech.currentPart = part;
+  speech.offsetInPart = offsetInPart;
+  speech.partStartTime = 0;
+  speech.boundarySeen = false;
+  utterance.addEventListener("start", () => {
+    if (activeSpeech !== speech || speech.cancelled) return;
+    speech.partStartTime = Date.now();
+  });
   utterance.addEventListener("boundary", (event) => {
     if (activeSpeech !== speech || speech.cancelled) return;
     if (typeof event.charIndex === "number") {
+      speech.boundarySeen = true;
       speech.resumeOffset = part.start + offsetInPart + event.charIndex;
     }
   });
@@ -1324,6 +1365,19 @@ function playSpeechPart(speech) {
   utterance.lang = "zh-TW";
   utterance.rate = 0.78;
   window.speechSynthesis.speak(utterance);
+}
+
+function updateSpeechResumeOffsetFromTime(speech) {
+  if (!speech?.currentPart || speech.boundarySeen || !speech.partStartTime) return;
+  const elapsedSeconds = Math.max(0, (Date.now() - speech.partStartTime) / 1000);
+  const estimatedChars = elapsedSeconds < 0.15
+    ? 0
+    : Math.floor(elapsedSeconds * SPEECH_ESTIMATED_CHARS_PER_SECOND * 0.78);
+  const offset = Math.min(
+    speech.currentPart.end,
+    speech.currentPart.start + speech.offsetInPart + estimatedChars,
+  );
+  speech.resumeOffset = Math.max(speech.resumeOffset || 0, offset);
 }
 
 function stopSpeech() {
