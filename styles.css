@@ -394,6 +394,19 @@ select,
   font-weight: 950;
 }
 
+.mark-link {
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+
+.mark-link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
 .mark-vocab {
   color: #174a7c;
   background: #e7f1fb;
@@ -426,6 +439,28 @@ select,
   padding: 12px;
   border-radius: 8px;
   background: #fbf9fa;
+}
+
+.dialogue-line.playing {
+  background: #fff6d8;
+  box-shadow: inset 4px 0 0 var(--gold);
+  animation: readingPulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes readingPulse {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(3px);
+  }
+}
+
+.text-audio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .speaker {
@@ -636,6 +671,14 @@ select,
   min-height: 44px;
   padding: 0 16px;
   font-weight: 850;
+}
+
+.dialogue-zh .mark-link {
+  min-height: 0;
+  padding: 1px 5px;
+  border: 0;
+  font: inherit;
+  font-weight: 950;
 }
 
 .primary {
@@ -1189,6 +1232,14 @@ footer {
   .text-card-head,
   .update-notice {
     flex-direction: column;
+  }
+
+  .text-audio-actions {
+    justify-content: stretch;
+  }
+
+  .text-audio-actions button {
+    flex: 1;
   }
 
   .heading-actions,

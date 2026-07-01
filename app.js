@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson2-handwriting-audio-toggle-20260701";
+const CONTENT_VERSION = "lesson2-text-playback-links-20260701";
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
@@ -240,6 +240,7 @@ let currentPracticeIndex = Number(state.currentPracticeIndex || 0);
 let currentQuizLesson = Number(state.currentQuizLesson || 1);
 let deferredInstallPrompt = null;
 let activeSpeech = null;
+let activeTextPlayback = null;
 let quiz = {
   total: 0,
   correct: 0,
@@ -361,7 +362,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-handwriting").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-text-links").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -514,19 +515,27 @@ function renderText() {
           <p class="pinyin-line">${escapeHtml(formatTermPinyin(text.titlePinyin) || "")}</p>
           <strong>${escapeHtml(text.titleVi || "")}</strong>
         </div>
-        <button class="mini-button" type="button" aria-label="播放課文">播放</button>
+        <div class="text-audio-actions">
+          <button class="mini-button text-play-toggle" type="button" aria-label="播放或暫停課文">播放</button>
+          <button class="mini-button text-restart" type="button" aria-label="從頭播放課文">重頭播放</button>
+        </div>
       </div>
       <p class="text-note">${escapeHtml(text.note || "")}</p>
       <div class="text-legend">
         ${(text.legend || []).map(([type, label]) => `<span class="mark mark-${escapeHtml(type)}">${escapeHtml(label)}</span>`).join("")}
       </div>
       <div class="dialogue-list">
-        ${(text.lines || []).map(renderTextLine).join("")}
+        ${(text.lines || []).map((line, index) => renderTextLine(line, index)).join("")}
       </div>
       ${renderTextExtras(text.extras || [])}
     `;
-    article.querySelector("button").addEventListener("click", () => {
-      speakText((text.lines || []).map((line) => line.zh).join("。"), article.querySelector("button"));
+    article.querySelector(".text-play-toggle").addEventListener("click", (event) => toggleTextPlayback(text, article, event.currentTarget));
+    article.querySelector(".text-restart").addEventListener("click", () => startTextPlayback(text, article, 0));
+    article.querySelectorAll(".mark-link").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        navigateToMarkedTerm(button.dataset.markType, button.dataset.term, Number(text.lesson || currentTextLesson));
+      });
     });
     textList.appendChild(article);
   });
@@ -563,9 +572,9 @@ function renderTextExtraItems(items) {
   }).join("");
 }
 
-function renderTextLine(line) {
+function renderTextLine(line, index = 0) {
   return `
-    <section class="dialogue-line">
+    <section class="dialogue-line" data-line-index="${index}">
       <span class="speaker">${escapeHtml(line.speaker || "")}</span>
       <div>
         <p class="dialogue-zh">${renderMarkedText(line.zh || "", line.marks || [])}</p>
@@ -591,7 +600,7 @@ function renderMarkedText(text, marks) {
       cursor += 1;
       continue;
     }
-    output += `<strong class="mark mark-${escapeHtml(match.type)}">${escapeHtml(match.term)}</strong>`;
+    output += `<button class="mark mark-link mark-${escapeHtml(match.type)}" type="button" data-mark-type="${escapeHtml(match.type)}" data-term="${escapeHtml(match.term)}">${escapeHtml(match.term)}</button>`;
     cursor += match.term.length;
   }
   return output;
@@ -666,6 +675,7 @@ function renderGrammar() {
   lessonGrammar.forEach((item) => {
     const card = document.createElement("article");
     card.className = "grammar-card collapsed";
+    card.dataset.grammarId = item.id;
     card.innerHTML = `
       <button class="grammar-toggle" type="button" aria-expanded="false">
         <span>${escapeHtml(item.pattern)}</span>
@@ -1092,18 +1102,104 @@ function speakCurrentCard(button = null) {
   speakText(`${card.term}。${card.meaningZh || ""}。${card.example || ""}`, button);
 }
 
+function toggleTextPlayback(text, article, button) {
+  if (activeTextPlayback?.article === article) {
+    if (activeTextPlayback.paused) {
+      window.speechSynthesis.resume();
+      activeTextPlayback.paused = false;
+      if (activeSpeech) activeSpeech.paused = false;
+      button.textContent = "暫停";
+      return;
+    }
+    window.speechSynthesis.pause();
+    activeTextPlayback.paused = true;
+    if (activeSpeech) activeSpeech.paused = true;
+    button.textContent = "播放";
+    return;
+  }
+  startTextPlayback(text, article, 0);
+}
+
+function startTextPlayback(text, article, startIndex = 0) {
+  if (!("speechSynthesis" in window)) return;
+  stopSpeech();
+  clearTextPlaybackHighlight();
+  const lines = (text.lines || []).map((line) => String(line.zh || "").trim()).filter(Boolean);
+  if (!lines.length) return;
+  activeTextPlayback = {
+    article,
+    lines,
+    index: startIndex,
+    playButton: article.querySelector(".text-play-toggle"),
+    paused: false,
+  };
+  playCurrentTextLine();
+}
+
+function playCurrentTextLine() {
+  if (!activeTextPlayback) return;
+  const playback = activeTextPlayback;
+  if (playback.index >= playback.lines.length) {
+    finishTextPlayback();
+    return;
+  }
+  const text = playback.lines[playback.index];
+  highlightTextLine(playback.article, playback.index);
+  const utterance = new SpeechSynthesisUtterance(text);
+  activeSpeech = { text, button: playback.playButton, utterance, mode: "text", paused: false };
+  playback.playButton.textContent = "暫停";
+  utterance.addEventListener("end", () => {
+    if (activeSpeech?.utterance !== utterance || !activeTextPlayback || activeTextPlayback.paused) return;
+    activeTextPlayback.index += 1;
+    playCurrentTextLine();
+  });
+  utterance.addEventListener("error", () => {
+    if (activeSpeech?.utterance === utterance) finishTextPlayback();
+  });
+  utterance.lang = "zh-TW";
+  utterance.rate = 0.78;
+  window.speechSynthesis.speak(utterance);
+}
+
+function highlightTextLine(article, index) {
+  article.querySelectorAll(".dialogue-line").forEach((line) => {
+    const active = Number(line.dataset.lineIndex) === index;
+    line.classList.toggle("playing", active);
+    if (active) line.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+}
+
+function clearTextPlaybackHighlight() {
+  document.querySelectorAll(".dialogue-line.playing").forEach((line) => line.classList.remove("playing"));
+}
+
+function finishTextPlayback() {
+  if (activeTextPlayback?.playButton) activeTextPlayback.playButton.textContent = "播放";
+  clearTextPlaybackHighlight();
+  activeTextPlayback = null;
+  resetSpeechButton();
+}
+
 function speakText(text, button = null) {
   if (!("speechSynthesis" in window)) return;
   const normalizedText = String(text || "").trim();
   if (!normalizedText) return;
-  if (activeSpeech && window.speechSynthesis.speaking && activeSpeech.text === normalizedText) {
-    stopSpeech();
+  if (activeSpeech && activeSpeech.text === normalizedText) {
+    if (activeSpeech.paused) {
+      window.speechSynthesis.resume();
+      activeSpeech.paused = false;
+      if (button) button.textContent = "暫停";
+      return;
+    }
+    window.speechSynthesis.pause();
+    activeSpeech.paused = true;
+    if (button) button.textContent = "播放";
     return;
   }
   stopSpeech();
   const utterance = new SpeechSynthesisUtterance(normalizedText);
-  activeSpeech = { text: normalizedText, button, utterance };
-  if (button) button.textContent = "停止";
+  activeSpeech = { text: normalizedText, button, utterance, mode: "single", paused: false };
+  if (button) button.textContent = "暫停";
   utterance.addEventListener("end", () => {
     if (activeSpeech?.utterance === utterance) resetSpeechButton();
   });
@@ -1118,12 +1214,69 @@ function speakText(text, button = null) {
 function stopSpeech() {
   if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
+  if (activeTextPlayback?.playButton) activeTextPlayback.playButton.textContent = "播放";
+  activeTextPlayback = null;
+  clearTextPlaybackHighlight();
   resetSpeechButton();
 }
 
 function resetSpeechButton() {
   if (activeSpeech?.button) activeSpeech.button.textContent = "播放";
   activeSpeech = null;
+}
+
+function navigateToMarkedTerm(type, term, lesson) {
+  if (!term) return;
+  if (type === "grammar") {
+    navigateToGrammarTerm(term, lesson);
+    return;
+  }
+  navigateToCardTerm(type, term, lesson);
+}
+
+function navigateToCardTerm(type, term, lesson) {
+  const category = type === "proper" ? "proper" : type === "idiom" ? "idioms" : "vocab";
+  currentCardLesson = lesson;
+  currentCardCategory = category;
+  currentCardSearch = "";
+  currentCardIndex = 0;
+  state.currentCardLesson = currentCardLesson;
+  state.currentCardCategory = currentCardCategory;
+  state.currentCardSearch = currentCardSearch;
+  const lessonCards = getCardsForCurrentLesson();
+  const index = lessonCards.findIndex((card) => card.term === term || card.term.includes(term) || term.includes(card.term));
+  if (index >= 0) currentCardIndex = index;
+  renderLessonSelectOptions();
+  renderCard();
+  saveState();
+  setView("cards");
+  requestAnimationFrame(() => document.querySelector("#flashcard")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+}
+
+function navigateToGrammarTerm(term, lesson) {
+  currentGrammarLesson = lesson;
+  state.currentGrammarLesson = currentGrammarLesson;
+  renderLessonSelectOptions();
+  renderGrammar();
+  saveState();
+  setView("grammar");
+  const target = grammar
+    .filter((item) => Number(item.lesson) === lesson)
+    .find((item) => item.pattern?.includes(term) || item.example?.includes(term) || item.explanationZh?.includes(term));
+  if (target) requestAnimationFrame(() => expandGrammarCard(target.id));
+}
+
+function expandGrammarCard(grammarId) {
+  const card = [...document.querySelectorAll(".grammar-card")].find((item) => item.dataset.grammarId === grammarId);
+  if (!card) return;
+  const body = card.querySelector(".grammar-body");
+  const toggle = card.querySelector(".grammar-toggle");
+  const label = toggle.querySelector("small");
+  body.hidden = false;
+  card.classList.remove("collapsed");
+  toggle.setAttribute("aria-expanded", "true");
+  label.textContent = "收起";
+  card.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function setupHandwritingPanels(root = document) {
