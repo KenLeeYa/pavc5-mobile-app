@@ -1,9 +1,12 @@
 import { lesson1Cards } from "./data/lesson1-cards.js";
 import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
+import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson1-text-grammar-20260701";
+const CONTENT_VERSION = "lesson2-content-search-20260701";
 const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
+const PROPER_TYPES = new Set(["專有名詞"]);
+const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
 
 const thirdEditionLessons = [
   ["第 1 課", "第三版第五冊內容整理區"],
@@ -90,8 +93,8 @@ const legacyDemoCards = [
   },
 ];
 
-const defaultCards = lesson1Cards;
-const defaultTexts = lesson1Texts;
+const defaultCards = [...lesson1Cards, ...lesson2Cards];
+const defaultTexts = [...lesson1Texts, ...lesson2Texts];
 
 const fallbackGrammar = [
   {
@@ -170,7 +173,8 @@ const fallbackGrammar = [
 
 const defaultGrammar = [
   ...lesson1Grammar,
-  ...fallbackGrammar.filter((item) => Number(item.lesson) !== 1),
+  ...lesson2Grammar,
+  ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
 ];
 
 const defaultExercises = Array.from({ length: 14 }, (_, index) => {
@@ -227,6 +231,7 @@ let exercises = state.exercises?.length ? state.exercises : defaultExercises;
 let currentCardIndex = 0;
 let currentCardLesson = Number(state.currentCardLesson || 1);
 let currentCardCategory = state.currentCardCategory || "vocab";
+let currentCardSearch = state.currentCardSearch || "";
 let currentTextLesson = Number(state.currentTextLesson || 1);
 let currentGrammarLesson = Number(state.currentGrammarLesson || 1);
 let currentPracticeLesson = Number(state.currentPracticeLesson || 1);
@@ -259,6 +264,7 @@ const textLessonSelect = document.querySelector("#textLessonSelect");
 const textList = document.querySelector("#textList");
 const cardLessonSelect = document.querySelector("#cardLessonSelect");
 const cardCategorySelect = document.querySelector("#cardCategorySelect");
+const cardSearchInput = document.querySelector("#cardSearchInput");
 const grammarLessonSelect = document.querySelector("#grammarLessonSelect");
 const practiceList = document.querySelector("#practiceList");
 const practiceLessonSelect = document.querySelector("#practiceLessonSelect");
@@ -266,6 +272,10 @@ const practiceModeSelect = document.querySelector("#practiceModeSelect");
 const practicePrev = document.querySelector("#practicePrev");
 const practiceNext = document.querySelector("#practiceNext");
 const quizLessonSelect = document.querySelector("#quizLessonSelect");
+
+document.querySelectorAll(".admin-only").forEach((element) => {
+  element.hidden = !adminMode;
+});
 
 document.querySelectorAll(".tab").forEach((tab) => {
   tab.addEventListener("click", () => setView(tab.dataset.view));
@@ -281,7 +291,10 @@ document.querySelector("#flashcard").addEventListener("click", speakCurrentCard)
 cardLessonSelect.addEventListener("change", () => {
   currentCardLesson = Number(cardLessonSelect.value);
   currentCardIndex = 0;
+  currentCardSearch = "";
+  cardSearchInput.value = "";
   state.currentCardLesson = currentCardLesson;
+  state.currentCardSearch = currentCardSearch;
   saveState();
   renderCard();
 });
@@ -289,6 +302,13 @@ cardCategorySelect.addEventListener("change", () => {
   currentCardCategory = cardCategorySelect.value;
   currentCardIndex = 0;
   state.currentCardCategory = currentCardCategory;
+  saveState();
+  renderCard();
+});
+cardSearchInput.addEventListener("input", () => {
+  currentCardSearch = cardSearchInput.value.trim();
+  currentCardIndex = 0;
+  state.currentCardSearch = currentCardSearch;
   saveState();
   renderCard();
 });
@@ -339,7 +359,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-text").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260701-lesson2").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -376,6 +396,8 @@ function saveState() {
 }
 
 function setView(viewName) {
+  if (viewName === "import" && !adminMode) viewName = "lessons";
+
   document.querySelectorAll(".tab").forEach((tab) => {
     tab.classList.toggle("active", tab.dataset.view === viewName);
   });
@@ -393,7 +415,8 @@ function renderLessons() {
   thirdEditionLessons.forEach(([title, description], index) => {
     const number = index + 1;
     const learned = state.learnedCards?.filter((cardId) => cardId.startsWith(`${number}:`)).length || 0;
-    const vocabCount = cards.filter((item) => Number(item.lesson) === number && !isIdiomCard(item)).length;
+    const vocabCount = cards.filter((item) => Number(item.lesson) === number && !isIdiomCard(item) && !isProperCard(item)).length;
+    const properCount = cards.filter((item) => Number(item.lesson) === number && isProperCard(item)).length;
     const idiomCount = cards.filter((item) => Number(item.lesson) === number && isIdiomCard(item)).length;
     const textItems = texts.filter((item) => Number(item.lesson) === number).length;
     const grammarItems = grammar.filter((item) => Number(item.lesson) === number).length;
@@ -404,7 +427,7 @@ function renderLessons() {
       <div class="lesson-number">${number}</div>
       <div>
         <h3>${escapeHtml(title)}</h3>
-        <p>${escapeHtml(description)}・課文 ${textItems}・生詞 ${vocabCount}・成語 ${idiomCount}・${grammarItems} 則語法・${exerciseItems} 題練習</p>
+        <p>${escapeHtml(description)}・課文 ${textItems}・生詞 ${vocabCount}・專名 ${properCount}・成語 ${idiomCount}・${grammarItems} 則語法・${exerciseItems} 題練習</p>
       </div>
       <div class="lesson-status">${learned} 張</div>
     `;
@@ -417,14 +440,17 @@ function renderLessons() {
       currentPracticeIndex = 0;
       currentQuizLesson = number;
       currentCardIndex = 0;
+      currentCardSearch = "";
       cardLessonSelect.value = String(number);
       cardCategorySelect.value = currentCardCategory;
+      cardSearchInput.value = currentCardSearch;
       textLessonSelect.value = String(number);
       grammarLessonSelect.value = String(number);
       practiceLessonSelect.value = String(number);
       quizLessonSelect.value = String(number);
       state.currentCardLesson = currentCardLesson;
       state.currentCardCategory = currentCardCategory;
+      state.currentCardSearch = currentCardSearch;
       state.currentTextLesson = currentTextLesson;
       state.currentGrammarLesson = currentGrammarLesson;
       state.currentPracticeLesson = currentPracticeLesson;
@@ -443,8 +469,27 @@ function getCardsForCurrentLesson() {
   return cards.filter((item) => {
     const sameLesson = Number(item.lesson) === currentCardLesson;
     if (!sameLesson) return false;
-    return currentCardCategory === "idioms" ? isIdiomCard(item) : !isIdiomCard(item);
+    if (currentCardCategory === "idioms" && !isIdiomCard(item)) return false;
+    if (currentCardCategory === "proper" && !isProperCard(item)) return false;
+    if (currentCardCategory === "vocab" && (isIdiomCard(item) || isProperCard(item))) return false;
+    return cardMatchesSearch(item);
   });
+}
+
+function cardMatchesSearch(card) {
+  const query = normalizeSearch(currentCardSearch);
+  if (!query) return true;
+  return [
+    card.term,
+    card.pinyin,
+    card.type,
+    card.meaningZh,
+    card.meaningPinyin,
+    card.meaningVi,
+    card.example,
+    card.examplePinyin,
+    card.exampleVi,
+  ].some((value) => normalizeSearch(value).includes(query));
 }
 
 function renderText() {
@@ -475,12 +520,44 @@ function renderText() {
       <div class="dialogue-list">
         ${(text.lines || []).map(renderTextLine).join("")}
       </div>
+      ${renderTextExtras(text.extras || [])}
     `;
     article.querySelector("button").addEventListener("click", () => {
       speakText((text.lines || []).map((line) => line.zh).join("。"));
     });
     textList.appendChild(article);
   });
+}
+
+function renderTextExtras(extras) {
+  if (!Array.isArray(extras) || !extras.length) return "";
+  return `
+    <div class="text-extra-list">
+      ${extras.map((section) => `
+        <section class="text-extra-section">
+          <h4>${escapeHtml(section.title || "補充")}</h4>
+          <div class="text-extra-items">
+            ${renderTextExtraItems(section.items || [])}
+          </div>
+        </section>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderTextExtraItems(items) {
+  if (!Array.isArray(items) || !items.length) return "<p>尚未填入內容。</p>";
+  return items.map((item, index) => {
+    if (typeof item === "string") return `<p>${index + 1}. ${escapeHtml(item)}</p>`;
+    return `
+      <article class="text-extra-item">
+        <strong>${escapeHtml(item.term || item.prompt || item.title || `第 ${index + 1} 題`)}</strong>
+        ${item.explanation ? `<p>${escapeHtml(item.explanation)}</p>` : ""}
+        ${item.pinyin ? `<small>${escapeHtml(formatSentencePinyin(item.pinyin))}</small>` : ""}
+        ${item.vi ? `<p>${escapeHtml(item.vi)}</p>` : ""}
+      </article>
+    `;
+  }).join("");
 }
 
 function renderTextLine(line) {
@@ -521,8 +598,14 @@ function isIdiomCard(card) {
   return IDIOM_TYPES.has(card.type);
 }
 
+function isProperCard(card) {
+  return PROPER_TYPES.has(card.type);
+}
+
 function getCardCategoryLabel() {
-  return currentCardCategory === "idioms" ? "成語/俗語/四字詞" : "生詞";
+  if (currentCardCategory === "idioms") return "成語/俗語/四字詞";
+  if (currentCardCategory === "proper") return "專有名詞";
+  return "生詞";
 }
 
 function renderCard() {
@@ -533,8 +616,10 @@ function renderCard() {
     updateCardProgress(0, 0);
     document.querySelector("#cardTerm").textContent = "尚未匯入";
     document.querySelector("#cardPinyin").textContent = "";
-    document.querySelector("#cardMeaning").textContent = `這一課還沒有${getCardCategoryLabel()}。`;
-    document.querySelector("#cardExample").textContent = "請從匯入頁加入 cards。";
+    document.querySelector("#cardMeaning").textContent = currentCardSearch
+      ? `找不到符合「${currentCardSearch}」的${getCardCategoryLabel()}。`
+      : `這一課還沒有${getCardCategoryLabel()}。`;
+    document.querySelector("#cardExample").textContent = "請換一個搜尋字，或切換課別與分類。";
     return;
   }
   const normalizedIndex = currentCardIndex % lessonCards.length;
@@ -596,12 +681,27 @@ function renderGrammar() {
       ${renderGrammarPractice(item)}
     `;
     card.querySelector("button").addEventListener("click", () => speakText(`${item.pattern}。${item.example || ""}`));
-    card.querySelectorAll(".grammar-answer-toggle").forEach((button) => {
-      button.addEventListener("click", () => {
-        const answer = button.nextElementSibling;
+    card.querySelectorAll(".grammar-practice-item").forEach((practiceCard) => {
+      const input = practiceCard.querySelector(".grammar-practice-input");
+      const checkButton = practiceCard.querySelector(".grammar-check");
+      const toggleButton = practiceCard.querySelector(".grammar-answer-toggle");
+      const answer = practiceCard.querySelector(".grammar-answer");
+      const feedback = practiceCard.querySelector(".grammar-feedback");
+      const practice = item.practice?.[Number(practiceCard.dataset.index)] || {};
+      checkButton.addEventListener("click", () => {
+        const result = checkGrammarPracticeAnswer(input.value, practice);
+        answer.hidden = false;
+        toggleButton.textContent = "隱藏答案";
+        feedback.className = `grammar-feedback ${result.isCorrect ? "correct" : "wrong"}`;
+        feedback.innerHTML = `
+          <strong>${result.isCorrect ? "格式符合" : "再對照一次"}</strong>
+          ${result.missingTerms?.length ? `<span>缺少：${result.missingTerms.map(escapeHtml).join("、")}</span>` : "<span>請再比較語氣、詞序與標點。</span>"}
+        `;
+      });
+      toggleButton.addEventListener("click", () => {
         const isHidden = answer.hidden;
         answer.hidden = !isHidden;
-        button.textContent = isHidden ? "隱藏答案" : "顯示答案";
+        toggleButton.textContent = isHidden ? "隱藏答案" : "顯示答案";
       });
     });
     grammarList.appendChild(card);
@@ -614,10 +714,15 @@ function renderGrammarPractice(item) {
     <div class="grammar-practice">
       <h4>語法練習</h4>
       ${item.practice.map((practice, index) => `
-        <div class="grammar-practice-item">
+        <div class="grammar-practice-item" data-index="${index}">
           <p>${index + 1}. ${escapeHtml(practice.prompt || "")}</p>
-          <button class="mini-button grammar-answer-toggle" type="button">顯示答案</button>
+          <textarea class="grammar-practice-input" rows="3" placeholder="請在這裡輸入你的答案"></textarea>
+          <div class="grammar-practice-actions">
+            <button class="mini-button grammar-check" type="button">對照答案</button>
+            <button class="mini-button grammar-answer-toggle" type="button">顯示答案</button>
+          </div>
           <p class="grammar-answer" hidden>${escapeHtml(practice.answer || "")}</p>
+          <p class="grammar-feedback" aria-live="polite"></p>
         </div>
       `).join("")}
     </div>
@@ -635,6 +740,7 @@ function renderLessonSelectOptions() {
   quizLessonSelect.innerHTML = options;
   cardLessonSelect.value = String(currentCardLesson);
   cardCategorySelect.value = currentCardCategory;
+  cardSearchInput.value = currentCardSearch;
   textLessonSelect.value = String(currentTextLesson);
   grammarLessonSelect.value = String(currentGrammarLesson);
   practiceLessonSelect.value = String(currentPracticeLesson);
@@ -894,6 +1000,17 @@ function checkSentenceAnswer(value, exercise) {
   };
 }
 
+function checkGrammarPracticeAnswer(value, practice) {
+  const answer = normalizeAnswer(value);
+  const requiredTerms = practice.requiredTerms?.length ? practice.requiredTerms : [practice.pattern].filter(Boolean);
+  const missingTerms = requiredTerms.filter((term) => !answer.includes(normalizeAnswer(term)));
+  const exactMatch = answer && normalizeAnswer(practice.answer) === answer;
+  return {
+    isCorrect: Boolean(answer) && (exactMatch || missingTerms.length === 0),
+    missingTerms,
+  };
+}
+
 function showExerciseFeedback(feedback, answerMask, exercise, result) {
   const isCorrect = result.isCorrect;
   answerMask.textContent = isCorrect ? "答對了" : "已顯示正解";
@@ -1050,6 +1167,7 @@ function importContent(text) {
     currentCardIndex = 0;
     currentCardLesson = 1;
     currentCardCategory = "vocab";
+    currentCardSearch = "";
     currentTextLesson = 1;
     currentGrammarLesson = 1;
     currentPracticeLesson = 1;
@@ -1058,6 +1176,7 @@ function importContent(text) {
     currentQuizLesson = 1;
     state.currentCardLesson = currentCardLesson;
     state.currentCardCategory = currentCardCategory;
+    state.currentCardSearch = currentCardSearch;
     state.currentTextLesson = currentTextLesson;
     state.currentGrammarLesson = currentGrammarLesson;
     state.currentPracticeLesson = currentPracticeLesson;
@@ -1115,6 +1234,12 @@ function normalizeText(text, index) {
           marks: Array.isArray(line.marks) ? line.marks : [],
         })).filter((line) => line.zh)
       : [],
+    extras: Array.isArray(text.extras)
+      ? text.extras.map((section) => ({
+          title: String(section.title || "").trim(),
+          items: Array.isArray(section.items) ? section.items : [],
+        })).filter((section) => section.title || section.items.length)
+      : [],
     id: String(text.id || index + 1),
   };
 }
@@ -1147,6 +1272,15 @@ function normalizeGrammar(item, index) {
     example: String(item.example || "").trim(),
     examplePinyin: String(item.examplePinyin || "").trim(),
     exampleVi: String(item.exampleVi || "").trim(),
+    practice: Array.isArray(item.practice)
+      ? item.practice.map((practice) => ({
+          prompt: String(practice.prompt || "").trim(),
+          answer: String(practice.answer || "").trim(),
+          requiredTerms: Array.isArray(practice.requiredTerms)
+            ? practice.requiredTerms.map((term) => String(term).trim()).filter(Boolean)
+            : [],
+        })).filter((practice) => practice.prompt)
+      : [],
     id: String(item.id || index + 1),
   };
 }
@@ -1226,6 +1360,10 @@ function shuffle(items) {
 
 function normalizeAnswer(value) {
   return String(value).replace(/\s+/g, "").replace(/[，。！？、,.!?]/g, "").trim();
+}
+
+function normalizeSearch(value) {
+  return String(value || "").toLowerCase().replace(/\s+/g, "").trim();
 }
 
 function formatTermPinyin(value) {

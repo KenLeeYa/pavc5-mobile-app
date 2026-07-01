@@ -1,4 +1,4 @@
-const CACHE_NAME = "pavc5-mobile-v5-20260701-text";
+const CACHE_NAME = "pavc5-mobile-v6-20260701-lesson2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -8,6 +8,7 @@ const ASSETS = [
   "./content-template.json",
   "./data/lesson1-cards.js",
   "./data/lesson1-content.js",
+  "./data/lesson2-content.js",
   "./assets/pavc5-cover.svg",
 ];
 
