@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-sync-20260701";
+const CONTENT_VERSION = "lesson-content-shell-20260707";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -273,6 +273,10 @@ const textList = document.querySelector("#textList");
 const cardLessonSelect = document.querySelector("#cardLessonSelect");
 const cardCategorySelect = document.querySelector("#cardCategorySelect");
 const cardSearchInput = document.querySelector("#cardSearchInput");
+const cardPickerToggle = document.querySelector("#cardPickerToggle");
+const cardPickerBody = document.querySelector("#cardPickerBody");
+const cardPickerList = document.querySelector("#cardPickerList");
+const cardPickerCount = document.querySelector("#cardPickerCount");
 const grammarLessonSelect = document.querySelector("#grammarLessonSelect");
 const practiceList = document.querySelector("#practiceList");
 const practiceLessonSelect = document.querySelector("#practiceLessonSelect");
@@ -298,6 +302,11 @@ document.querySelector("#resetProgress").addEventListener("click", resetProgress
 document.querySelector("#loadJson").addEventListener("click", importFromTextarea);
 document.querySelector("#contentFile").addEventListener("change", importFromFile);
 document.querySelector("#flashcard").addEventListener("click", () => speakCurrentCard(speakCardButton));
+cardPickerToggle?.addEventListener("click", () => {
+  const isClosed = cardPickerBody.hidden;
+  cardPickerBody.hidden = !isClosed;
+  cardPickerToggle.setAttribute("aria-expanded", String(isClosed));
+});
 cardLessonSelect.addEventListener("change", () => {
   setCurrentLesson(cardLessonSelect.value, { resetCard: true, resetPractice: true, resetQuiz: true, render: true });
 });
@@ -346,7 +355,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260701-lesson-sync").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260707-content-shell").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -495,6 +504,7 @@ function getCardsForCurrentLesson() {
   return cards.filter((item) => {
     const sameLesson = Number(item.lesson) === currentCardLesson;
     if (!sameLesson) return false;
+    if (currentCardCategory === "all") return cardMatchesSearch(item);
     if (currentCardCategory === "idioms" && !isIdiomCard(item)) return false;
     if (currentCardCategory === "proper" && !isProperCard(item)) return false;
     if (currentCardCategory === "vocab" && (isIdiomCard(item) || isProperCard(item))) return false;
@@ -570,18 +580,50 @@ function renderTextExtras(extras) {
   if (!Array.isArray(extras) || !extras.length) return "";
   return `
     <div class="text-extra-list">
-      ${extras.map((section) => `
-        <section class="text-extra-section">
-          <h4>${escapeHtml(section.title || "補充")}</h4>
-          <div class="text-extra-items">
-            ${renderTextExtraItems(section.items || [])}
-          </div>
-        </section>
-      `).join("")}
+      ${extras.map(renderTextExtraSection).join("")}
     </div>
   `;
 }
 
+function renderTextExtraSection(section) {
+  const isTable = section.type === "table" || Array.isArray(section.headers) || Array.isArray(section.rows);
+  return `
+    <section class="text-extra-section">
+      <h4>${escapeHtml(section.title || "\u88dc\u5145\u9805\u76ee")}</h4>
+      ${section.description ? `<p>${escapeHtml(section.description)}</p>` : ""}
+      ${isTable ? renderTextExtraTable(section) : `
+        <div class="text-extra-items">
+          ${renderTextExtraItems(section.items || [])}
+        </div>
+      `}
+    </section>
+  `;
+}
+
+function renderTextExtraTable(section) {
+  const headers = Array.isArray(section.headers) ? section.headers : [];
+  const rows = Array.isArray(section.rows) ? section.rows : [];
+  if (!headers.length || !rows.length) return "<p>\u5c1a\u672a\u586b\u5165\u8868\u683c\u5167\u5bb9\u3002</p>";
+  return `
+    <div class="extra-table-wrap">
+      <table class="extra-table">
+        <thead>
+          <tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("")}</tr>
+        </thead>
+        <tbody>
+          ${rows.map((row) => `
+            <tr>
+              ${headers.map((header, index) => {
+                const value = Array.isArray(row) ? row[index] : row?.[header];
+                return `<td>${escapeHtml(value || "")}</td>`;
+              }).join("")}
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
 function renderTextNote(note) {
   const safeNote = String(note || "").trim();
   if (!safeNote || safeNote.includes("依你提供")) return "";
@@ -646,6 +688,7 @@ function isProperCard(card) {
 }
 
 function getCardCategoryLabel() {
+  if (currentCardCategory === "all") return "全部生詞";
   if (currentCardCategory === "idioms") return "成語/俗語/四字詞";
   if (currentCardCategory === "proper") return "專有名詞";
   return "生詞";
@@ -654,6 +697,7 @@ function getCardCategoryLabel() {
 function renderCard() {
   document.querySelector("#cardSectionTitle").textContent = getCardCategoryLabel();
   const lessonCards = getCardsForCurrentLesson();
+  renderCardPicker(lessonCards);
   if (!lessonCards.length) {
     document.querySelector("#cardLesson").textContent = `第 ${currentCardLesson} 課`;
     updateCardProgress(0, 0);
@@ -683,6 +727,29 @@ function renderCard() {
     <small>${escapeHtml(formatSentencePinyin(card.examplePinyin) || "請匯入例句拼音。")}</small>
     <strong>${escapeHtml(card.exampleVi || "請匯入越南語例句翻譯。")}</strong>
   `;
+}
+
+function renderCardPicker(lessonCards) {
+  if (!cardPickerList) return;
+  const normalizedIndex = lessonCards.length ? currentCardIndex % lessonCards.length : 0;
+  cardPickerCount.textContent = `${lessonCards.length} 個`;
+  if (!lessonCards.length) {
+    cardPickerList.innerHTML = "<p class=\"empty-state compact\">這一課目前沒有可顯示的生詞。</p>";
+    return;
+  }
+  cardPickerList.innerHTML = lessonCards.map((card, index) => `
+    <button class="card-picker-item ${index === normalizedIndex ? "active" : ""}" type="button" data-index="${index}">
+      <span>${escapeHtml(card.term || "")}</span>
+      <small>${escapeHtml(formatTermPinyin(card.pinyin) || "")}</small>
+    </button>
+  `).join("");
+  cardPickerList.querySelectorAll(".card-picker-item").forEach((button) => {
+    button.addEventListener("click", () => {
+      currentCardIndex = Number(button.dataset.index || 0);
+      renderCard();
+      requestAnimationFrame(() => document.querySelector("#flashcard")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+    });
+  });
 }
 
 function updateCardProgress(current, total) {
@@ -1530,6 +1597,7 @@ function createHandwritingBoard(canvas) {
   let strokes = [];
 
   function resize() {
+    if (drawing) return;
     const rect = canvas.getBoundingClientRect();
     const ratio = window.devicePixelRatio || 1;
     canvas.width = Math.max(1, Math.round(rect.width * ratio));
@@ -1600,17 +1668,23 @@ function createHandwritingBoard(canvas) {
   }
 
   function stop(event) {
-    if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+    if (event?.pointerId != null && canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
     if (currentStroke?.length) strokes.push(currentStroke);
     drawing = false;
     lastPoint = null;
     currentStroke = null;
   }
 
+  function blockTouchScroll(event) {
+    if (event.cancelable) event.preventDefault();
+  }
+
   canvas.addEventListener("pointerdown", start);
   canvas.addEventListener("pointermove", draw);
   canvas.addEventListener("pointerup", stop);
   canvas.addEventListener("pointercancel", stop);
+  canvas.addEventListener("touchstart", blockTouchScroll, { passive: false });
+  canvas.addEventListener("touchmove", blockTouchScroll, { passive: false });
   window.addEventListener("resize", () => {
     if (!canvas.closest(".handwriting-body")?.hidden) resize();
   });
@@ -1792,9 +1866,13 @@ function normalizeText(text, index) {
       : [],
     extras: Array.isArray(text.extras)
       ? text.extras.map((section) => ({
+          type: String(section.type || "").trim(),
           title: String(section.title || "").trim(),
+          description: String(section.description || "").trim(),
+          headers: Array.isArray(section.headers) ? section.headers.map((item) => String(item).trim()).filter(Boolean) : [],
+          rows: Array.isArray(section.rows) ? section.rows : [],
           items: Array.isArray(section.items) ? section.items : [],
-        })).filter((section) => section.title || section.items.length)
+        })).filter((section) => section.title || section.items.length || section.rows.length)
       : [],
     id: String(text.id || index + 1),
   };
