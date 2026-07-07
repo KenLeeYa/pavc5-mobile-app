@@ -1,9 +1,10 @@
 import { lesson1Cards } from "./data/lesson1-cards.js";
 import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
+import { lesson3To14OcrGrammar, lesson3To14OcrTexts } from "./data/lesson3-14-ocr-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260707-ocr1";
+const CONTENT_VERSION = "lesson-content-shell-20260707-ocr2";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -185,7 +186,7 @@ const legacyDemoCards = [
 ];
 
 const defaultCards = [...lesson1Cards, ...lesson2Cards];
-const defaultTexts = [...lesson1Texts, ...lesson2Texts];
+const defaultTexts = [...lesson1Texts, ...lesson2Texts, ...lesson3To14OcrTexts];
 
 const fallbackGrammar = [
   {
@@ -265,6 +266,7 @@ const fallbackGrammar = [
 const defaultGrammar = [
   ...lesson1Grammar,
   ...lesson2Grammar,
+  ...lesson3To14OcrGrammar,
   ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
 ];
 

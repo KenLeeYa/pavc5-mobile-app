@@ -468,6 +468,7 @@ select,
   font-size: 1.04rem;
   font-weight: 760;
   line-height: 1.72;
+  white-space: pre-wrap;
 }
 
 .dialogue-pinyin,
