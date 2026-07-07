@@ -3,7 +3,7 @@ import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260707";
+const CONTENT_VERSION = "lesson-content-shell-20260707-ocr1";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -13,22 +13,108 @@ const IDIOM_TYPES = new Set(["成語", "俗語", "四字詞"]);
 const PROPER_TYPES = new Set(["專有名詞"]);
 const adminMode = new URLSearchParams(window.location.search).get("admin") === "1";
 
-const thirdEditionLessons = [
-  ["第 1 課", "第三版第五冊內容整理區"],
-  ["第 2 課", "第三版第五冊內容整理區"],
-  ["第 3 課", "第三版第五冊內容整理區"],
-  ["第 4 課", "第三版第五冊內容整理區"],
-  ["第 5 課", "第三版第五冊內容整理區"],
-  ["第 6 課", "第三版第五冊內容整理區"],
-  ["第 7 課", "第三版第五冊內容整理區"],
-  ["第 8 課", "第三版第五冊內容整理區"],
-  ["第 9 課", "第三版第五冊內容整理區"],
-  ["第 10 課", "第三版第五冊內容整理區"],
-  ["第 11 課", "第三版第五冊內容整理區"],
-  ["第 12 課", "第三版第五冊內容整理區"],
-  ["第 13 課", "第三版第五冊內容整理區"],
-  ["第 14 課", "第三版第五冊內容整理區"],
+const courseOutline = [
+  {
+    title: "因小失大",
+    description: "討論購物選擇、正版與盜版商品，以及因小利造成大損失的經驗。",
+    grammar: ["只不過...而已", "...不用...，只要...就...(了)", "...就算了，何必(還)...", "不光是...，...也是...", "...，何況..."],
+    idioms: ["因小失大", "貨比三家不吃虧", "貪小便宜", "上一次當，學一次乖", "得不償失"],
+    culture: "認識正版、仿冒品、統一發票與華人消費觀念。",
+  },
+  {
+    title: "歡樂過春節",
+    description: "介紹華人春節的由來、活動、食物與節慶習俗。",
+    grammar: ["...與...相當", "至於", "當...時", "凡是...都...", "例如...等等"],
+    idioms: ["大街小巷", "家家戶戶", "財源廣進", "此起彼落", "不可或缺"],
+    culture: "認識春節、元宵節、農曆與過年吉祥話。",
+  },
+  {
+    title: "終身學習",
+    description: "說明終身學習的觀念、方式與優點，並討論不同教育制度。",
+    grammar: ["所謂(的)...", "往往", "由此可見", "以為...其實...", "(雖然)...然而..."],
+    idioms: ["一言一行", "形形色色", "打打殺殺", "活到老，學到老", "得心應手"],
+    culture: "比較學習方式、教育制度與成人學習文化。",
+  },
+  {
+    title: "不經一事，不長一智",
+    description: "敘述旅行經驗、遭遇問題後的處理方式，以及從經驗得到的提醒。",
+    grammar: ["歷經...好不容易...", "等到...", "把...連同...", "先...接著(再)...然後", "等到...就...了"],
+    idioms: ["不經一事，不長一智", "晴天霹靂", "徒勞無功"],
+    culture: "認識旅行安排、突發狀況與提醒他人的表達方式。",
+  },
+  {
+    title: "世界運動會",
+    description: "介紹運動賽事、選手精神與世界運動會的理念。",
+    grammar: ["在...方面", "V 入", "以...來", "經過...終於...", "使"],
+    idioms: ["世界大同，天下一家", "同場競技"],
+    culture: "認識奧運會、世界運動會與公平競爭精神。",
+  },
+  {
+    title: "服務性的休閒活動",
+    description: "介紹服務性休閒活動的意義、種類、好處與注意事項。",
+    grammar: ["以...來說", "是否", "只有...才...", "在...前提下"],
+    idioms: ["自己快樂，別人受惠", "助人為快樂之本", "天災人禍", "流離失所", "受苦受難"],
+    culture: "認識志工、公益與服務性休閒活動。",
+  },
+  {
+    title: "你戒菸，我拒吸二手菸",
+    description: "討論吸菸、戒菸、二手菸與公共健康觀念。",
+    grammar: ["由於", "把...掛在嘴上", "只要...就...", "只有...才..."],
+    idioms: ["提神醒腦", "消愁解悶", "飯後一根菸，快樂似神仙", "人人皆知", "無話可說", "各式各樣"],
+    culture: "認識拒菸、戒菸與公共場所禁菸觀念。",
+  },
+  {
+    title: "單親家庭也幸福",
+    description: "討論單親家庭的定義、現象、困難與社會支持。",
+    grammar: ["由...所組成", "則", "(不)等於", "儘管...仍然...", "這樣/如此一來"],
+    idioms: ["不離不棄", "誤入歧途", "總而言之", "因人而異"],
+    culture: "認識家庭型態、親職壓力與社會變遷。",
+  },
+  {
+    title: "人人都是環保尖兵",
+    description: "說明環境保護、環保意識與個人可行的改善方式。",
+    grammar: ["因(為)...而...變得/變成", "到...地步", "怎不令...", "如何", "...也好...也好"],
+    idioms: ["以身作則", "耳濡目染", "自然而然"],
+    culture: "認識環保政策、生活習慣與環境議題。",
+  },
+  {
+    title: "吃得健康又安全",
+    description: "討論現代飲食、吃素、食品安全與健康觀念。",
+    grammar: ["反映出", "以...而言/來說", "固然...但是...", "為了...著想", "俗話說得好..."],
+    idioms: ["藥補不如食補", "持之以恆"],
+    culture: "認識食品安全、保健食品與現代飲食選擇。",
+  },
+  {
+    title: "高齡化與少子化的社會",
+    description: "討論高齡化、少子化的原因、影響與相關政策。",
+    grammar: ["即", "更 SV 的是", "為了因應...", "V/SV 於", "首先...其次..."],
+    idioms: ["日積月累", "顯而易見", "刻不容緩", "家有一老，如有一寶"],
+    culture: "認識人口老化、少子化與社會政策。",
+  },
+  {
+    title: "十二生肖",
+    description: "介紹華人十二生肖的由來、計時概念與文化象徵。",
+    grammar: ["除了...(之)外，最...", "有助於/有利於", "倒也不是", "以...為...", "看法不一"],
+    idioms: ["心服口服", "威風凜凜"],
+    culture: "比較不同文化中的生肖、年齡與性格觀念。",
+  },
+  {
+    title: "正體字與簡體字",
+    description: "說明中華文字的演變、正體字與簡體字的形成和使用。",
+    grammar: ["自...以後，即成為", "隨著", "越...越...", "被...視為", "除此之外，尚有..."],
+    idioms: ["龍飛鳳舞", "行雲流水", "發人深省", "茫然不解", "貽笑大方"],
+    culture: "認識華文字體演變與兩岸華文使用差異。",
+  },
+  {
+    title: "掌中戲大師李天祿與茶藝",
+    description: "介紹李天祿、掌中戲與華人茶文化，並比較戲劇與飲品文化。",
+    grammar: ["V 遍", "了...是", "沒有...，有的只是...", "...但...反而...", "介於...之間"],
+    idioms: ["雕樑畫棟", "入口即化", "回味無窮", "栩栩如生", "悲歡離合", "人情世事"],
+    culture: "透過掌中戲與喝茶文化認識傳統藝術與生活美學。",
+  },
 ];
+
+const thirdEditionLessons = courseOutline.map((item, index) => [`第 ${index + 1} 課 ${item.title}`, item.description]);
 
 const legacyDemoCards = [
   {
@@ -473,6 +559,7 @@ function renderLessons() {
   lessonList.innerHTML = "";
   thirdEditionLessons.forEach(([title, description], index) => {
     const number = index + 1;
+    const outline = courseOutline[index] || {};
     const learned = state.learnedCards?.filter((cardId) => cardId.startsWith(`${number}:`)).length || 0;
     const vocabCount = cards.filter((item) => Number(item.lesson) === number && !isIdiomCard(item) && !isProperCard(item)).length;
     const properCount = cards.filter((item) => Number(item.lesson) === number && isProperCard(item)).length;
@@ -487,6 +574,11 @@ function renderLessons() {
       <div>
         <h3>${escapeHtml(title)}</h3>
         <p>${escapeHtml(description)}・課文 ${textItems}・生詞 ${vocabCount}・專名 ${properCount}・成語 ${idiomCount}・${grammarItems} 則語法・${exerciseItems} 題練習</p>
+        <div class="lesson-outline">
+          ${renderLessonOutlineRow("課程表", outline.culture)}
+          ${renderLessonOutlineRow("語法", outline.grammar)}
+          ${renderLessonOutlineRow("成語/俗語/四字詞", outline.idioms)}
+        </div>
       </div>
       <div class="lesson-status">${learned} 張</div>
     `;
@@ -750,6 +842,17 @@ function renderCardPicker(lessonCards) {
       requestAnimationFrame(() => document.querySelector("#flashcard")?.scrollIntoView({ behavior: "smooth", block: "center" }));
     });
   });
+}
+
+function renderLessonOutlineRow(label, value) {
+  const items = Array.isArray(value) ? value : value ? [value] : [];
+  if (!items.length) return "";
+  return `
+    <div class="lesson-outline-row">
+      <strong>${escapeHtml(label)}</strong>
+      <span>${items.map((item) => escapeHtml(item)).join("、")}</span>
+    </div>
+  `;
 }
 
 function updateCardProgress(current, total) {

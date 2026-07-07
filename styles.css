@@ -295,6 +295,25 @@ select,
   line-height: 1.45;
 }
 
+.lesson-outline {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.lesson-outline-row {
+  display: grid;
+  gap: 3px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.lesson-outline-row strong {
+  color: var(--magenta-dark);
+  font-size: 0.78rem;
+}
+
 .lesson-status {
   min-width: 58px;
   color: var(--gold);
