@@ -1,10 +1,10 @@
 import { lesson1Cards } from "./data/lesson1-cards.js";
 import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
-import { manualSupplementGrammar, manualSupplementTexts } from "./data/manual-supplement-content.js";
+import { manualSupplementCards, manualSupplementGrammar, manualSupplementTexts } from "./data/manual-supplement-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260707-manual1";
+const CONTENT_VERSION = "lesson-content-shell-20260707-manual2";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -185,7 +185,7 @@ const legacyDemoCards = [
   },
 ];
 
-const defaultCards = [...lesson1Cards, ...lesson2Cards];
+const defaultCards = [...lesson1Cards, ...lesson2Cards, ...manualSupplementCards];
 const defaultTexts = [...lesson1Texts, ...lesson2Texts, ...manualSupplementTexts];
 
 const fallbackGrammar = [
@@ -575,7 +575,8 @@ function renderLessons() {
       <div class="lesson-number">${number}</div>
       <div>
         <h3>${escapeHtml(title)}</h3>
-        <p>${escapeHtml(description)}・課文 ${textItems}・生詞 ${vocabCount}・專名 ${properCount}・成語 ${idiomCount}・${grammarItems} 則語法・${exerciseItems} 題練習</p>
+        <p>${escapeHtml(description)}</p>
+        <p class="lesson-card-stats">課文 ${textItems}・生詞 ${vocabCount}・專名 ${properCount}・成語 ${idiomCount}・${grammarItems} 則語法・${exerciseItems} 題練習</p>
         <div class="lesson-outline">
           ${renderLessonOutlineRow("課程表", outline.culture)}
           ${renderLessonOutlineRow("語法", outline.grammar)}

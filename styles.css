@@ -386,6 +386,12 @@ select,
   background: #fde9f3;
 }
 
+.lesson-card-stats {
+  margin-top: 6px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .mark-proper {
   color: #7a3f10;
   background: #fff0d8;

@@ -110,6 +110,153 @@ function extra(title, items, type = "note") {
   return { title, type, items: items.map((item) => (typeof item === "string" ? { explanation: item } : item)) };
 }
 
+function manualCard(id, lesson, type, term, pinyin, meaningZh, meaningVi, example = "", examplePinyin = "", exampleVi = "") {
+  return {
+    id,
+    lesson,
+    type,
+    term,
+    pinyin,
+    meaningZh,
+    meaningPinyin: "",
+    meaningVi,
+    example,
+    examplePinyin,
+    exampleVi,
+    audioUrl: "",
+  };
+}
+
+export const manualSupplementCards = [
+  manualCard("3-v001", 3, "生詞", "終身", "zhong1 shen1", "一生；一輩子。", "suốt đời", "終身學習是一種重要的生活態度。"),
+  manualCard("3-v002", 3, "生詞", "階段", "jie1 duan4", "事情發展過程中的一段時期。", "giai đoạn", "學生在不同階段會遇到不同的學習問題。"),
+  manualCard("3-v003", 3, "生詞", "正規", "zheng4 gui1", "合乎正式標準或規定的。", "chính quy", "學校教育是正規教育的重要部分。"),
+  manualCard("3-v004", 3, "生詞", "提倡", "ti2 chang4", "提出並鼓勵大家去做。", "đề xướng, khuyến khích", "老師提倡學生每天閱讀。"),
+  manualCard("3-v005", 3, "生詞", "高齡", "gao1 ling2", "年紀很大，通常指超過一般工作或退休年齡。", "tuổi cao", "高齡者也可以保持學習的習慣。"),
+  manualCard("3-v006", 3, "生詞", "不斷地", "bu2 duan4 de5", "一直、持續地。", "không ngừng", "他不斷地練習中文，所以進步很快。"),
+  manualCard("3-v007", 3, "生詞", "提升", "ti2 sheng1", "使程度、能力或地位提高。", "nâng cao", "閱讀可以提升語言能力。"),
+  manualCard("3-v008", 3, "生詞", "強調", "qiang2 diao4", "特別指出重要性。", "nhấn mạnh", "老師強調複習的重要性。"),
+  manualCard("3-v009", 3, "生詞", "探討", "tan4 tao3", "深入研究或討論。", "thảo luận, nghiên cứu", "我們要探討現代教育的目的。"),
+  manualCard("3-v010", 3, "生詞", "榜樣", "bang3 yang4", "值得學習的人或事情。", "tấm gương", "父母常是孩子學習的榜樣。"),
+  manualCard("3-v011", 3, "生詞", "相處", "xiang1 chu3", "和別人一起生活或互動。", "chung sống, hòa hợp", "學校生活能讓學生學習如何與人相處。"),
+  manualCard("3-v012", 3, "生詞", "來源", "lai2 yuan2", "事物產生或取得的地方。", "nguồn gốc, nguồn", "家庭是孩子早期學習的重要來源。"),
+  manualCard("3-v013", 3, "生詞", "教養", "jiao4 yang3", "教育和培養，也指品德修養。", "nuôi dạy, giáo dưỡng", "父母的教養方式會影響孩子。"),
+  manualCard("3-v014", 3, "生詞", "心靈", "xin1 ling2", "內心、精神層面。", "tâm hồn", "閱讀能豐富人的心靈。"),
+  manualCard("3-v015", 3, "生詞", "深遠", "shen1 yuan3", "影響很大、很久。", "sâu xa", "家庭教育對孩子有深遠的影響。"),
+  manualCard("3-v016", 3, "生詞", "現象", "xian4 xiang4", "可以觀察到的情況。", "hiện tượng", "高齡化是現代社會常見的現象。"),
+  manualCard("3-v017", 3, "生詞", "發人深省", "fa1 ren2 shen1 xing3", "使人深入思考。", "đáng suy ngẫm", "這篇文章的內容發人深省。"),
+  manualCard("3-v018", 3, "生詞", "形成", "xing2 cheng2", "逐漸產生或變成。", "hình thành", "良好的學習習慣不是一天形成的。"),
+  manualCard("3-v019", 3, "生詞", "正面", "zheng4 mian4", "好的、積極的一面。", "mặt tích cực", "媒體也能帶來正面的教育效果。"),
+  manualCard("3-v020", 3, "生詞", "意義", "yi4 yi4", "意思或價值。", "ý nghĩa", "終身學習有很重要的意義。"),
+  manualCard("3-v021", 3, "生詞", "事件", "shi4 jian4", "發生的事情。", "sự kiện", "社會新聞常出現讓人深省的事件。"),
+  manualCard("3-v022", 3, "生詞", "負面", "fu4 mian4", "不好的、消極的一面。", "mặt tiêu cực", "網路資訊也可能有負面的影響。"),
+  manualCard("3-v023", 3, "生詞", "依賴", "yi1 lai4", "靠著別人或某件事物。", "phụ thuộc", "學生不能只依賴老師，也要主動學習。"),
+  manualCard("3-v024", 3, "生詞", "教材", "jiao4 cai2", "教學用的材料。", "tài liệu giảng dạy", "這本書是中文課的教材。"),
+  manualCard("3-v025", 3, "生詞", "理論", "li3 lun4", "有系統的知識或原則。", "lý thuyết", "理論和實際有時不完全一樣。"),
+  manualCard("3-v026", 3, "生詞", "實際", "shi2 ji4", "真實的情況。", "thực tế", "只懂理論還不夠，也要有實際經驗。"),
+  manualCard("3-v027", 3, "生詞", "迷失", "mi2 shi1", "迷路或失去方向。", "lạc lối, mất phương hướng", "資訊太多時，人容易迷失方向。"),
+  manualCard("3-v028", 3, "生詞", "多變", "duo1 bian4", "變化很多、不固定。", "nhiều biến đổi", "現代社會多變，學習不能停止。"),
+  manualCard("3-v029", 3, "生詞", "領導", "ling3 dao3", "帶領或指導。", "lãnh đạo", "老師領導學生完成討論。"),
+  manualCard("3-v030", 3, "生詞", "培養", "pei2 yang3", "訓練、養成。", "bồi dưỡng", "教育的目的之一是培養思考能力。"),
+  manualCard("3-v031", 3, "生詞", "思考", "si1 kao3", "想、考慮。", "suy nghĩ", "遇到問題時，要先思考再決定。"),
+  manualCard("3-v032", 3, "生詞", "唯一", "wei2 yi1", "只有一個。", "duy nhất", "學校不是唯一的學習場所。"),
+  manualCard("3-v033", 3, "生詞", "成就", "cheng2 jiu4", "努力後得到的成果。", "thành tựu", "完成學位是很大的成就。"),
+  manualCard("3-v034", 3, "生詞", "完成", "wan2 cheng2", "把事情做完。", "hoàn thành", "他終於完成了研究計畫。"),
+  manualCard("3-v035", 3, "生詞", "達成", "da2 cheng2", "完成目標或得到結果。", "đạt được", "學生努力達成自己的學習目標。"),
+  manualCard("3-v036", 3, "生詞", "新知", "xin1 zhi1", "新的知識，也可指新朋友。", "tri thức mới", "活到老、學到老，才能吸收新知。"),
+  manualCard("3-v037", 3, "生詞", "視訊", "shi4 xun4", "透過影像通話或傳輸的方式溝通。", "cuộc gọi video", "他常和家人用視訊聊天。"),
+  manualCard("3-v038", 3, "生詞", "佩服", "pei4 fu2", "敬重、欣賞。", "khâm phục", "我很佩服他努力學習的精神。"),
+  manualCard("3-v039", 3, "生詞", "保持", "bao3 chi2", "維持、不改變。", "duy trì", "每天運動能保持身體健康。"),
+  manualCard("3-v040", 3, "生詞", "實現", "shi2 xian4", "使理想或計畫變成事實。", "thực hiện", "他希望實現自己的夢想。"),
+  manualCard("3-v041", 3, "生詞", "自我實現", "zi4 wo3 shi2 xian4", "完成自我理想並發揮潛能。", "tự hiện thực hóa", "學習能幫助人追求自我實現。"),
+  manualCard("3-v042", 3, "生詞", "價值", "jia4 zhi2", "有用或重要的程度。", "giá trị", "知識的價值很難用金錢衡量。"),
+  manualCard("3-i001", 3, "成語", "一言一行", "yi4 yan2 yi4 xing2", "一句話和一個行為，泛指人的言語與行動。", "lời nói và hành động", "老師的一言一行都會影響學生。"),
+  manualCard("3-i002", 3, "成語", "價值連城", "jia4 zhi2 lian2 cheng2", "形容非常珍貴，價值很高。", "vô giá, cực kỳ quý giá", "良好的學習態度對人生來說價值連城。"),
+];
+
+const lesson3DetailedGrammar = [
+  {
+    id: "manual-lesson3-grammar-suowei",
+    lesson: 3,
+    pattern: "所謂(的)...是指...",
+    patternPinyin: "suo3 wei4 (de5)... shi4 zhi3...",
+    explanationZh: "用來解釋複雜的名詞、觀念或說法，先提出要說明的詞語，再用「是指」說明內容。",
+    explanationPinyin: "",
+    explanationVi: "Dùng để giải thích một khái niệm hoặc thuật ngữ phức tạp; nêu từ cần giải thích rồi dùng 是指 để giải nghĩa.",
+    example: "所謂的終身學習，是指一個人從出生到老都不斷學習。",
+    examplePinyin: "suo3 wei4 de5 zhong1 shen1 xue2 xi2, shi4 zhi3 yi2 ge4 ren2 cong2 chu1 sheng1 dao4 lao3 dou1 bu2 duan4 xue2 xi2.",
+    exampleVi: "Cái gọi là học tập suốt đời là việc một người học không ngừng từ lúc sinh ra đến khi già.",
+    practice: {
+      prompt: "請用「所謂(的)...是指...」解釋一個教育或學習相關的詞語。",
+      answer: "所謂的社會教育，是指在學校以外，透過社會環境與生活經驗得到的教育。",
+    },
+  },
+  {
+    id: "manual-lesson3-grammar-wangwang",
+    lesson: 3,
+    pattern: "往往",
+    patternPinyin: "wang3 wang3",
+    explanationZh: "表示某種情況常常發生，帶有經驗歸納的語氣。",
+    explanationPinyin: "",
+    explanationVi: "Biểu thị một tình huống thường xảy ra, thường dùng khi tổng kết kinh nghiệm.",
+    example: "只依賴課本的人，往往不容易把知識用在生活中。",
+    examplePinyin: "zhi3 yi1 lai4 ke4 ben3 de5 ren2, wang3 wang3 bu4 rong2 yi4 ba3 zhi1 shi4 yong4 zai4 sheng1 huo2 zhong1.",
+    exampleVi: "Người chỉ phụ thuộc vào sách giáo khoa thường không dễ áp dụng kiến thức vào đời sống.",
+    practice: {
+      prompt: "請用「往往」改寫一個和學習習慣有關的句子。",
+      answer: "不複習的人往往考試前才發現自己還有很多不懂的地方。",
+    },
+  },
+  {
+    id: "manual-lesson3-grammar-youcikejian",
+    lesson: 3,
+    pattern: "由此可見",
+    patternPinyin: "you2 ci3 ke3 jian4",
+    explanationZh: "用在說明或例子之後，表示從前面的內容可以得到某個結論。",
+    explanationPinyin: "",
+    explanationVi: "Dùng sau ví dụ hoặc lập luận để đưa ra kết luận: từ đó có thể thấy rằng...",
+    example: "家庭、學校和社會都會影響一個人，由此可見，教育不只發生在教室裡。",
+    examplePinyin: "jia1 ting2, xue2 xiao4 he2 she4 hui4 dou1 hui4 ying3 xiang3 yi2 ge4 ren2, you2 ci3 ke3 jian4, jiao4 yu4 bu4 zhi3 fa1 sheng1 zai4 jiao4 shi4 li3.",
+    exampleVi: "Gia đình, nhà trường và xã hội đều ảnh hưởng đến một người; từ đó có thể thấy giáo dục không chỉ diễn ra trong lớp học.",
+    practice: {
+      prompt: "請先寫一個現象，再用「由此可見」寫出結論。",
+      answer: "很多人畢業後仍然上課學新技能，由此可見，學習不是學生時代才需要做的事。",
+    },
+  },
+  {
+    id: "manual-lesson3-grammar-yiwei-qishi",
+    lesson: 3,
+    pattern: "...以為...，其實...",
+    patternPinyin: "... yi3 wei2..., qi2 shi2...",
+    explanationZh: "用來表示原來的想法和實際情況不同，前面說誤解，後面說真實情況。",
+    explanationPinyin: "",
+    explanationVi: "Dùng để nói điều mình tưởng ban đầu khác với thực tế; vế sau nêu sự thật.",
+    example: "我以前以為畢業以後就不用學習了，其實學習是一輩子的事。",
+    examplePinyin: "wo3 yi3 qian2 yi3 wei2 bi4 ye4 yi3 hou4 jiu4 bu2 yong4 xue2 xi2 le5, qi2 shi2 xue2 xi2 shi4 yi2 bei4 zi5 de5 shi4.",
+    exampleVi: "Trước đây tôi tưởng sau khi tốt nghiệp thì không cần học nữa, thật ra học tập là chuyện cả đời.",
+    practice: {
+      prompt: "請用「...以為...，其實...」說明一個你改變過的想法。",
+      answer: "我以為網路上的資料都正確，其實很多內容還需要查證。",
+    },
+  },
+  {
+    id: "manual-lesson3-grammar-suiran-raner",
+    lesson: 3,
+    pattern: "(雖然)...然而...",
+    patternPinyin: "(sui1 ran2)... ran2 er2...",
+    explanationZh: "用來連接兩個相反或轉折的情況，語氣比「但是」正式。",
+    explanationPinyin: "",
+    explanationVi: "Dùng để nối hai tình huống tương phản; trang trọng hơn 但是.",
+    example: "雖然社會教育沒有固定的教室，然而它對人的影響很深遠。",
+    examplePinyin: "sui1 ran2 she4 hui4 jiao4 yu4 mei2 you3 gu4 ding4 de5 jiao4 shi4, ran2 er2 ta1 dui4 ren2 de5 ying3 xiang3 hen3 shen1 yuan3.",
+    exampleVi: "Tuy giáo dục xã hội không có lớp học cố định, nhưng ảnh hưởng của nó đối với con người rất sâu xa.",
+    practice: {
+      prompt: "請用「(雖然)...然而...」完成一個和學習有關的句子。",
+      answer: "雖然自學很自由，然而要成功仍然需要自律和計畫。",
+    },
+  },
+];
+
 export const manualSupplementTexts = [
   {
     id: "lesson1-notes-discussion-reading",
@@ -189,6 +336,40 @@ export const manualSupplementTexts = [
         "目標：能以中文討論家庭教育、社會教育與終身學習。",
         "語法：所謂(的)...是指...、往往、由此可見、...以為...其實...、(雖然)...然而...",
       ]),
+      extra("問題討論", [
+        "根據課文，人的一生中有哪幾個重要的教育階段？",
+        "你從學校教育、家庭教育或社會教育中學到什麼？",
+        "你同意「活到老，學到老」嗎？為什麼？",
+        "很多人認為學習者年紀很大時，用電腦和網路會很困難。你同意嗎？請說明理由。",
+        "請舉例說明一件讓你覺得發人深省的社會事件。",
+        "你認為現代教育最重要的目的是什麼？",
+      ], "discussion"),
+      extra("課室活動：終身學習", [
+        "訪問一位長輩，了解他過去的學習經驗。",
+        "整理訪問內容，說明他在學校、家庭或社會中學到的事情。",
+        "分享你覺得最有啟發的一件事，並說明原因。",
+      ], "activity"),
+    ],
+  },
+  {
+    id: "lesson4-main-manual",
+    lesson: 4,
+    title: "不經一事，不長一智",
+    titlePinyin: "bu4 jing1 yi2 shi4, bu4 zhang3 yi2 zhi4",
+    titleVi: "Không trải qua việc thì không thêm khôn ngoan",
+    note: "依照補充圖片人工整理第四課課文開頭，後續頁面提供後可再補完整。",
+    lines: [
+      line("課文", "林敏從十一歲起就嚮往歐洲的生活。她看了許多介紹歐洲的雜誌和報導，那裡的美麗風光常常讓她羨慕不已。", "lin2 min3 cong2 shi2 yi1 sui4 qi3 jiu4 xiang4 wang3 ou1 zhou1 de5 sheng1 huo2.", "Từ năm mười một tuổi, Lâm Mẫn đã hướng về đời sống ở châu Âu; cảnh đẹp trong sách báo khiến cô rất ngưỡng mộ."),
+      line("課文", "在大學學法兩年後的夏天，她終於下定決心，把旅行的夢想變成計畫，報名參加了一個遊歐洲的旅行團。", "zai4 da4 xue2 xue2 fa3 liang3 nian2 hou4 de5 xia4 tian1, ta1 zhong1 yu2 xia4 ding4 jue2 xin1.", "Sau hai năm học tiếng Pháp ở đại học, mùa hè năm ấy cô quyết tâm biến giấc mơ du lịch thành kế hoạch."),
+      line("課文", "在二十天的旅程中，導遊帶團員參觀了很多風景和行程，過程非常緊湊。", "zai4 er4 shi2 tian1 de5 lv3 cheng2 zhong1, dao3 you2 dai4 tuan2 yuan2 can1 guan1 le5 hen3 duo1 feng1 jing3.", "Trong chuyến đi hai mươi ngày, hướng dẫn viên đưa đoàn tham quan nhiều nơi, lịch trình rất dày."),
+      line("課文", "在旅程中，大家常常在戶外餐廳聽音樂演奏。音樂的旋律讓人如醉如痴，她也開始發現當地食物與生活方式的特色。", "zai4 lv3 cheng2 zhong1, da4 jia1 chang2 chang2 zai4 hu4 wai4 can1 ting1 ting1 yin1 yue4 yan3 zou4.", "Trong chuyến đi, mọi người thường nghe nhạc ở nhà hàng ngoài trời; cô cũng bắt đầu cảm nhận được nét đặc sắc của ẩm thực và đời sống địa phương."),
+    ],
+    extras: [
+      extra("問題討論", [
+        "除了回國探親以外，還有哪些旅遊的方式？",
+        "越南有自己的特色旅遊、傳統習俗或文化行程嗎？請舉例。",
+        "本課讓你得到什麼學習機會？你用什麼方式來描述旅程？",
+      ], "discussion"),
     ],
   },
   ...outlineRows.filter((row) => row.lesson >= 4).map((row) => ({
@@ -229,6 +410,9 @@ function grammarItem(lesson, pattern, example) {
   };
 }
 
-export const manualSupplementGrammar = outlineRows.flatMap((row) =>
-  row.grammar.map((pattern) => grammarItem(row.lesson, pattern, `${lessonTitles[row.lesson]}這一課可以用「${pattern}」來說明課文中的重點。`)),
-);
+export const manualSupplementGrammar = [
+  ...lesson3DetailedGrammar,
+  ...outlineRows
+    .filter((row) => row.lesson >= 4)
+    .flatMap((row) => row.grammar.map((pattern) => grammarItem(row.lesson, pattern, `${lessonTitles[row.lesson]}這一課可以用「${pattern}」來說明課文中的重點。`))),
+];
