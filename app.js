@@ -4,7 +4,7 @@ import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-conte
 import { lesson3To14OcrGrammar, lesson3To14OcrTexts } from "./data/lesson3-14-ocr-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260707-ocr2";
+const CONTENT_VERSION = "lesson-content-shell-20260707-ocr4";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
