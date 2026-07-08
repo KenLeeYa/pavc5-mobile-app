@@ -4,7 +4,7 @@ import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-conte
 import { manualSupplementCards, manualSupplementGrammar, manualSupplementTexts } from "./data/manual-supplement-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260707-manual2";
+const CONTENT_VERSION = "lesson-content-shell-20260708-manual3";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
