@@ -2,9 +2,10 @@ import { lesson1Cards } from "./data/lesson1-cards.js";
 import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 import { manualSupplementCards, manualSupplementGrammar, manualSupplementTexts } from "./data/manual-supplement-content.js";
+import { lesson34SyncCards, lesson34SyncGrammar, lesson34SyncTexts } from "./data/lesson3-4-sync-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260806-text-marks";
+const CONTENT_VERSION = "lesson-content-shell-20260806-lessons34-complete";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -185,8 +186,21 @@ const legacyDemoCards = [
   },
 ];
 
-const defaultCards = [...lesson1Cards, ...lesson2Cards, ...manualSupplementCards];
-const defaultTexts = [...lesson1Texts, ...lesson2Texts, ...manualSupplementTexts];
+const lessonNumber = (item) => Number(String(item?.lesson ?? "").match(/\d+/)?.[0]);
+
+const replaceLessons34 = (items, replacements) => [
+  ...items.filter((item) => ![3, 4].includes(lessonNumber(item))),
+  ...replacements,
+];
+
+const defaultCards = replaceLessons34(
+  [...lesson1Cards, ...lesson2Cards, ...manualSupplementCards],
+  lesson34SyncCards,
+);
+const defaultTexts = replaceLessons34(
+  [...lesson1Texts, ...lesson2Texts, ...manualSupplementTexts],
+  lesson34SyncTexts,
+);
 
 const fallbackGrammar = [
   {
@@ -263,12 +277,15 @@ const fallbackGrammar = [
   },
 ];
 
-const defaultGrammar = [
-  ...lesson1Grammar,
-  ...lesson2Grammar,
-  ...manualSupplementGrammar,
-  ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
-];
+const defaultGrammar = replaceLessons34(
+  [
+    ...lesson1Grammar,
+    ...lesson2Grammar,
+    ...manualSupplementGrammar,
+    ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
+  ],
+  lesson34SyncGrammar,
+);
 
 const defaultExercises = Array.from({ length: 14 }, (_, index) => {
   const lesson = index + 1;
@@ -317,9 +334,9 @@ if (state.contentVersion !== CONTENT_VERSION && !state.customContent) {
   state.contentVersion = CONTENT_VERSION;
   saveState();
 }
-let cards = state.cards?.length ? state.cards : defaultCards;
-let grammar = state.grammar?.length ? state.grammar : defaultGrammar;
-let texts = state.texts?.length ? state.texts : defaultTexts;
+let cards = replaceLessons34(state.cards?.length ? state.cards : defaultCards, lesson34SyncCards);
+let grammar = replaceLessons34(state.grammar?.length ? state.grammar : defaultGrammar, lesson34SyncGrammar);
+let texts = replaceLessons34(state.texts?.length ? state.texts : defaultTexts, lesson34SyncTexts);
 let exercises = state.exercises?.length ? state.exercises : defaultExercises;
 let currentCardIndex = 0;
 let currentLesson = normalizeLessonNumber(state.currentLesson || state.currentTextLesson || state.currentCardLesson || 1);
