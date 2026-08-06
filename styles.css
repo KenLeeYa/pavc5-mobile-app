@@ -991,6 +991,68 @@ select,
   background: #fbf9fa;
 }
 
+.worksheet-list {
+  display: grid;
+  gap: 10px;
+}
+
+.worksheet-item {
+  display: grid;
+  gap: 8px;
+  padding: 11px;
+  border: 1px solid #e8dce2;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.worksheet-prompt,
+.worksheet-options,
+.worksheet-answer p {
+  margin: 0;
+}
+
+.worksheet-prompt {
+  line-height: 1.7;
+}
+
+.worksheet-options {
+  padding: 7px 9px;
+  border-radius: 6px;
+  background: #fff5dd;
+  color: #7a4c08;
+  font-size: 0.9rem;
+}
+
+.worksheet-answer {
+  display: grid;
+  gap: 4px;
+  padding: 10px 11px;
+  border-left: 4px solid #197a69;
+  border-radius: 0 7px 7px 0;
+  background: #eaf7f3;
+}
+
+.worksheet-answer span {
+  color: #186a5d;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.worksheet-answer strong {
+  color: #0c4f83;
+  line-height: 1.55;
+}
+
+.worksheet-answer small {
+  color: #5d357b;
+  line-height: 1.5;
+}
+
+.worksheet-answer p {
+  color: #285e52;
+  line-height: 1.55;
+}
+
 .extra-table-wrap {
   overflow-x: auto;
   margin-top: 4px;

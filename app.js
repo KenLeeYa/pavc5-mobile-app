@@ -691,11 +691,16 @@ function renderTextLegend(legend) {
 
 function renderTextExtraSection(section) {
   const isTable = section.type === "table" || Array.isArray(section.headers) || Array.isArray(section.rows);
+  const isWorksheet = section.type === "worksheet";
   return `
     <section class="text-extra-section">
       <h4>${escapeHtml(section.title || "\u88dc\u5145\u9805\u76ee")}</h4>
       ${section.description ? `<p>${escapeHtml(section.description)}</p>` : ""}
-      ${isTable ? renderTextExtraTable(section) : `
+      ${isTable ? renderTextExtraTable(section) : isWorksheet ? `
+        <div class="worksheet-list">
+          ${renderWorksheetItems(section.items || [])}
+        </div>
+      ` : `
         <div class="text-extra-items">
           ${renderTextExtraItems(section.items || [])}
         </div>
@@ -747,6 +752,24 @@ function renderTextExtraItems(items) {
       </article>
     `;
   }).join("");
+}
+
+function renderWorksheetItems(items) {
+  if (!Array.isArray(items) || !items.length) return "<p>尚未填入練習內容。</p>";
+  return items.map((item, index) => `
+    <article class="worksheet-item">
+      <p class="worksheet-prompt"><strong>${escapeHtml(item.title || `第 ${index + 1} 題`)}</strong>${item.prompt ? `<br>${escapeHtml(item.prompt)}` : ""}</p>
+      ${item.options ? `<p class="worksheet-options">${escapeHtml(item.options)}</p>` : ""}
+      ${item.answer ? `
+        <div class="worksheet-answer">
+          <span>建議答案</span>
+          <strong>${escapeHtml(item.answer)}</strong>
+          ${item.pinyin ? `<small>${escapeHtml(formatSentencePinyin(item.pinyin))}</small>` : ""}
+          ${item.vi ? `<p>${escapeHtml(item.vi)}</p>` : ""}
+        </div>
+      ` : ""}
+    </article>
+  `).join("");
 }
 
 function renderTextLine(line, index = 0) {
