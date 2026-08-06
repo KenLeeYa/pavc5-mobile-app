@@ -1,4 +1,4 @@
-const CACHE_NAME = "pavc5-mobile-v28-20260708-manual3";
+const CACHE_NAME = "pavc5-mobile-v29-20260806-text-marks";
 const ASSETS = [
   "./",
   "./index.html",

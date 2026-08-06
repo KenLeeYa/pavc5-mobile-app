@@ -4,7 +4,7 @@ import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-conte
 import { manualSupplementCards, manualSupplementGrammar, manualSupplementTexts } from "./data/manual-supplement-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260708-manual3";
+const CONTENT_VERSION = "lesson-content-shell-20260806-text-marks";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -648,9 +648,7 @@ function renderText() {
         <button class="mini-button text-play-toggle" type="button" aria-label="播放或暫停課文">播放</button>
         <button class="mini-button text-restart" type="button" aria-label="從頭播放課文">重頭播放</button>
       </div>
-      <div class="text-legend">
-        ${(text.legend || []).map(([type, label]) => `<span class="mark mark-${escapeHtml(type)}">${escapeHtml(label)}</span>`).join("")}
-      </div>
+      ${renderTextLegend(text.legend)}
       <div class="dialogue-list">
         ${(text.lines || []).map((line, index) => renderTextLine(line, index)).join("")}
       </div>
@@ -678,6 +676,17 @@ function renderTextExtras(extras) {
       ${extras.map(renderTextExtraSection).join("")}
     </div>
   `;
+}
+
+function renderTextLegend(legend) {
+  const sharedLegend = [
+    ["vocab", "生詞"],
+    ["grammar", "語法"],
+    ["proper", "專有名詞"],
+    ["idiom", "成語/俗語/四字詞"],
+  ];
+  const items = Array.isArray(legend) && legend.length ? legend : sharedLegend;
+  return `<div class="text-legend">${items.map(([type, label]) => `<span class="mark mark-${escapeHtml(type)}">${escapeHtml(label)}</span>`).join("")}</div>`;
 }
 
 function renderTextExtraSection(section) {

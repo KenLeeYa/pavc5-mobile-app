@@ -102,8 +102,8 @@ const outlineRows = [
   },
 ];
 
-function line(speaker, zh, pinyin = "", vi = "") {
-  return { speaker, zh, pinyin, vi };
+function line(speaker, zh, pinyin = "", vi = "", marks = []) {
+  return { speaker, zh, pinyin, vi, marks };
 }
 
 function extra(title, items, type = "note") {
@@ -456,11 +456,11 @@ export const manualSupplementTexts = [
     titleVi: "Học tập suốt đời",
     note: "依照第三課圖片人工整理。若之後提供更清楚頁面，可再逐句校對成完整版。",
     lines: [
-      line("課文", "人的一生，都應該學不同的知識。在學前、幼兒、小學、中學、大學和研究所等階段，我們接受正規的學校教育，由老師有步驟地教學生相關知識。", "ren2 de5 yi4 sheng1, dou1 ying1 gai1 xue2 bu4 tong2 de5 zhi1 shi4.", "Trong suốt cuộc đời, con người nên học nhiều loại tri thức khác nhau. Ở các giai đoạn học tập chính quy, giáo viên hướng dẫn học sinh từng bước."),
-      line("課文", "所謂「終身學習」是指一個人從學前到高等階段，持續不斷地學習，並藉由學習提高生活品質。", "suo3 wei4 zhong1 shen1 xue2 xi2 shi4 zhi3 yi2 ge4 ren2 chi2 xu4 bu4 duan4 de5 xue2 xi2.", "Cái gọi là học tập suốt đời là việc một người tiếp tục học không ngừng, từ đó nâng cao chất lượng cuộc sống."),
-      line("課文", "為了達成這個目標，除了學校教育外，家庭教育與社會教育也很重要。家庭是孩子最早學習與他人相處的地方。", "wei4 le5 da2 cheng2 zhe4 ge5 mu4 biao1, jia1 ting2 jiao4 yu4 yu3 she4 hui4 jiao4 yu4 ye3 hen3 zhong4 yao4.", "Để đạt mục tiêu này, ngoài giáo dục nhà trường, giáo dục gia đình và xã hội cũng rất quan trọng."),
-      line("課文", "父母的教養態度，以及家人之間的關係，都會對孩子的身體與心理發展造成深遠的影響。", "fu4 mu3 de5 jiao4 yang3 tai4 du4 yi3 ji2 jia1 ren2 zhi1 jian1 de5 guan1 xi4, dou1 hui4 zao4 cheng2 shen1 yuan3 de5 ying3 xiang3.", "Thái độ nuôi dạy của cha mẹ và quan hệ trong gia đình đều ảnh hưởng sâu sắc đến sự phát triển thể chất và tâm lý của trẻ."),
-      line("課文", "社會教育則來自生活中各種人、事、物，例如社區、圖書館、博物館、媒體與公共活動。由此可見，現代教育的目的，是培養每個人持續學習、獨立思考和解決問題的能力。", "you2 ci3 ke3 jian4, xian4 dai4 jiao4 yu4 de5 mu4 di4 shi4 pei2 yang3 chi2 xu4 xue2 xi2 he2 jie3 jue2 wen4 ti2 de5 neng2 li4.", "Có thể thấy mục tiêu của giáo dục hiện đại là bồi dưỡng năng lực học tập liên tục, tư duy độc lập và giải quyết vấn đề."),
+      line("課文", "人的一生，都應該學不同的知識。在學前、幼兒、小學、中學、大學和研究所等階段，我們接受正規的學校教育，由老師有步驟地教學生相關知識。", "ren2 de5 yi4 sheng1, dou1 ying1 gai1 xue2 bu4 tong2 de5 zhi1 shi4.", "Trong suốt cuộc đời, con người nên học nhiều loại tri thức khác nhau. Ở các giai đoạn học tập chính quy, giáo viên hướng dẫn học sinh từng bước.", [["vocab", "正規"], ["vocab", "階段"]]),
+      line("課文", "所謂「終身學習」是指一個人從學前到高等階段，持續不斷地學習，並藉由學習提高生活品質。", "suo3 wei4 zhong1 shen1 xue2 xi2 shi4 zhi3 yi2 ge4 ren2 chi2 xu4 bu4 duan4 de5 xue2 xi2.", "Cái gọi là học tập suốt đời là việc một người tiếp tục học không ngừng, từ đó nâng cao chất lượng cuộc sống.", [["grammar", "所謂"], ["vocab", "終身"], ["vocab", "階段"], ["vocab", "不斷地"], ["vocab", "提升"]]),
+      line("課文", "為了達成這個目標，除了學校教育外，家庭教育與社會教育也很重要。家庭是孩子最早學習與他人相處的地方。", "wei4 le5 da2 cheng2 zhe4 ge5 mu4 biao1, jia1 ting2 jiao4 yu4 yu3 she4 hui4 jiao4 yu4 ye3 hen3 zhong4 yao4.", "Để đạt mục tiêu này, ngoài giáo dục nhà trường, giáo dục gia đình và xã hội cũng rất quan trọng.", [["vocab", "達成"], ["vocab", "相處"]]),
+      line("課文", "父母的教養態度，以及家人之間的關係，都會對孩子的身體與心理發展造成深遠的影響。", "fu4 mu3 de5 jiao4 yang3 tai4 du4 yi3 ji2 jia1 ren2 zhi1 jian1 de5 guan1 xi4, dou1 hui4 zao4 cheng2 shen1 yuan3 de5 ying3 xiang3.", "Thái độ nuôi dạy của cha mẹ và quan hệ trong gia đình đều ảnh hưởng sâu sắc đến sự phát triển thể chất và tâm lý của trẻ.", [["vocab", "教養"], ["vocab", "深遠"]]),
+      line("課文", "社會教育則來自生活中各種人、事、物，例如社區、圖書館、博物館、媒體與公共活動。由此可見，現代教育的目的，是培養每個人持續學習、獨立思考和解決問題的能力。", "you2 ci3 ke3 jian4, xian4 dai4 jiao4 yu4 de5 mu4 di4 shi4 pei2 yang3 chi2 xu4 xue2 xi2 he2 jie3 jue2 wen4 ti2 de5 neng2 li4.", "Có thể thấy mục tiêu của giáo dục hiện đại là bồi dưỡng năng lực học tập liên tục, tư duy độc lập và giải quyết vấn đề.", [["grammar", "由此可見"], ["vocab", "培養"], ["vocab", "思考"]]),
     ],
     extras: [
       extra("本課重點", [
@@ -491,10 +491,10 @@ export const manualSupplementTexts = [
     titleVi: "Không trải qua việc thì không thêm khôn ngoan",
     note: "依照補充圖片人工整理第四課課文開頭，後續頁面提供後可再補完整。",
     lines: [
-      line("課文", "林敏從十一歲起就嚮往歐洲的生活。她看了許多介紹歐洲的雜誌和報導，那裡的美麗風光常常讓她羨慕不已。", "lin2 min3 cong2 shi2 yi1 sui4 qi3 jiu4 xiang4 wang3 ou1 zhou1 de5 sheng1 huo2.", "Từ năm mười một tuổi, Lâm Mẫn đã hướng về đời sống ở châu Âu; cảnh đẹp trong sách báo khiến cô rất ngưỡng mộ."),
+      line("課文", "林敏從十一歲起就嚮往歐洲的生活。她看了許多介紹歐洲的雜誌和報導，那裡的美麗風光常常讓她羨慕不已。", "lin2 min3 cong2 shi2 yi1 sui4 qi3 jiu4 xiang4 wang3 ou1 zhou1 de5 sheng1 huo2.", "Từ năm mười một tuổi, Lâm Mẫn đã hướng về đời sống ở châu Âu; cảnh đẹp trong sách báo khiến cô rất ngưỡng mộ.", [["vocab", "嚮往"], ["vocab", "報導"], ["vocab", "風光"]]),
       line("課文", "在大學學法兩年後的夏天，她終於下定決心，把旅行的夢想變成計畫，報名參加了一個遊歐洲的旅行團。", "zai4 da4 xue2 xue2 fa3 liang3 nian2 hou4 de5 xia4 tian1, ta1 zhong1 yu2 xia4 ding4 jue2 xin1.", "Sau hai năm học tiếng Pháp ở đại học, mùa hè năm ấy cô quyết tâm biến giấc mơ du lịch thành kế hoạch."),
-      line("課文", "在二十天的旅程中，導遊帶團員參觀了很多風景和行程，過程非常緊湊。", "zai4 er4 shi2 tian1 de5 lv3 cheng2 zhong1, dao3 you2 dai4 tuan2 yuan2 can1 guan1 le5 hen3 duo1 feng1 jing3.", "Trong chuyến đi hai mươi ngày, hướng dẫn viên đưa đoàn tham quan nhiều nơi, lịch trình rất dày."),
-      line("課文", "在旅程中，大家常常在戶外餐廳聽音樂演奏。音樂的旋律讓人如醉如痴，她也開始發現當地食物與生活方式的特色。", "zai4 lv3 cheng2 zhong1, da4 jia1 chang2 chang2 zai4 hu4 wai4 can1 ting1 ting1 yin1 yue4 yan3 zou4.", "Trong chuyến đi, mọi người thường nghe nhạc ở nhà hàng ngoài trời; cô cũng bắt đầu cảm nhận được nét đặc sắc của ẩm thực và đời sống địa phương."),
+      line("課文", "在二十天的旅程中，導遊帶團員參觀了很多風景和行程，過程非常緊湊。", "zai4 er4 shi2 tian1 de5 lv3 cheng2 zhong1, dao3 you2 dai4 tuan2 yuan2 can1 guan1 le5 hen3 duo1 feng1 jing3.", "Trong chuyến đi hai mươi ngày, hướng dẫn viên đưa đoàn tham quan nhiều nơi, lịch trình rất dày.", [["vocab", "旅程"]]),
+      line("課文", "在旅程中，大家常常在戶外餐廳聽音樂演奏。音樂的旋律讓人如癡如醉，她也開始發現當地食物與生活方式的特色。", "zai4 lv3 cheng2 zhong1, da4 jia1 chang2 chang2 zai4 hu4 wai4 can1 ting1 ting1 yin1 yue4 yan3 zou4.", "Trong chuyến đi, mọi người thường nghe nhạc ở nhà hàng ngoài trời; cô cũng bắt đầu cảm nhận được nét đặc sắc của ẩm thực và đời sống địa phương.", [["vocab", "旅程"], ["vocab", "演奏"], ["vocab", "旋律"], ["idiom", "如癡如醉"]]),
     ],
     extras: [
       extra("問題討論", [
@@ -514,13 +514,13 @@ export const manualSupplementTexts = [
     lines: [
       line("課文", "林敏從十一歲起就嚮往歐洲的生活。她看了許多介紹歐洲的雜誌和報導，那裡的美麗風光常常讓她羨慕不已。", "lin2 min3 cong2 shi2 yi1 sui4 qi3 jiu4 xiang4 wang3 ou1 zhou1 de5 sheng1 huo2.", "Từ năm mười một tuổi, Lâm Mẫn đã hướng về đời sống ở châu Âu; cảnh đẹp trong sách báo khiến cô rất ngưỡng mộ."),
       line("課文", "在大學學法兩年後的夏天，她終於下定決心，把旅行的夢想變成計畫，報名參加了一個遊歐洲的旅行團。", "zai4 da4 xue2 xue2 fa3 liang3 nian2 hou4 de5 xia4 tian1, ta1 zhong1 yu2 xia4 ding4 jue2 xin1.", "Sau hai năm học tiếng Pháp ở đại học, mùa hè năm ấy cô quyết tâm biến giấc mơ du lịch thành kế hoạch."),
-      line("課文", "在二十天的旅程中，導遊帶團員參觀了許多名勝、古蹟和著名的觀光勝地，大家也常在戶外餐廳聆聽美妙的音樂演奏。", "zai4 er4 shi2 tian1 de5 lv3 cheng2 zhong1, dao3 you2 dai4 tuan2 yuan2 can1 guan1 le5 xu3 duo1 ming2 sheng4, gu3 ji1 he2 zhu4 ming2 de5 guan1 guang1 sheng4 di4.", "Trong chuyến đi hai mươi ngày, hướng dẫn viên đưa đoàn tham quan nhiều danh thắng, di tích và địa điểm nổi tiếng; mọi người cũng thường nghe biểu diễn âm nhạc tuyệt vời."),
-      line("課文", "她一路上欣賞風光，也分享自己的感受，覺得這趟旅程寶貴又難忘。", "ta1 yi2 lu4 shang4 xin1 shang3 feng1 guang1, ye3 fen1 xiang3 zi4 ji3 de5 gan3 shou4.", "Suốt dọc đường cô thưởng thức phong cảnh và chia sẻ cảm nhận của mình, cảm thấy chuyến đi rất quý giá và khó quên."),
-      line("課文", "沒想到有一天，護照、存款簿和重要財物竟然不翼而飛。這個晴天霹靂的消息讓她頓時不安，內心十分煎熬。", "mei2 xiang3 dao4 you3 yi4 tian1, hu4 zhao4, cun2 kuan3 bu4 he2 zhong4 yao4 cai2 wu4 jing4 ran2 bu4 yi4 er2 fei1.", "Không ngờ một ngày nọ, hộ chiếu, sổ tiết kiệm và tài sản quan trọng bỗng biến mất. Tin như sét đánh khiến cô lập tức bất an và vô cùng dày vò."),
-      line("課文", "她先獨自尋找，接著請導遊幫忙推測可能遺失的地點，然後到警察局報案。", "ta1 xian1 du2 zi4 xun2 zhao3, jie1 zhe5 qing3 dao3 you2 bang1 mang2 tui1 ce4 ke3 neng2 yi2 shi1 de5 di4 dian3, ran2 hou4 dao4 jing3 cha2 ju2 bao4 an4.", "Trước tiên cô tự tìm, sau đó nhờ hướng dẫn viên suy đoán nơi có thể bị mất, rồi đến đồn cảnh sát báo án."),
-      line("課文", "歷經許多手續後，她又到領事館請求協助。因為語言和文件問題，她感到無助，也懊惱自己沒有把證件影本和護照分開保管。", "li4 jing1 xu3 duo1 shou3 xu4 hou4, ta1 you4 dao4 ling3 shi4 guan3 qing3 qiu2 xie2 zhu4.", "Sau nhiều thủ tục, cô lại đến lãnh sự quán xin giúp đỡ. Vì vấn đề ngôn ngữ và giấy tờ, cô cảm thấy bất lực và hối hận vì không cất bản sao giấy tờ riêng với hộ chiếu."),
-      line("課文", "等到事情慢慢解決之後，她好不容易才和旅行團團聚。雖然這段經驗很辛酸，卻也讓她學到保持警覺的重要。", "deng3 dao4 shi4 qing2 man4 man4 jie3 jue2 zhi1 hou4, ta1 hao3 bu4 rong2 yi4 cai2 he2 lv3 xing2 tuan2 tuan2 ju4.", "Sau khi sự việc dần được giải quyết, cô vất vả lắm mới đoàn tụ với đoàn du lịch. Tuy trải nghiệm này cay đắng, nó giúp cô học được tầm quan trọng của cảnh giác."),
-      line("課文", "這次旅程讓她明白，不經一事，不長一智；出國旅行時，證件、財物和緊急聯絡資料都應該貼身保存。", "zhe4 ci4 lv3 cheng2 rang4 ta1 ming2 bai2, bu4 jing1 yi2 shi4, bu4 zhang3 yi2 zhi4.", "Chuyến đi này khiến cô hiểu rằng không trải qua việc thì không thêm khôn ngoan; khi ra nước ngoài, giấy tờ, tài sản và thông tin liên lạc khẩn cấp nên được giữ bên mình."),
+      line("課文", "在二十天的旅程中，導遊帶團員參觀了許多名勝、古蹟和著名的觀光勝地，大家也常在戶外餐廳聆聽美妙的音樂演奏。", "zai4 er4 shi2 tian1 de5 lv3 cheng2 zhong1, dao3 you2 dai4 tuan2 yuan2 can1 guan1 le5 xu3 duo1 ming2 sheng4, gu3 ji1 he2 zhu4 ming2 de5 guan1 guang1 sheng4 di4.", "Trong chuyến đi hai mươi ngày, hướng dẫn viên đưa đoàn tham quan nhiều danh thắng, di tích và địa điểm nổi tiếng; mọi người cũng thường nghe biểu diễn âm nhạc tuyệt vời.", [["vocab", "旅程"], ["vocab", "名勝"], ["vocab", "古蹟"], ["vocab", "著名"], ["vocab", "勝地"], ["vocab", "聆聽"], ["vocab", "美妙"], ["vocab", "演奏"]]),
+      line("課文", "她一路上欣賞風光，也分享自己的感受，覺得這趟旅程寶貴又難忘。", "ta1 yi2 lu4 shang4 xin1 shang3 feng1 guang1, ye3 fen1 xiang3 zi4 ji3 de5 gan3 shou4.", "Suốt dọc đường cô thưởng thức phong cảnh và chia sẻ cảm nhận của mình, cảm thấy chuyến đi rất quý giá và khó quên.", [["vocab", "一路上"], ["vocab", "風光"], ["vocab", "分享"], ["vocab", "旅程"], ["vocab", "寶貴"]]),
+      line("課文", "沒想到有一天，護照、存款簿和重要財物竟然不翼而飛。這個晴天霹靂的消息讓她頓時不安，內心十分煎熬。", "mei2 xiang3 dao4 you3 yi4 tian1, hu4 zhao4, cun2 kuan3 bu4 he2 zhong4 yao4 cai2 wu4 jing4 ran2 bu4 yi4 er2 fei1.", "Không ngờ một ngày nọ, hộ chiếu, sổ tiết kiệm và tài sản quan trọng bỗng biến mất. Tin như sét đánh khiến cô lập tức bất an và vô cùng dày vò.", [["vocab", "存款"], ["vocab", "財物"], ["idiom", "不翼而飛"], ["idiom", "晴天霹靂"], ["vocab", "頓時"], ["vocab", "不安"], ["vocab", "內心"], ["vocab", "煎熬"]]),
+      line("課文", "她先獨自尋找，接著請導遊幫忙推測可能遺失的地點，然後到警察局報案。", "ta1 xian1 du2 zi4 xun2 zhao3, jie1 zhe5 qing3 dao3 you2 bang1 mang2 tui1 ce4 ke3 neng2 yi2 shi1 de5 di4 dian3, ran2 hou4 dao4 jing3 cha2 ju2 bao4 an4.", "Trước tiên cô tự tìm, sau đó nhờ hướng dẫn viên suy đoán nơi có thể bị mất, rồi đến đồn cảnh sát báo án.", [["vocab", "獨自"], ["vocab", "尋找"], ["grammar", "接著"], ["vocab", "推測"], ["vocab", "報案"]]),
+      line("課文", "歷經許多手續後，她又到領事館請求協助。因為語言和文件問題，她感到無助，也懊惱自己沒有把證件影本和護照分開保管。", "li4 jing1 xu3 duo1 shou3 xu4 hou4, ta1 you4 dao4 ling3 shi4 guan3 qing3 qiu2 xie2 zhu4.", "Sau nhiều thủ tục, cô lại đến lãnh sự quán xin giúp đỡ. Vì vấn đề ngôn ngữ và giấy tờ, cô cảm thấy bất lực và hối hận vì không cất bản sao giấy tờ riêng với hộ chiếu.", [["vocab", "歷經"], ["vocab", "領事館"], ["vocab", "無助"], ["vocab", "懊惱"], ["vocab", "影本"]]),
+      line("課文", "等到事情慢慢解決之後，她好不容易才和旅行團團聚。雖然這段經驗很辛酸，卻也讓她學到保持警覺的重要。", "deng3 dao4 shi4 qing2 man4 man4 jie3 jue2 zhi1 hou4, ta1 hao3 bu4 rong2 yi4 cai2 he2 lv3 xing2 tuan2 tuan2 ju4.", "Sau khi sự việc dần được giải quyết, cô vất vả lắm mới đoàn tụ với đoàn du lịch. Tuy trải nghiệm này cay đắng, nó giúp cô học được tầm quan trọng của cảnh giác.", [["grammar", "等到"], ["grammar", "好不容易"], ["vocab", "團聚"], ["vocab", "辛酸"], ["vocab", "警覺"]]),
+      line("課文", "這次旅程讓她明白，不經一事，不長一智；出國旅行時，證件、財物和緊急聯絡資料都應該貼身保存。", "zhe4 ci4 lv3 cheng2 rang4 ta1 ming2 bai2, bu4 jing1 yi2 shi4, bu4 zhang3 yi2 zhi4.", "Chuyến đi này khiến cô hiểu rằng không trải qua việc thì không thêm khôn ngoan; khi ra nước ngoài, giấy tờ, tài sản và thông tin liên lạc khẩn cấp nên được giữ bên mình.", [["vocab", "旅程"], ["idiom", "不經一事，不長一智"], ["vocab", "財物"], ["vocab", "貼身"]]),
     ],
     extras: [
       extra("注釋", [
