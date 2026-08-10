@@ -5,7 +5,7 @@ import { manualSupplementCards, manualSupplementGrammar, manualSupplementTexts }
 import { lesson34SyncCards, lesson34SyncGrammar, lesson34SyncTexts } from "./data/lesson3-4-sync-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260806-lessons34-complete";
+const CONTENT_VERSION = "lesson-content-shell-20260810-text-paragraphs";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -640,8 +640,36 @@ function cardMatchesSearch(card) {
   ].some((value) => normalizeSearch(value).includes(query));
 }
 
+function normalizeTextLines(text) {
+  const sourceLines = Array.isArray(text?.lines) && text.lines.length
+    ? text.lines
+    : Array.isArray(text?.paragraphs)
+      ? text.paragraphs
+      : [];
+
+  return sourceLines
+    .map((line) => {
+      if (typeof line === "string") {
+        return { speaker: "", zh: line, pinyin: "", vi: "", marks: [] };
+      }
+
+      return {
+        ...line,
+        speaker: line?.speaker || "",
+        zh: line?.zh || line?.text || line?.paragraph || "",
+        pinyin: line?.pinyin || "",
+        vi: line?.vi || line?.vietnamese || line?.translation || "",
+        marks: Array.isArray(line?.marks) ? line.marks : [],
+      };
+    })
+    .filter((line) => line.zh);
+}
+
 function renderText() {
-  const lessonTexts = texts.filter((item) => Number(item.lesson) === currentTextLesson);
+  const lessonTexts = texts
+    .filter((item) => lessonNumber(item) === Number(currentTextLesson))
+    .map((text) => ({ ...text, lines: normalizeTextLines(text) }))
+    .filter((text) => text.lines.length);
   textList.innerHTML = "";
   if (!lessonTexts.length) {
     textList.innerHTML = "<p class=\"empty-state\">這一課還沒有課文內容。請提供課文照片或從匯入頁加入 texts。</p>";
