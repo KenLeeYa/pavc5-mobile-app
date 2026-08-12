@@ -6,9 +6,10 @@ import { lesson34SyncCards, lesson34SyncGrammar } from "./data/lesson3-4-sync-co
 import { lesson34CompletionTexts } from "./data/lesson3-4-final-content.js";
 import { lesson3CardCompletions } from "./data/lesson3-card-completions.js";
 import { lesson4CardCompletions } from "./data/lesson4-card-completions.js";
+import { lesson512Cards, lesson512Grammar, lesson512Texts } from "./data/lesson5-12-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260812-lessons34-workbooks";
+const CONTENT_VERSION = "lesson-content-shell-20260812-lessons3-12-workbooks";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -50,56 +51,56 @@ const courseOutline = [
   {
     title: "世界運動會",
     description: "介紹運動賽事、選手精神與世界運動會的理念。",
-    grammar: ["在...方面", "V 入", "以...來", "經過...終於...", "使"],
+    grammar: ["無不……", "V入", "……以……（來）……", "經過一番……，終於……", "使"],
     idioms: ["世界大同，天下一家", "同場競技"],
     culture: "認識奧運會、世界運動會與公平競爭精神。",
   },
   {
     title: "服務性的休閒活動",
     description: "介紹服務性休閒活動的意義、種類、好處與注意事項。",
-    grammar: ["以...來說", "是否", "只有...才...", "在...前提下"],
+    grammar: ["在……之餘，……", "藉此", "是否", "在……的前提下，……", "……不只……，……更……"],
     idioms: ["自己快樂，別人受惠", "助人為快樂之本", "天災人禍", "流離失所", "受苦受難"],
     culture: "認識志工、公益與服務性休閒活動。",
   },
   {
     title: "你戒菸，我拒吸二手菸",
     description: "討論吸菸、戒菸、二手菸與公共健康觀念。",
-    grammar: ["由於", "把...掛在嘴上", "只要...就...", "只有...才..."],
+    grammar: ["……，說是……；……說是……真的……嗎？", "把……掛在嘴上", "……既……，也……，更……", "……，豈不是……（嗎）？", "只要……，就……／只有……，才……"],
     idioms: ["提神醒腦", "消愁解悶", "飯後一根菸，快樂似神仙", "人人皆知", "無話可說", "各式各樣"],
     culture: "認識拒菸、戒菸與公共場所禁菸觀念。",
   },
   {
     title: "單親家庭也幸福",
     description: "討論單親家庭的定義、現象、困難與社會支持。",
-    grammar: ["由...所組成", "則", "(不)等於", "儘管...仍然...", "這樣/如此一來"],
+    grammar: ["……由……所組成", "則", "（不）等於", "儘管……，仍然……", "這樣／如此一來"],
     idioms: ["不離不棄", "誤入歧途", "總而言之", "因人而異"],
     culture: "認識家庭型態、親職壓力與社會變遷。",
   },
   {
     title: "人人都是環保尖兵",
     description: "說明環境保護、環保意識與個人可行的改善方式。",
-    grammar: ["因(為)...而...變得/變成", "到...地步", "怎不令...", "如何", "...也好...也好"],
+    grammar: ["……因（為）……（而）變得 SV／（而）變成 N", "……到……（的）地步", "怎不令……SV？", "如何", "……也好，……也好，……都……"],
     idioms: ["以身作則", "耳濡目染", "自然而然"],
     culture: "認識環保政策、生活習慣與環境議題。",
   },
   {
     title: "吃得健康又安全",
     description: "討論現代飲食、吃素、食品安全與健康觀念。",
-    grammar: ["反映出", "以...而言/來說", "固然...但是...", "為了...著想", "俗話說得好..."],
+    grammar: ["……反映出……", "以……而言／來說，……", "……固然……，但是……", "為了……著想", "俗話說得好，……"],
     idioms: ["藥補不如食補", "持之以恆"],
     culture: "認識食品安全、保健食品與現代飲食選擇。",
   },
   {
     title: "高齡化與少子化的社會",
     description: "討論高齡化、少子化的原因、影響與相關政策。",
-    grammar: ["即", "更 SV 的是", "為了因應...", "V/SV 於", "首先...其次..."],
+    grammar: ["即", "不僅……，更 SV 的是……", "為了因應……", "V／SV 於", "首先……。其次……"],
     idioms: ["日積月累", "顯而易見", "刻不容緩", "家有一老，如有一寶"],
     culture: "認識人口老化、少子化與社會政策。",
   },
   {
     title: "十二生肖",
     description: "介紹華人十二生肖的由來、計時概念與文化象徵。",
-    grammar: ["除了...(之)外，最...", "有助於/有利於", "倒也不是", "以...為...", "看法不一"],
+    grammar: ["除了……（之外），最 SV／VP 的……是……", "有助於……／有利於……", "並不只是……，……也……", "以……為……", "……也不例外"],
     idioms: ["心服口服", "威風凜凜"],
     culture: "比較不同文化中的生肖、年齡與性格觀念。",
   },
@@ -193,6 +194,11 @@ const lessonNumber = (item) => Number(String(item?.lesson ?? "").match(/\d+/)?.[
 
 const replaceLessons34 = (items, replacements) => [
   ...items.filter((item) => ![3, 4].includes(lessonNumber(item))),
+  ...replacements,
+];
+
+const replaceLessons512 = (items, replacements) => [
+  ...items.filter((item) => ![5, 6, 7, 8, 9, 10, 11, 12].includes(lessonNumber(item))),
   ...replacements,
 ];
 
@@ -471,13 +477,19 @@ const lesson34CompleteTexts = lesson34CompletionTexts.map((text) => {
   };
 });
 
-const defaultCards = replaceLessons34(
-  [...lesson1Cards, ...lesson2Cards, ...manualSupplementCards],
-  lesson34CompleteCards,
+const defaultCards = replaceLessons512(
+  replaceLessons34(
+    [...lesson1Cards, ...lesson2Cards, ...manualSupplementCards],
+    lesson34CompleteCards,
+  ),
+  lesson512Cards,
 );
-const defaultTexts = replaceLessons34(
-  [...lesson1Texts, ...lesson2Texts, ...manualSupplementTexts],
-  lesson34CompleteTexts,
+const defaultTexts = replaceLessons512(
+  replaceLessons34(
+    [...lesson1Texts, ...lesson2Texts, ...manualSupplementTexts],
+    lesson34CompleteTexts,
+  ),
+  lesson512Texts,
 );
 
 const fallbackGrammar = [
@@ -555,14 +567,17 @@ const fallbackGrammar = [
   },
 ];
 
-const defaultGrammar = replaceLessons34(
-  [
-    ...lesson1Grammar,
-    ...lesson2Grammar,
-    ...manualSupplementGrammar,
-    ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
-  ],
-  lesson34CompleteGrammar,
+const defaultGrammar = replaceLessons512(
+  replaceLessons34(
+    [
+      ...lesson1Grammar,
+      ...lesson2Grammar,
+      ...manualSupplementGrammar,
+      ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
+    ],
+    lesson34CompleteGrammar,
+  ),
+  lesson512Grammar,
 );
 
 const defaultExercises = Array.from({ length: 14 }, (_, index) => {
@@ -608,13 +623,22 @@ if (state.contentVersion !== CONTENT_VERSION && !state.customContent) {
   state.cards = [];
   state.grammar = [];
   state.texts = [];
-  state.learnedCards = [];
+  state.learnedCards = (state.learnedCards || []).filter((cardId) => !/^(?:5|6|7|8|9|10|11|12):/.test(cardId));
   state.contentVersion = CONTENT_VERSION;
   saveState();
 }
-let cards = replaceLessons34(state.cards?.length ? state.cards : defaultCards, lesson34CompleteCards);
-let grammar = replaceLessons34(state.grammar?.length ? state.grammar : defaultGrammar, lesson34CompleteGrammar);
-let texts = replaceLessons34(state.texts?.length ? state.texts : defaultTexts, lesson34CompleteTexts);
+let cards = replaceLessons512(
+  replaceLessons34(state.cards?.length ? state.cards : defaultCards, lesson34CompleteCards),
+  lesson512Cards,
+);
+let grammar = replaceLessons512(
+  replaceLessons34(state.grammar?.length ? state.grammar : defaultGrammar, lesson34CompleteGrammar),
+  lesson512Grammar,
+);
+let texts = replaceLessons512(
+  replaceLessons34(state.texts?.length ? state.texts : defaultTexts, lesson34CompleteTexts),
+  lesson512Texts,
+);
 let exercises = state.exercises?.length ? state.exercises : defaultExercises;
 let currentCardIndex = 0;
 let currentLesson = normalizeLessonNumber(state.currentLesson || state.currentTextLesson || state.currentCardLesson || 1);
@@ -738,7 +762,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260812-lessons34-workbooks").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260812-lessons3-12-workbooks").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -1015,7 +1039,9 @@ function renderTextLegend(legend) {
 function renderTextExtraSection(section) {
   const isTable = section.type === "table" || Array.isArray(section.headers) || Array.isArray(section.rows);
   const isWorksheet = section.type === "worksheet";
-  const tone = ["vocab", "grammar", "reading"].includes(section.tone) ? section.tone : "reading";
+  const toneAliases = { discussion: "vocab", activity: "grammar" };
+  const tone = toneAliases[section.tone]
+    || (["vocab", "grammar", "reading"].includes(section.tone) ? section.tone : "reading");
   return `
     <section class="text-extra-section ${isWorksheet ? `worksheet-section worksheet-${tone}` : ""}">
       <h4>${escapeHtml(section.title || "\u88dc\u5145\u9805\u76ee")}</h4>
@@ -1463,14 +1489,22 @@ function buildSentenceMakingExercises(lessonVocab, lessonGrammar, lesson) {
       };
     }
 
-    const requiredGrammarTerms = extractGrammarRequiredTerms(grammarItem.pattern);
+    const grammarPractice = Array.isArray(grammarItem.practice) && grammarItem.practice.length
+      ? grammarItem.practice[index % grammarItem.practice.length]
+      : null;
+    const requiredGrammarTerms = Array.isArray(grammarPractice?.requiredTerms) && grammarPractice.requiredTerms.length
+      ? grammarPractice.requiredTerms
+      : extractGrammarRequiredTerms(grammarItem.pattern);
+    const referenceAnswer = grammarPractice?.answer
+      ? `${card.example} ${grammarPractice.answer}`
+      : makeReferenceSentence(card.term, grammarItem.pattern);
     return {
       id: `auto-${lesson}-sentenceMaking-${index + 1}`,
       lesson,
       type: "sentence",
-      prompt: `請用「${card.term}」和語法「${grammarItem.pattern}」造一個完整句子。`,
+      prompt: `請用「${card.term}」和語法「${grammarItem.pattern}」寫一段完整的話。`,
       requiredTerms: [card.term, ...requiredGrammarTerms],
-      answer: makeReferenceSentence(card.term, grammarItem.pattern),
+      answer: referenceAnswer,
       explanation: `句子需包含生詞「${card.term}」與語法關鍵詞「${requiredGrammarTerms.join("、")}」。`,
     };
   });
@@ -2356,6 +2390,7 @@ function normalizeText(text, index) {
           type: String(section.type || "").trim(),
           title: String(section.title || "").trim(),
           description: String(section.description || "").trim(),
+          tone: String(section.tone || "").trim(),
           headers: Array.isArray(section.headers) ? section.headers.map((item) => String(item).trim()).filter(Boolean) : [],
           rows: Array.isArray(section.rows) ? section.rows : [],
           items: Array.isArray(section.items) ? section.items : [],

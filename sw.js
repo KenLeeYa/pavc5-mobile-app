@@ -1,4 +1,4 @@
-const CACHE_NAME = "pavc5-mobile-v33-20260812-lessons34-workbooks";
+const CACHE_NAME = "pavc5-mobile-v35-20260812-lessons3-12-workbooks";
 const ASSETS = [
   "./",
   "./index.html",
@@ -14,6 +14,15 @@ const ASSETS = [
   "./data/lesson3-4-final-content.js",
   "./data/lesson3-card-completions.js",
   "./data/lesson4-card-completions.js",
+  "./data/lesson5-12-content.js",
+  "./data/lesson5-content.js",
+  "./data/lesson6-content.js",
+  "./data/lesson7-content.js",
+  "./data/lesson8-content.js",
+  "./data/lesson9-content.js",
+  "./data/lesson10-content.js",
+  "./data/lesson11-content.js",
+  "./data/lesson12-content.js",
   "./assets/pavc5-cover.svg",
 ];
 
@@ -41,6 +50,6 @@ self.addEventListener("fetch", (event) => {
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         return response;
       })
-      .catch(() => caches.match(event.request)),
+      .catch(() => caches.match(event.request, { ignoreSearch: true })),
   );
 });
