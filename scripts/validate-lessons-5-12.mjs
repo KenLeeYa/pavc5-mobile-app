@@ -154,14 +154,14 @@ const migrationSource = appSource.slice(migrationStart, migrationEnd);
 const learnedFilter = migrationSource.match(/filter\(\(cardId\) => !\/([^/]+)\/\.test\(cardId\)\)/);
 
 if (migrationStart < 0 || migrationEnd < 0 || !learnedFilter) {
-  fail("找不到第 5–12 課學習進度遷移規則");
+  fail("找不到內容版本升級的學習進度遷移規則");
 } else {
   const replacedLessonPattern = new RegExp(learnedFilter[1]);
-  const migratedIds = ["3:舊詞", "4:舊詞", "5:舊詞", "12:舊詞"].filter(
+  const migratedIds = ["3:舊詞", "4:舊詞", "5:舊詞", "12:舊詞", "13:舊詞", "14:舊詞"].filter(
     (cardId) => !replacedLessonPattern.test(cardId),
   );
-  if (JSON.stringify(migratedIds) !== JSON.stringify(["3:舊詞", "4:舊詞"])) {
-    fail("內容升級未正確保留第 3、4 課學習進度，或未清除第 5–12 課舊進度");
+  if (JSON.stringify(migratedIds) !== JSON.stringify(["3:舊詞", "4:舊詞", "5:舊詞", "12:舊詞"])) {
+    fail("第 13、14 課內容升級未正確保留第 3–12 課學習進度");
   }
 }
 

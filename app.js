@@ -7,9 +7,10 @@ import { lesson34CompletionTexts } from "./data/lesson3-4-final-content.js";
 import { lesson3CardCompletions } from "./data/lesson3-card-completions.js";
 import { lesson4CardCompletions } from "./data/lesson4-card-completions.js";
 import { lesson512Cards, lesson512Grammar, lesson512Texts } from "./data/lesson5-12-content.js";
+import { lesson1314Cards, lesson1314Grammar, lesson1314Texts } from "./data/lesson13-14-content.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260812-lessons3-12-workbooks";
+const CONTENT_VERSION = "lesson-content-shell-20260812-lessons3-14-workbooks";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -107,14 +108,14 @@ const courseOutline = [
   {
     title: "正體字與簡體字",
     description: "說明中華文字的演變、正體字與簡體字的形成和使用。",
-    grammar: ["自...以後，即成為", "隨著", "越...越...", "被...視為", "除此之外，尚有..."],
+    grammar: ["自……（以）後，……即成為……", "隨著", "如……一般（SV）", "被……視為……", "除此以外，尚有……"],
     idioms: ["龍飛鳳舞", "行雲流水", "發人深省", "茫然不解", "貽笑大方"],
     culture: "認識華文字體演變與兩岸華文使用差異。",
   },
   {
-    title: "掌中戲大師李天祿與茶藝",
+    title: "掌中戲大師李天祿的茶藝",
     description: "介紹李天祿、掌中戲與華人茶文化，並比較戲劇與飲品文化。",
-    grammar: ["V 遍", "了...是", "沒有...，有的只是...", "...但...反而...", "介於...之間"],
+    grammar: ["V遍", "一旦", "……沒有……，有的只是……（而已）", "……依然……，（但）……反而……", "介於……（與）……之間"],
     idioms: ["雕樑畫棟", "入口即化", "回味無窮", "栩栩如生", "悲歡離合", "人情世事"],
     culture: "透過掌中戲與喝茶文化認識傳統藝術與生活美學。",
   },
@@ -199,6 +200,11 @@ const replaceLessons34 = (items, replacements) => [
 
 const replaceLessons512 = (items, replacements) => [
   ...items.filter((item) => ![5, 6, 7, 8, 9, 10, 11, 12].includes(lessonNumber(item))),
+  ...replacements,
+];
+
+const replaceLessons1314 = (items, replacements) => [
+  ...items.filter((item) => ![13, 14].includes(lessonNumber(item))),
   ...replacements,
 ];
 
@@ -477,19 +483,25 @@ const lesson34CompleteTexts = lesson34CompletionTexts.map((text) => {
   };
 });
 
-const defaultCards = replaceLessons512(
-  replaceLessons34(
-    [...lesson1Cards, ...lesson2Cards, ...manualSupplementCards],
-    lesson34CompleteCards,
+const defaultCards = replaceLessons1314(
+  replaceLessons512(
+    replaceLessons34(
+      [...lesson1Cards, ...lesson2Cards, ...manualSupplementCards],
+      lesson34CompleteCards,
+    ),
+    lesson512Cards,
   ),
-  lesson512Cards,
+  lesson1314Cards,
 );
-const defaultTexts = replaceLessons512(
-  replaceLessons34(
-    [...lesson1Texts, ...lesson2Texts, ...manualSupplementTexts],
-    lesson34CompleteTexts,
+const defaultTexts = replaceLessons1314(
+  replaceLessons512(
+    replaceLessons34(
+      [...lesson1Texts, ...lesson2Texts, ...manualSupplementTexts],
+      lesson34CompleteTexts,
+    ),
+    lesson512Texts,
   ),
-  lesson512Texts,
+  lesson1314Texts,
 );
 
 const fallbackGrammar = [
@@ -567,17 +579,20 @@ const fallbackGrammar = [
   },
 ];
 
-const defaultGrammar = replaceLessons512(
-  replaceLessons34(
-    [
-      ...lesson1Grammar,
-      ...lesson2Grammar,
-      ...manualSupplementGrammar,
-      ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
-    ],
-    lesson34CompleteGrammar,
+const defaultGrammar = replaceLessons1314(
+  replaceLessons512(
+    replaceLessons34(
+      [
+        ...lesson1Grammar,
+        ...lesson2Grammar,
+        ...manualSupplementGrammar,
+        ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
+      ],
+      lesson34CompleteGrammar,
+    ),
+    lesson512Grammar,
   ),
-  lesson512Grammar,
+  lesson1314Grammar,
 );
 
 const defaultExercises = Array.from({ length: 14 }, (_, index) => {
@@ -623,21 +638,30 @@ if (state.contentVersion !== CONTENT_VERSION && !state.customContent) {
   state.cards = [];
   state.grammar = [];
   state.texts = [];
-  state.learnedCards = (state.learnedCards || []).filter((cardId) => !/^(?:5|6|7|8|9|10|11|12):/.test(cardId));
+  state.learnedCards = (state.learnedCards || []).filter((cardId) => !/^(?:13|14):/.test(cardId));
   state.contentVersion = CONTENT_VERSION;
   saveState();
 }
-let cards = replaceLessons512(
-  replaceLessons34(state.cards?.length ? state.cards : defaultCards, lesson34CompleteCards),
-  lesson512Cards,
+let cards = replaceLessons1314(
+  replaceLessons512(
+    replaceLessons34(state.cards?.length ? state.cards : defaultCards, lesson34CompleteCards),
+    lesson512Cards,
+  ),
+  lesson1314Cards,
 );
-let grammar = replaceLessons512(
-  replaceLessons34(state.grammar?.length ? state.grammar : defaultGrammar, lesson34CompleteGrammar),
-  lesson512Grammar,
+let grammar = replaceLessons1314(
+  replaceLessons512(
+    replaceLessons34(state.grammar?.length ? state.grammar : defaultGrammar, lesson34CompleteGrammar),
+    lesson512Grammar,
+  ),
+  lesson1314Grammar,
 );
-let texts = replaceLessons512(
-  replaceLessons34(state.texts?.length ? state.texts : defaultTexts, lesson34CompleteTexts),
-  lesson512Texts,
+let texts = replaceLessons1314(
+  replaceLessons512(
+    replaceLessons34(state.texts?.length ? state.texts : defaultTexts, lesson34CompleteTexts),
+    lesson512Texts,
+  ),
+  lesson1314Texts,
 );
 let exercises = state.exercises?.length ? state.exercises : defaultExercises;
 let currentCardIndex = 0;
@@ -762,7 +786,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260812-lessons3-12-workbooks").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260812-lessons3-14-workbooks").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
