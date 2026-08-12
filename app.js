@@ -2,10 +2,13 @@ import { lesson1Cards } from "./data/lesson1-cards.js";
 import { lesson1Grammar, lesson1Texts } from "./data/lesson1-content.js";
 import { lesson2Cards, lesson2Grammar, lesson2Texts } from "./data/lesson2-content.js";
 import { manualSupplementCards, manualSupplementGrammar, manualSupplementTexts } from "./data/manual-supplement-content.js";
-import { lesson34SyncCards, lesson34SyncGrammar, lesson34SyncTexts } from "./data/lesson3-4-sync-content.js";
+import { lesson34SyncCards, lesson34SyncGrammar } from "./data/lesson3-4-sync-content.js";
+import { lesson34CompletionTexts } from "./data/lesson3-4-final-content.js";
+import { lesson3CardCompletions } from "./data/lesson3-card-completions.js";
+import { lesson4CardCompletions } from "./data/lesson4-card-completions.js";
 
 const STORAGE_KEY = "pavc5-vietnamese-mobile-app";
-const CONTENT_VERSION = "lesson-content-shell-20260810-text-paragraphs";
+const CONTENT_VERSION = "lesson-content-shell-20260812-lessons34-workbooks";
 const SPEECH_ELLIPSIS_PAUSE_MS = 5;
 const SPEECH_ELLIPSIS_PATTERN = /[.\uFF0E\u00B7\u2027\u2026\u22EF]+/g;
 const SPEECH_MAX_UNIT_CHARS = 8;
@@ -41,7 +44,7 @@ const courseOutline = [
     title: "不經一事，不長一智",
     description: "敘述旅行經驗、遭遇問題後的處理方式，以及從經驗得到的提醒。",
     grammar: ["歷經...好不容易...", "等到...", "把...連同...", "先...接著(再)...然後", "等到...就...了"],
-    idioms: ["不經一事，不長一智", "晴天霹靂", "徒勞無功"],
+    idioms: ["不經一事，不長一智", "青天霹靂", "徒勞無功"],
     culture: "認識旅行安排、突發狀況與提醒他人的表達方式。",
   },
   {
@@ -193,13 +196,288 @@ const replaceLessons34 = (items, replacements) => [
   ...replacements,
 ];
 
+const cardSourceTerm = (card) => String(card?.term || card?.word || "").trim();
+
+const normalizeCardType = (type) => {
+  const value = String(type || "詞語").trim();
+  if (value === "成語/俗語/四字詞") return "成語";
+  return value;
+};
+
+const manualLesson34Cards = manualSupplementCards.filter((card) => [3, 4].includes(lessonNumber(card)));
+const manualLesson34CardMap = new Map(
+  manualLesson34Cards.map((card) => [`${lessonNumber(card)}:${cardSourceTerm(card)}`, card]),
+);
+const syncLesson34CardKeys = new Set(
+  lesson34SyncCards.map((card) => `${lessonNumber(card)}:${cardSourceTerm(card)}`),
+);
+
+const lesson34LinkCards = [
+  {
+    id: "lesson3-life-quality",
+    lesson: 3,
+    type: "生詞",
+    term: "生活品質",
+    pinyin: "shēnghuó pǐnzhì",
+    meaningZh: "生活在物質、健康、心理與社會等方面的整體好壞程度。",
+    meaningPinyin: "Shēnghuó zài wùzhì, jiànkāng, xīnlǐ yǔ shèhuì děng fāngmiàn de zhěngtǐ hǎohuài chéngdù.",
+    meaningVi: "chất lượng cuộc sống",
+    example: "終身學習能提升生活品質。",
+    examplePinyin: "Zhōngshēn xuéxí néng tíshēng shēnghuó pǐnzhì.",
+    exampleVi: "Học tập suốt đời có thể nâng cao chất lượng cuộc sống.",
+  },
+  {
+    id: "lesson3-influence",
+    lesson: 3,
+    type: "生詞",
+    term: "影響",
+    pinyin: "yǐngxiǎng",
+    meaningZh: "對人或事情產生作用，使情況發生變化。",
+    meaningPinyin: "Duì rén huò shìqíng chǎnshēng zuòyòng, shǐ qíngkuàng fāshēng biànhuà.",
+    meaningVi: "ảnh hưởng",
+    example: "家庭教育會影響孩子的身心發展。",
+    examplePinyin: "Jiātíng jiàoyù huì yǐngxiǎng háizi de shēnxīn fāzhǎn.",
+    exampleVi: "Giáo dục gia đình ảnh hưởng đến sự phát triển thể chất và tinh thần của trẻ.",
+  },
+  {
+    id: "lesson3-interaction-style",
+    lesson: 3,
+    type: "生詞",
+    term: "互動方式",
+    pinyin: "hùdòng fāngshì",
+    meaningZh: "人與人彼此溝通、回應和相處的方法。",
+    meaningPinyin: "Rén yǔ rén bǐcǐ gōutōng, huíyìng hé xiāngchǔ de fāngfǎ.",
+    meaningVi: "cách thức tương tác",
+    example: "家人的互動方式會成為孩子學習的參考。",
+    examplePinyin: "Jiārén de hùdòng fāngshì huì chéngwéi háizi xuéxí de cānkǎo.",
+    exampleVi: "Cách tương tác trong gia đình trở thành khuôn mẫu để trẻ học theo.",
+  },
+  {
+    id: "lesson3-adapt",
+    lesson: 3,
+    type: "生詞",
+    term: "適應",
+    pinyin: "shìyìng",
+    meaningZh: "調整自己，使自己能配合新的環境或情況。",
+    meaningPinyin: "Tiáozhěng zìjǐ, shǐ zìjǐ néng pèihé xīn de huánjìng huò qíngkuàng.",
+    meaningVi: "thích nghi",
+    example: "持續學習能幫助我們適應多變的社會。",
+    examplePinyin: "Chíxù xuéxí néng bāngzhù wǒmen shìyìng duōbiàn de shèhuì.",
+    exampleVi: "Học tập liên tục giúp chúng ta thích nghi với xã hội luôn thay đổi.",
+  },
+  {
+    id: "lesson4-experience",
+    lesson: 4,
+    type: "生詞",
+    term: "經驗",
+    pinyin: "jīngyàn",
+    meaningZh: "親身做過或經歷事情後得到的知識與體會。",
+    meaningPinyin: "Qīnshēn zuòguò huò jīnglì shìqíng hòu dédào de zhīshì yǔ tǐhuì.",
+    meaningVi: "kinh nghiệm",
+    example: "林琳把自己的旅遊經驗分享給讀者。",
+    examplePinyin: "Lín Lín bǎ zìjǐ de lǚyóu jīngyàn fēnxiǎng gěi dúzhě.",
+    exampleVi: "Linh Linh chia sẻ kinh nghiệm du lịch của mình với độc giả.",
+  },
+  {
+    id: "lesson3-family-education",
+    lesson: 3,
+    type: "專有名詞",
+    term: "家庭教育",
+    pinyin: "jiātíng jiàoyù",
+    meaningZh: "家庭成員在日常生活中給予孩子的教育與影響。",
+    meaningPinyin: "Jiātíng chéngyuán zài rìcháng shēnghuó zhōng gěiyǔ háizi de jiàoyù yǔ yǐngxiǎng.",
+    meaningVi: "giáo dục gia đình",
+    example: "家庭教育是終身學習的重要基礎。",
+    examplePinyin: "Jiātíng jiàoyù shì zhōngshēn xuéxí de zhòngyào jīchǔ.",
+    exampleVi: "Giáo dục gia đình là nền tảng quan trọng của học tập suốt đời.",
+  },
+  {
+    id: "lesson3-social-education",
+    lesson: 3,
+    type: "專有名詞",
+    term: "社會教育",
+    pinyin: "shèhuì jiàoyù",
+    meaningZh: "在學校與家庭以外，透過社會環境和生活經驗進行的教育。",
+    meaningPinyin: "Zài xuéxiào yǔ jiātíng yǐwài, tòuguò shèhuì huánjìng hé shēnghuó jīngyàn jìnxíng de jiàoyù.",
+    meaningVi: "giáo dục xã hội",
+    example: "社會教育讓人從真實事件中學習。",
+    examplePinyin: "Shèhuì jiàoyù ràng rén cóng zhēnshí shìjiàn zhōng xuéxí.",
+    exampleVi: "Giáo dục xã hội giúp con người học từ các sự kiện thực tế.",
+  },
+  {
+    id: "lesson4-europe",
+    lesson: 4,
+    type: "專有名詞",
+    term: "歐洲",
+    pinyin: "Ōuzhōu",
+    meaningZh: "世界七大洲之一，位於亞洲西方。",
+    meaningPinyin: "Shìjiè qī dà zhōu zhī yī, wèiyú Yàzhōu xīfāng.",
+    meaningVi: "châu Âu",
+    example: "林琳一直嚮往歐洲的生活。",
+    examplePinyin: "Lín Lín yìzhí xiàngwǎng Ōuzhōu de shēnghuó.",
+    exampleVi: "Linh Linh luôn ao ước cuộc sống ở châu Âu.",
+  },
+  {
+    id: "lesson4-mr-zhang",
+    lesson: 4,
+    type: "專有名詞",
+    term: "張先生",
+    pinyin: "Zhāng xiānsheng",
+    meaningZh: "課文中在當地協助林琳補辦證件的人。",
+    meaningPinyin: "Kèwén zhōng zài dāngdì xiézhù Lín Lín bǔbàn zhèngjiàn de rén.",
+    meaningVi: "ông Trương, người giúp Linh Linh làm lại giấy tờ trong bài khóa",
+    example: "張先生陪林琳到警察局報案。",
+    examplePinyin: "Zhāng xiānsheng péi Lín Lín dào jǐngchá jú bào'àn.",
+    exampleVi: "Ông Trương đi cùng Linh Linh đến đồn cảnh sát trình báo.",
+  },
+  {
+    id: "lesson4-police-station",
+    lesson: 4,
+    type: "專有名詞",
+    term: "警察局",
+    pinyin: "jǐngchá jú",
+    meaningZh: "警察辦公並受理報案的機關。",
+    meaningPinyin: "Jǐngchá bàngōng bìng shòulǐ bào'àn de jīguān.",
+    meaningVi: "đồn cảnh sát",
+    example: "遺失財物後應該到警察局報案。",
+    examplePinyin: "Yíshī cáiwù hòu yīnggāi dào jǐngchá jú bào'àn.",
+    exampleVi: "Sau khi mất tài sản nên đến đồn cảnh sát trình báo.",
+  },
+  {
+    id: "lesson4-consulate",
+    lesson: 4,
+    type: "專有名詞",
+    term: "領事館",
+    pinyin: "lǐngshìguǎn",
+    meaningZh: "國家設在外國城市、協助本國人民處理事務的機構。",
+    meaningPinyin: "Guójiā shè zài wàiguó chéngshì, xiézhù běnguó rénmín chǔlǐ shìwù de jīgòu.",
+    meaningVi: "lãnh sự quán",
+    example: "護照遺失後，她到領事館補辦證件。",
+    examplePinyin: "Hùzhào yíshī hòu, tā dào lǐngshìguǎn bǔbàn zhèngjiàn.",
+    exampleVi: "Sau khi mất hộ chiếu, cô đến lãnh sự quán làm lại giấy tờ.",
+  },
+];
+
+const lesson34LinkCardKeys = new Set(
+  lesson34LinkCards.map((card) => `${lessonNumber(card)}:${cardSourceTerm(card)}`),
+);
+const lesson34CardCompletions = { 3: lesson3CardCompletions, 4: lesson4CardCompletions };
+
+const lesson34CompleteCards = [
+  ...lesson34SyncCards.map((card) => {
+    const details = manualLesson34CardMap.get(`${lessonNumber(card)}:${cardSourceTerm(card)}`) || {};
+    const sourceTerm = cardSourceTerm(card);
+    const term = sourceTerm === "如癡如醉" ? "如醉如癡" : sourceTerm;
+    const completion = lesson34CardCompletions[lessonNumber(card)]?.[term] || {};
+    return {
+      ...details,
+      ...card,
+      ...completion,
+      id: card.id,
+      lesson: lessonNumber(card),
+      type: normalizeCardType(card.category || details.type),
+      term,
+      pinyin: sourceTerm === "如癡如醉" ? "rú zuì rú chī" : card.pinyin,
+      meaningZh: details.meaningZh || completion.meaningZh || "",
+      meaningPinyin: details.meaningPinyin || completion.meaningPinyin || "",
+      meaningVi: card.vietnamese || details.meaningVi || "",
+      example: String(card.example || details.example || "").replaceAll("如癡如醉", "如醉如癡"),
+      examplePinyin: details.examplePinyin || completion.examplePinyin || "",
+      exampleVi: details.exampleVi || completion.exampleVi || "",
+    };
+  }),
+  ...manualLesson34Cards
+    .filter((card) => {
+      const key = `${lessonNumber(card)}:${cardSourceTerm(card)}`;
+      return !syncLesson34CardKeys.has(key)
+        && !lesson34LinkCardKeys.has(key)
+        && !["如癡如醉", "晴天霹靂"].includes(cardSourceTerm(card));
+    })
+    .map((card) => ({
+      ...card,
+      ...(lesson34CardCompletions[lessonNumber(card)]?.[cardSourceTerm(card)] || {}),
+    })),
+  ...lesson34LinkCards,
+].map(normalizeCard);
+
+const lesson34GrammarExplanationPinyin = {
+  "manual-lesson3-grammar-suowei": "Yònglái jiěshì fùzá de míngcí, guānniàn huò shuōfǎ, xiān tíchū yào shuōmíng de cíyǔ, zài yòng ‘shì zhǐ’ shuōmíng nèiróng.",
+  "manual-lesson3-grammar-wangwang": "Biǎoshì mǒu zhǒng qíngkuàng chángcháng fāshēng, dàiyǒu jīngyàn guīnà de yǔqì.",
+  "manual-lesson3-grammar-youcikejian": "Yòng zài shuōmíng huò lìzi zhīhòu, biǎoshì cóng qiánmiàn de nèiróng kěyǐ dédào mǒu ge jiélùn.",
+  "manual-lesson3-grammar-yiwei-qishi": "Yònglái biǎoshì yuánlái de xiǎngfǎ hé shíjì qíngkuàng bùtóng, qiánmiàn shuō wùjiě, hòumiàn shuō zhēnshí qíngkuàng.",
+  "manual-lesson3-grammar-suiran-raner": "Yònglái liánjiē liǎng ge xiāngfǎn huò zhuǎnzhé de qíngkuàng, yǔqì bǐ ‘dànshì’ zhèngshì.",
+  "manual-lesson4-grammar-lijing-haoburongyi": "‘Lìjīng’ biǎoshì jīngguò yí duàn shíjiān, guòchéng huò kùnnán; ‘hǎobù róngyì’ biǎoshì wánchéng mǒu jiàn shì hěn xīnkǔ, cháng hé ‘cái’ yìqǐ shǐyòng.",
+  "manual-lesson4-grammar-dengdiao-zhihou": "Biǎoshì dì yī jiàn shìqing fāshēng huò wánchéng yǐhòu, dì èr jiàn shìqing cái jiēzhe fāshēng. Kěyǐ jiē shíjiān, yě kěyǐ jiē dòngzuò.",
+  "manual-lesson4-grammar-ba-liantong": "‘Bǎ A liántóng B’ biǎoshì bǎ A hé B yìqǐ chǔlǐ, dàizǒu, fàng jìnqu huò sòng chūqu.",
+  "manual-lesson4-grammar-xian-jiezhe-ranhou": "Biǎoshì jǐ ge dòngzuò zhào xiānhòu shùnxù fāshēng. Cháng yònglái shuōmíng xíngchéng, chǔlǐ shìqing de bùzhòu huò jiějué wèntí de guòchéng.",
+  "manual-lesson4-grammar-ruguo-dengdiao-jiu": "Biǎoshì rúguǒ yìzhí děngdào mǒu ge shíjiān huò qíngkuàng cái xíngdòng, jiéguǒ kěnéng yǐjīng tài wǎn, cháng dàiyǒu tíxǐng huò jǐnggào de yǔqì.",
+};
+
+const lesson34GrammarRequiredTerms = {
+  "manual-lesson3-grammar-suowei": ["所謂", "是指"],
+  "manual-lesson3-grammar-wangwang": ["往往"],
+  "manual-lesson3-grammar-youcikejian": ["由此可見"],
+  "manual-lesson3-grammar-yiwei-qishi": ["以為", "其實"],
+  "manual-lesson3-grammar-suiran-raner": ["雖然", "然而"],
+  "manual-lesson4-grammar-lijing-haoburongyi": ["歷經", "好不容易"],
+  "manual-lesson4-grammar-dengdiao-zhihou": ["等到"],
+  "manual-lesson4-grammar-ba-liantong": ["把", "連同"],
+  "manual-lesson4-grammar-xian-jiezhe-ranhou": ["先", "接著", "然後"],
+  "manual-lesson4-grammar-ruguo-dengdiao-jiu": ["等到", "就"],
+};
+
+const lesson34CompleteGrammar = manualSupplementGrammar
+  .filter((item) => [3, 4].includes(lessonNumber(item)))
+  .map((item) => {
+    const requiredTerms = lesson34GrammarRequiredTerms[item.id] || [];
+    const practice = item.practice && !Array.isArray(item.practice)
+      ? { ...item.practice, requiredTerms: item.practice.requiredTerms || requiredTerms }
+      : item.practice;
+    return normalizeGrammar({
+      ...item,
+      explanationPinyin: item.explanationPinyin || lesson34GrammarExplanationPinyin[item.id] || "",
+      practice,
+    });
+  });
+
+const embeddedWorksheetExtras = (text) => {
+  const worksheet = text?.worksheet;
+  if (!Array.isArray(worksheet?.sections)) return [];
+  return worksheet.sections.map((section) => ({
+    type: "worksheet",
+    tone: section.tone || "reading",
+    title: `${worksheet.title || `第 ${text.lesson} 課課後練習卷`}：${section.title || "練習"}`,
+    description: worksheet.vi || "",
+    items: Array.isArray(section.items) ? section.items : [],
+  }));
+};
+
+const lesson34CompleteTexts = lesson34CompletionTexts.map((text) => {
+  const manualWorksheets = manualSupplementTexts
+    .filter((item) => lessonNumber(item) === lessonNumber(text))
+    .flatMap((item) => Array.isArray(item.extras) ? item.extras : [])
+    .filter((section) => section.type === "worksheet")
+    .map((section) => ({
+      ...section,
+      tone: /生詞|所列生詞/.test(section.title || "")
+        ? "vocab"
+        : /適當的字|改錯字|語法/.test(section.title || "")
+          ? "grammar"
+          : "reading",
+    }));
+  return {
+    ...text,
+    extras: manualWorksheets.length ? manualWorksheets : embeddedWorksheetExtras(text),
+  };
+});
+
 const defaultCards = replaceLessons34(
   [...lesson1Cards, ...lesson2Cards, ...manualSupplementCards],
-  lesson34SyncCards,
+  lesson34CompleteCards,
 );
 const defaultTexts = replaceLessons34(
   [...lesson1Texts, ...lesson2Texts, ...manualSupplementTexts],
-  lesson34SyncTexts,
+  lesson34CompleteTexts,
 );
 
 const fallbackGrammar = [
@@ -284,7 +562,7 @@ const defaultGrammar = replaceLessons34(
     ...manualSupplementGrammar,
     ...fallbackGrammar.filter((item) => ![1, 2].includes(Number(item.lesson))),
   ],
-  lesson34SyncGrammar,
+  lesson34CompleteGrammar,
 );
 
 const defaultExercises = Array.from({ length: 14 }, (_, index) => {
@@ -334,9 +612,9 @@ if (state.contentVersion !== CONTENT_VERSION && !state.customContent) {
   state.contentVersion = CONTENT_VERSION;
   saveState();
 }
-let cards = replaceLessons34(state.cards?.length ? state.cards : defaultCards, lesson34SyncCards);
-let grammar = replaceLessons34(state.grammar?.length ? state.grammar : defaultGrammar, lesson34SyncGrammar);
-let texts = replaceLessons34(state.texts?.length ? state.texts : defaultTexts, lesson34SyncTexts);
+let cards = replaceLessons34(state.cards?.length ? state.cards : defaultCards, lesson34CompleteCards);
+let grammar = replaceLessons34(state.grammar?.length ? state.grammar : defaultGrammar, lesson34CompleteGrammar);
+let texts = replaceLessons34(state.texts?.length ? state.texts : defaultTexts, lesson34CompleteTexts);
 let exercises = state.exercises?.length ? state.exercises : defaultExercises;
 let currentCardIndex = 0;
 let currentLesson = normalizeLessonNumber(state.currentLesson || state.currentTextLesson || state.currentCardLesson || 1);
@@ -460,7 +738,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js?v=20260707-content-shell").then((registration) => {
+  navigator.serviceWorker.register("./sw.js?v=20260812-lessons34-workbooks").then((registration) => {
     registration.addEventListener("updatefound", () => {
       const worker = registration.installing;
       if (!worker) return;
@@ -737,8 +1015,9 @@ function renderTextLegend(legend) {
 function renderTextExtraSection(section) {
   const isTable = section.type === "table" || Array.isArray(section.headers) || Array.isArray(section.rows);
   const isWorksheet = section.type === "worksheet";
+  const tone = ["vocab", "grammar", "reading"].includes(section.tone) ? section.tone : "reading";
   return `
-    <section class="text-extra-section">
+    <section class="text-extra-section ${isWorksheet ? `worksheet-section worksheet-${tone}` : ""}">
       <h4>${escapeHtml(section.title || "\u88dc\u5145\u9805\u76ee")}</h4>
       ${section.description ? `<p>${escapeHtml(section.description)}</p>` : ""}
       ${isTable ? renderTextExtraTable(section) : isWorksheet ? `
@@ -832,7 +1111,16 @@ function renderTextLine(line, index = 0) {
 
 function renderMarkedText(text, marks) {
   const normalizedMarks = [...marks]
-    .map(([type, term]) => ({ type, term: String(term || "") }))
+    .map((mark) => {
+      if (Array.isArray(mark)) {
+        return { type: mark[0], term: String(mark[1] || ""), target: String(mark[2] || mark[1] || "") };
+      }
+      return {
+        type: mark?.type || mark?.markType,
+        term: String(mark?.term || mark?.text || ""),
+        target: String(mark?.target || mark?.term || mark?.text || ""),
+      };
+    })
     .filter((mark) => mark.term && text.includes(mark.term))
     .sort((a, b) => b.term.length - a.term.length);
 
@@ -845,7 +1133,7 @@ function renderMarkedText(text, marks) {
       cursor += 1;
       continue;
     }
-    output += `<button class="mark mark-link mark-${escapeHtml(match.type)}" type="button" data-mark-type="${escapeHtml(match.type)}" data-term="${escapeHtml(match.term)}">${escapeHtml(match.term)}</button>`;
+    output += `<button class="mark mark-link mark-${escapeHtml(match.type)}" type="button" data-mark-type="${escapeHtml(match.type)}" data-term="${escapeHtml(match.target)}">${escapeHtml(match.term)}</button>`;
     cursor += match.term.length;
   }
   return output;
@@ -1716,7 +2004,10 @@ function navigateToCardTerm(type, term, lesson) {
   currentCardCategory = category;
   cardCategorySelect.value = currentCardCategory;
   const lessonCards = getCardsForCurrentLesson();
-  const index = lessonCards.findIndex((card) => card.term === term || card.term.includes(term) || term.includes(card.term));
+  const exactIndex = lessonCards.findIndex((card) => card.term === term);
+  const index = exactIndex >= 0
+    ? exactIndex
+    : lessonCards.findIndex((card) => card.term.includes(term) || term.includes(card.term));
   if (index >= 0) currentCardIndex = index;
   persistCurrentLesson();
   renderCard();
@@ -1726,13 +2017,26 @@ function navigateToCardTerm(type, term, lesson) {
 }
 
 function navigateToGrammarTerm(term, lesson) {
-  setCurrentLesson(lesson, { resetCard: true, resetPractice: true, resetQuiz: true });
+  const lookup = normalizeGrammarLookup(term);
+  const matches = (item) => [item.pattern, item.example, item.explanationZh]
+    .some((value) => {
+      const candidate = normalizeGrammarLookup(value);
+      return candidate && lookup && (candidate.includes(lookup) || lookup.includes(candidate));
+    });
+  const target = grammar.find((item) => Number(item.lesson) === lesson && matches(item))
+    || grammar.find(matches);
+  const targetLesson = Number(target?.lesson || lesson);
+  setCurrentLesson(targetLesson, { resetCard: true, resetPractice: true, resetQuiz: true });
   renderGrammar();
   setView("grammar");
-  const target = grammar
-    .filter((item) => Number(item.lesson) === lesson)
-    .find((item) => item.pattern?.includes(term) || item.example?.includes(term) || item.explanationZh?.includes(term));
   if (target) requestAnimationFrame(() => expandGrammarCard(target.id));
+}
+
+function normalizeGrammarLookup(value) {
+  return String(value || "")
+    .replace(/[（）()「」『』，,。；;：:\s]/g, "")
+    .replace(/[.…]+/g, "")
+    .trim();
 }
 
 function expandGrammarCard(grammarId) {
@@ -2064,10 +2368,10 @@ function normalizeText(text, index) {
 function normalizeCard(card, index) {
   return {
     lesson: Number(card.lesson || 1),
-    type: String(card.type || "詞語").trim(),
-    term: String(card.term || "").trim(),
+    type: normalizeCardType(card.type || card.category || "詞語"),
+    term: String(card.term || card.word || "").trim(),
     pinyin: String(card.pinyin || "").trim(),
-    meaningZh: String(card.meaningZh || "").trim(),
+    meaningZh: String(card.meaningZh || card.meaning || "").trim(),
     meaningPinyin: String(card.meaningPinyin || "").trim(),
     meaningVi: String(card.meaningVi || card.vietnamese || "").trim(),
     example: String(card.example || "").trim(),
@@ -2079,25 +2383,29 @@ function normalizeCard(card, index) {
 }
 
 function normalizeGrammar(item, index) {
+  const practiceSource = Array.isArray(item.practice)
+    ? item.practice
+    : item.practice
+      ? [item.practice]
+      : [];
   return {
     lesson: Number(item.lesson || 1),
     pattern: String(item.pattern || "").trim(),
-    patternPinyin: String(item.patternPinyin || "").trim(),
-    explanationZh: String(item.explanationZh || "").trim(),
+    patternPinyin: String(item.patternPinyin || item.pinyin || "").trim(),
+    explanationZh: String(item.explanationZh || item.explanation || "").trim(),
     explanationPinyin: String(item.explanationPinyin || "").trim(),
-    explanationVi: String(item.explanationVi || "").trim(),
+    explanationVi: String(item.explanationVi || item.vietnamese || "").trim(),
     example: String(item.example || "").trim(),
     examplePinyin: String(item.examplePinyin || "").trim(),
     exampleVi: String(item.exampleVi || "").trim(),
-    practice: Array.isArray(item.practice)
-      ? item.practice.map((practice) => ({
+    practice: practiceSource
+      .map((practice) => ({
           prompt: String(practice.prompt || "").trim(),
           answer: String(practice.answer || "").trim(),
           requiredTerms: Array.isArray(practice.requiredTerms)
             ? practice.requiredTerms.map((term) => String(term).trim()).filter(Boolean)
             : [],
-        })).filter((practice) => practice.prompt)
-      : [],
+        })).filter((practice) => practice.prompt),
     id: String(item.id || index + 1),
   };
 }

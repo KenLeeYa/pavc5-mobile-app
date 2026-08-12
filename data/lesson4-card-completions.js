@@ -1,0 +1,333 @@
+export const lesson4CardCompletions = {
+  "嚮往": {
+    meaningPinyin: "Xīnlǐ hěn xīwàng dédào huò dàodá mǒu zhǒng shēnghuó, dìfang huò mùbiāo.",
+    examplePinyin: "Tā xiàngwǎng Ōuzhōu de shēnghuó.",
+    exampleVi: "Cô ấy khao khát cuộc sống ở châu Âu.",
+  },
+  "報導": {
+    meaningPinyin: "Bǎ xiāoxi xiě chūlái huò shuō chūlái; yě zhǐ xīnwén nèiróng.",
+    examplePinyin: "Xīnwén bàodào táifēng xiāoxi.",
+    exampleVi: "Bản tin đưa tin về cơn bão.",
+  },
+  "風光": {
+    meaningPinyin: "Měilì de jǐngsè.",
+    examplePinyin: "Huālián de fēngguāng hěn měilì.",
+    exampleVi: "Phong cảnh Hoa Liên rất đẹp.",
+  },
+  "著名": {
+    meaningPinyin: "Hěn yǒumíng.",
+    examplePinyin: "Nà shì shìjiè zhùmíng de gǔjī.",
+    exampleVi: "Đó là một di tích nổi tiếng thế giới.",
+  },
+  "古蹟": {
+    meaningPinyin: "Gǔdài liú xiàlái, yǒu lìshǐ jiàzhí de jiànzhù huò dìdiǎn.",
+    examplePinyin: "Táinán yǒu xǔduō zhùmíng gǔjī.",
+    exampleVi: "Đài Nam có nhiều di tích nổi tiếng.",
+  },
+  "存款": {
+    meaningPinyin: "Cún zài yínháng lǐ de qián.",
+    examplePinyin: "Tā bǎ xīnshuǐ de yíbàn cún dào yínháng.",
+    exampleVi: "Cô ấy gửi một nửa tiền lương vào ngân hàng.",
+  },
+  "旅程": {
+    meaningPinyin: "Lǚxíng de guòchéng huò ānpái.",
+    examplePinyin: "Lǚchéng zhōng kàndàole měilì fēngjǐng.",
+    exampleVi: "Trong hành trình, họ đã nhìn thấy phong cảnh đẹp.",
+  },
+  "勝地": {
+    meaningPinyin: "Yǒumíng ér zhídé yóulǎn de dìfang.",
+    examplePinyin: "Nàlǐ shì zhùmíng de guānguāng shèngdì.",
+    exampleVi: "Nơi đó là một thắng cảnh du lịch nổi tiếng.",
+  },
+  "緊湊": {
+    meaningZh: "安排密集而連貫，幾乎沒有空隙。",
+    meaningPinyin: "Ānpái mìjí ér liánguàn, jīhū méiyǒu kòngxì.",
+    examplePinyin: "Jiémù ānpái de hěn jǐncòu.",
+    exampleVi: "Chương trình được sắp xếp rất dày đặc.",
+  },
+  "聆聽": {
+    meaningPinyin: "Zǐxì de tīng.",
+    examplePinyin: "Tā xǐhuan língtīng niǎojiào.",
+    exampleVi: "Anh ấy thích lắng nghe tiếng chim hót.",
+  },
+  "演奏": {
+    meaningPinyin: "Yòng yuèqì biǎoyǎn yīnyuè.",
+    examplePinyin: "Tā zài tái shàng yǎnzòu gāngqín.",
+    exampleVi: "Cô ấy biểu diễn piano trên sân khấu.",
+  },
+  "旋律": {
+    meaningPinyin: "Yīnyuè zhōng gāodī chángduǎn zǔchéng de diàozi.",
+    examplePinyin: "Dàjiā xǐhuan zhè duàn xuánlǜ.",
+    exampleVi: "Mọi người yêu thích giai điệu này.",
+  },
+  "突然": {
+    meaningPinyin: "Shìqíng fāshēng de hěn kuài, méiyǒu yùliào dào.",
+    examplePinyin: "Chēzi tūrán tíng xiàlái.",
+    exampleVi: "Chiếc xe đột nhiên dừng lại.",
+  },
+  "無心": {
+    meaningPinyin: "Méiyǒu xīnqíng zuò mǒu shì; bú shì gùyì de.",
+    examplePinyin: "Tā wúxīn tīng yīnyuè.",
+    exampleVi: "Cô ấy không còn tâm trí nghe nhạc.",
+  },
+  "如醉如癡": {
+    meaningPinyin: "Xíngróng fēicháng zháomí, táozuì.",
+    examplePinyin: "Měimiào de yīnyuè ràng dàjiā tīng de rúzuìrúchī.",
+    exampleVi: "Âm nhạc tuyệt diệu khiến mọi người nghe đến say mê.",
+  },
+  "不翼而飛": {
+    meaningPinyin: "Méiyǒu chìbǎng què fēizǒule, xíngróng dōngxi tūrán bú jiàn.",
+    examplePinyin: "Wǒ de píbāo bùyì ér fēile.",
+    exampleVi: "Túi xách của tôi bỗng dưng biến mất.",
+  },
+  "青天霹靂": {
+    meaningZh: "比喻突然聽到令人震驚的壞消息。",
+    meaningPinyin: "Bǐyù tūrán tīngdào lìng rén zhènjīng de huài xiāoxi.",
+    examplePinyin: "Dézhī hùzhào bú jiànle, zhēn shì qīngtiān pīlì.",
+    exampleVi: "Biết hộ chiếu đã mất quả thật là một tin sét đánh.",
+  },
+  "煎熬": {
+    meaningPinyin: "Tòngkǔ ér nánshòu de xīnlǐ zhuàngtài.",
+    examplePinyin: "Děngdài xiāoxi shǐ rén jiānáo.",
+    exampleVi: "Việc chờ đợi tin tức khiến người ta dằn vặt.",
+  },
+  "推測": {
+    meaningPinyin: "Gēnjù xiànsuǒ cāixiǎng shìqíng de kěnéng qíngkuàng.",
+    examplePinyin: "Jǐngchá gēnjù xiànsuǒ tuīcè ànqíng.",
+    exampleVi: "Cảnh sát suy đoán tình tiết vụ án dựa trên manh mối.",
+  },
+  "尋找": {
+    meaningPinyin: "Zhǎo.",
+    examplePinyin: "Tāmen zài fùjìn xúnzhǎo píbāo.",
+    exampleVi: "Họ tìm chiếc túi xách ở khu vực gần đó.",
+  },
+  "徒勞無功": {
+    meaningPinyin: "Báifèi lìqi, méiyǒu jiéguǒ.",
+    examplePinyin: "Zhǎole yì zhěng tiān háishi méi zhǎodào, zhēn shì túláo wúgōng.",
+    exampleVi: "Tìm suốt cả ngày vẫn không thấy, đúng là tốn công vô ích.",
+  },
+  "獨自": {
+    meaningPinyin: "Yí ge rén.",
+    examplePinyin: "Tā dúzì liú zài lǚguǎn.",
+    exampleVi: "Cô ấy ở lại khách sạn một mình.",
+  },
+  "頓時": {
+    meaningPinyin: "Lìkè, mǎshàng.",
+    examplePinyin: "Tīngdào xiāoxi shí tā dùnshí lèngzhù.",
+    exampleVi: "Khi nghe tin, anh ấy lập tức sững người.",
+  },
+  "懊惱": {
+    meaningPinyin: "Hòuhuǐ, fánnǎo.",
+    examplePinyin: "Zuò cuò shì hòu tā hěn àonǎo.",
+    exampleVi: "Sau khi làm sai, anh ấy rất hối hận và phiền muộn.",
+  },
+  "無助": {
+    meaningPinyin: "Méiyǒu bànfǎ, yě méiyǒu rén kěyǐ bāngmáng de gǎnjué.",
+    examplePinyin: "Tā gǎndào wúzhù, dàn péngyou bāngzhù tā.",
+    exampleVi: "Cô ấy cảm thấy bất lực, nhưng bạn bè đã giúp cô.",
+  },
+  "湧": {
+    meaningPinyin: "Dàliàng chūxiàn huò liúchū.",
+    examplePinyin: "Gǎndòng yǒng shàng xīntóu.",
+    exampleVi: "Niềm xúc động dâng trào trong lòng.",
+  },
+  "報案": {
+    meaningPinyin: "Xiàng jǐngchá bàogào shìjiàn.",
+    examplePinyin: "Tā lìkè dào jǐngchá jú bào'àn.",
+    exampleVi: "Cô ấy lập tức đến đồn cảnh sát trình báo.",
+  },
+  "補辦": {
+    meaningZh: "原有的證件或手續失效、遺失後，重新申請辦理。",
+    meaningPinyin: "Yuányǒu de zhèngjiàn huò shǒuxù shīxiào, yíshī hòu, chóngxīn shēnqǐng bànlǐ.",
+    examplePinyin: "Hùzhào bú jiànle yào bǔbàn.",
+    exampleVi: "Nếu hộ chiếu bị mất thì phải làm lại.",
+  },
+  "旺季": {
+    meaningPinyin: "Shēngyì huò lǚyóu zuì máng de jìjié.",
+    examplePinyin: "Lǚyóu wàngjì fángjià jiào gāo.",
+    exampleVi: "Giá phòng cao hơn vào mùa du lịch cao điểm.",
+  },
+  "一路上": {
+    meaningPinyin: "Zhěng ge lùtú zhōng.",
+    examplePinyin: "Yílùshàng dàjiā dōu zài chànggē.",
+    exampleVi: "Suốt dọc đường, mọi người đều hát.",
+  },
+  "名勝": {
+    meaningPinyin: "Yǒumíng de fēngjǐng huò gǔjī.",
+    examplePinyin: "Dǎoyóu jièshào dāngdì míngshèng.",
+    exampleVi: "Hướng dẫn viên giới thiệu các danh thắng địa phương.",
+  },
+  "不安": {
+    meaningPinyin: "Xīnlǐ bù píngjìng, dānxīn.",
+    examplePinyin: "Tā yīnwèi hùzhào yíshī ér bù'ān.",
+    exampleVi: "Cô ấy bất an vì bị mất hộ chiếu.",
+  },
+  "失散": {
+    meaningPinyin: "Hé tóngxíng de rén fēnkāi ér shīqù liánluò.",
+    examplePinyin: "Tā hé jiārén shīsàn duō nián.",
+    exampleVi: "Anh ấy đã thất lạc gia đình nhiều năm.",
+  },
+  "團聚": {
+    meaningPinyin: "Fēnkāi de rén chóngxīn jù zài yìqǐ.",
+    examplePinyin: "Guònián shí jiārén tuánjù.",
+    exampleVi: "Gia đình đoàn tụ vào dịp năm mới.",
+  },
+  "大排長龍": {
+    meaningPinyin: "Hěnduō rén pái chéng hěn cháng de duìwǔ.",
+    examplePinyin: "Lǚyóu wàngjì, bàn hùzhào de rén dà pái chánglóng.",
+    exampleVi: "Vào mùa du lịch cao điểm, người làm hộ chiếu xếp thành hàng dài.",
+  },
+  "寶貴": {
+    meaningPinyin: "Fēicháng zhēnguì.",
+    examplePinyin: "Zhè shì bǎoguì de jīngyàn.",
+    exampleVi: "Đây là một kinh nghiệm quý báu.",
+  },
+  "叮嚀": {
+    meaningPinyin: "Zàisān tíxǐng, zhǔfù.",
+    examplePinyin: "Māma dīngníng háizi zhùyì ānquán.",
+    exampleVi: "Mẹ dặn con chú ý an toàn.",
+  },
+  "貼身": {
+    meaningPinyin: "Kàojìn shēntǐ; suíshēn de.",
+    examplePinyin: "Hùzhào yào fàng zài tiēshēn kǒudài.",
+    exampleVi: "Hộ chiếu phải được để trong túi sát người.",
+  },
+  "警覺": {
+    meaningPinyin: "Zhùyì wēixiǎn bìng tígāo fángbèi.",
+    examplePinyin: "Chūguó lǚxíng yào tígāo jǐngjué.",
+    exampleVi: "Khi đi du lịch nước ngoài cần nâng cao cảnh giác.",
+  },
+  "影本": {
+    meaningPinyin: "Yòng yǐngyìn fāngshì fùzhì de wénjiàn.",
+    examplePinyin: "Qǐng jiāo zhèngjiàn yǐngběn.",
+    exampleVi: "Vui lòng nộp bản sao giấy tờ.",
+  },
+  "乘興而來，敗興而歸": {
+    meaningZh: "帶著興致前來，最後卻因失望而離去。",
+    meaningPinyin: "Dàizhe xìngzhì qiánlái, zuìhòu què yīn shīwàng ér líqù.",
+    examplePinyin: "Lǚxíng qián yào zuò hǎo zhǔnbèi, cái bú huì chéngxìng ér lái, bàixìng ér guī.",
+    exampleVi: "Cần chuẩn bị kỹ trước chuyến đi để không vui vẻ lên đường rồi lại thất vọng trở về.",
+  },
+  "獨家報導": {
+    meaningZh: "只有一家媒體取得並發布的新聞報導。",
+    meaningPinyin: "Zhǐyǒu yì jiā méitǐ qǔdé bìng fābù de xīnwén bàodào.",
+    examplePinyin: "Zhè jiā xīnwéntái yǒu dújiā bàodào.",
+    exampleVi: "Đài truyền hình này có một bản tin độc quyền.",
+  },
+  "特別報導": {
+    meaningZh: "針對某一重要事件製作的專題新聞報導。",
+    meaningPinyin: "Zhēnduì mǒu yí zhòngyào shìjiàn zhìzuò de zhuāntí xīnwén bàodào.",
+    examplePinyin: "Qiú sài dàngwǎn yǒu tèbié bàodào.",
+    exampleVi: "Tối diễn ra trận đấu sẽ có một bản tin đặc biệt.",
+  },
+  "名著": {
+    meaningZh: "著名且具有重要價值的作品。",
+    meaningPinyin: "Zhùmíng qiě jùyǒu zhòngyào jiàzhí de zuòpǐn.",
+    examplePinyin: "Xīyóujì shì yì běn wénxué míngzhù.",
+    exampleVi: "Tây Du Ký là một kiệt tác văn học nổi tiếng.",
+  },
+  "提款": {
+    meaningZh: "從銀行帳戶取出存款。",
+    meaningPinyin: "Cóng yínháng zhànghù qǔchū cúnkuǎn.",
+    examplePinyin: "Wǒ děi xiān qù tíkuǎn.",
+    exampleVi: "Tôi phải đi rút tiền trước.",
+  },
+  "行程": {
+    meaningZh: "旅行或辦事所安排的路線、時間和活動。",
+    meaningPinyin: "Lǚxíng huò bànshì suǒ ānpái de lùxiàn, shíjiān hé huódòng.",
+    examplePinyin: "Lǚxíngtuán de xíngchéng hěn jǐncòu.",
+    exampleVi: "Lịch trình của đoàn du lịch rất dày đặc.",
+  },
+  "美妙": {
+    meaningPinyin: "Měihǎo ér lìng rén yúkuài.",
+    examplePinyin: "Zhè shǒu gē de xuánlǜ hěn měimiào.",
+    exampleVi: "Giai điệu của bài hát này rất tuyệt vời.",
+  },
+  "歷經": {
+    meaningPinyin: "Jīngguò, jīnglì yí duàn shíjiān huò shìqíng.",
+    examplePinyin: "Sēnlín lìjīng duō nián de pòhuài.",
+    exampleVi: "Khu rừng đã trải qua nhiều năm bị tàn phá.",
+  },
+  "內心": {
+    meaningPinyin: "Xīnlǐ de gǎnshòu huò xiǎngfǎ.",
+    examplePinyin: "Tā nèixīn gǎndào bù'ān.",
+    exampleVi: "Trong lòng cô ấy cảm thấy bất an.",
+  },
+  "補交": {
+    meaningZh: "在規定期限後補上原先應繳交的東西。",
+    meaningPinyin: "Zài guīdìng qīxiàn hòu bǔshàng yuánxiān yīng jiǎojiāo de dōngxi.",
+    examplePinyin: "Qǐng xià zhōu qián bǔjiāo zuòyè.",
+    exampleVi: "Vui lòng nộp bù bài tập trước tuần sau.",
+  },
+  "補考": {
+    meaningZh: "因缺考或成績不及格而另外參加考試。",
+    meaningPinyin: "Yīn quēkǎo huò chéngjī bù jígé ér lìngwài cānjiā kǎoshì.",
+    examplePinyin: "Tā quēkǎo hòu xūyào bǔkǎo.",
+    exampleVi: "Sau khi vắng thi, anh ấy cần thi bù.",
+  },
+  "補課": {
+    meaningZh: "為補上缺少的課程內容而另外上課。",
+    meaningPinyin: "Wèi bǔshàng quēshǎo de kèchéng nèiróng ér lìngwài shàngkè.",
+    examplePinyin: "Shēngbìng hòu lǎoshī bāng tā bǔkè.",
+    exampleVi: "Sau khi em ấy bị ốm, giáo viên giúp em học bù.",
+  },
+  "補假": {
+    meaningZh: "因假日與其他休息日重疊而另外補放的假。",
+    meaningPinyin: "Yīn jiàrì yǔ qítā xiūxīrì chóngdié ér lìngwài bǔfàng de jià.",
+    examplePinyin: "Duānwǔjié bǔjià yì tiān.",
+    exampleVi: "Tết Đoan Ngọ được nghỉ bù một ngày.",
+  },
+  "淡季": {
+    meaningZh: "生意或旅遊較不繁忙的季節。",
+    meaningPinyin: "Shēngyì huò lǚyóu jiào bù fánmáng de jìjié.",
+    examplePinyin: "Dànjì lǚyóu bǐjiào huásuàn.",
+    exampleVi: "Đi du lịch vào mùa thấp điểm tiết kiệm hơn.",
+  },
+  "辛酸": {
+    meaningPinyin: "Bēishāng, nánguò de gǎnshòu.",
+    examplePinyin: "Tā liúxià xīnsuān de yǎnlèi.",
+    exampleVi: "Cô ấy rơi những giọt nước mắt cay đắng.",
+  },
+  "心酸": {
+    meaningZh: "因悲傷、委屈或同情而感到難受。",
+    meaningPinyin: "Yīn bēishāng, wěiqu huò tóngqíng ér gǎndào nánshòu.",
+    examplePinyin: "Tīngdào gùshi wǒ gǎndào xīnsuān.",
+    exampleVi: "Nghe câu chuyện, tôi cảm thấy xót xa.",
+  },
+  "鼻酸": {
+    meaningZh: "因感動或悲傷而鼻子發酸，形容快要流淚。",
+    meaningPinyin: "Yīn gǎndòng huò bēishāng ér bízi fāsuān, xíngróng kuài yào liúlèi.",
+    examplePinyin: "Tīngdào xiāoxi wǒ bísuān.",
+    exampleVi: "Nghe tin, tôi cảm thấy cay sống mũi.",
+  },
+  "分享": {
+    meaningPinyin: "Bǎ zìjǐ de jīngyàn huò dōngxi gàosu biérén, gěi biérén.",
+    examplePinyin: "Tā fēnxiǎng lǚxíng jīngyàn.",
+    exampleVi: "Cô ấy chia sẻ kinh nghiệm du lịch.",
+  },
+  "財物": {
+    meaningPinyin: "Qiáncái hé wùpǐn.",
+    examplePinyin: "Qǐng bǎoguǎn hǎo gèrén cáiwù.",
+    exampleVi: "Vui lòng bảo quản cẩn thận tài sản cá nhân.",
+  },
+  "不經一事，不長一智": {
+    meaningPinyin: "Méiyǒu jīnglì yí jiàn shì, jiù bú huì zēngjiā yì fēn zhìhuì; biǎoshì jīngyàn néng ràng rén chéngzhǎng.",
+    examplePinyin: "Zhè cì yíshī hùzhào ràng tā míngbai bù jīng yí shì, bù zhǎng yí zhì.",
+    exampleVi: "Lần làm mất hộ chiếu này khiến cô hiểu rằng phải trải qua sự việc mới khôn ngoan hơn.",
+  },
+  "歷程": {
+    meaningPinyin: "Shìqíng fāzhǎn de guòchéng.",
+    examplePinyin: "Zhè cì lǚxíng chéngle tā rénshēng zhōng nánwàng de lìchéng.",
+    exampleVi: "Chuyến đi này đã trở thành một hành trình khó quên trong đời cô.",
+  },
+  "報恩": {
+    meaningPinyin: "Bàodá biérén de ēnqíng.",
+    examplePinyin: "Tā zài guówài shòudào péngyou bāngzhù, xīnlǐ yìzhí xiǎng bào'ēn.",
+    exampleVi: "Khi ở nước ngoài, cô được bạn bè giúp đỡ và luôn muốn báo đáp ân tình.",
+  },
+  "禍不單行，福無雙至": {
+    meaningPinyin: "Bù hǎo de shìqíng cháng jiēlián fāshēng, hǎoshì què bù yídìng tóngshí lái.",
+    examplePinyin: "Tā xiān yíshī hùzhào, yòu hé lǚxíngtuán shīsàn, zhēn shì huò bù dān xíng.",
+    exampleVi: "Cô vừa mất hộ chiếu, lại thất lạc với đoàn du lịch; đúng là họa vô đơn chí.",
+  },
+};

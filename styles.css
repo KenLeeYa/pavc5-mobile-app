@@ -979,6 +979,34 @@ select,
   margin: 0;
 }
 
+.worksheet-section {
+  border-left-width: 4px;
+}
+
+.worksheet-vocab {
+  border-left-color: #174a7c;
+}
+
+.worksheet-vocab > h4 {
+  color: #174a7c;
+}
+
+.worksheet-grammar {
+  border-left-color: #822055;
+}
+
+.worksheet-grammar > h4 {
+  color: #822055;
+}
+
+.worksheet-reading {
+  border-left-color: #14664f;
+}
+
+.worksheet-reading > h4 {
+  color: #14664f;
+}
+
 .text-extra-items,
 .text-extra-item {
   display: grid;

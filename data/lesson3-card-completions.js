@@ -1,0 +1,300 @@
+export const lesson3CardCompletions = {
+  "階段": {
+    meaningPinyin: "Shìqíng fāzhǎn guòchéng zhōng de yí duàn shíqī.",
+    examplePinyin: "Xuéxí Zhōngwén de chūqī jiēduàn yào zhòngshì fāyīn.",
+    exampleVi: "Ở giai đoạn đầu học tiếng Trung, cần chú trọng phát âm.",
+  },
+  "正規": {
+    meaningPinyin: "Héhū zhèngshì biāozhǔn huò guīdìng de.",
+    examplePinyin: "Tā jiēshòu zhèngguī de xuéxiào jiàoyù.",
+    exampleVi: "Cô ấy được giáo dục chính quy tại trường.",
+  },
+  "提倡": {
+    meaningPinyin: "Tíchū bìng gǔlì dàjiā qù zuò.",
+    examplePinyin: "Xǔduō tuántǐ tíchàng shǎo yòng sùjiāodài.",
+    exampleVi: "Nhiều tổ chức kêu gọi mọi người giảm sử dụng túi ni-lông.",
+  },
+  "終身": {
+    meaningPinyin: "Yìshēng; yíbèizi.",
+    examplePinyin: "Zhōngshēn xuéxí ràng rén bùduàn tíshēng zìjǐ.",
+    exampleVi: "Học tập suốt đời giúp con người không ngừng hoàn thiện bản thân.",
+  },
+  "榜樣": {
+    meaningPinyin: "Zhídé xuéxí de rén huò shìqing.",
+    examplePinyin: "Fùmǔ shì háizi xuéxí de bǎngyàng.",
+    exampleVi: "Cha mẹ là tấm gương học tập cho con cái.",
+  },
+  "來源": {
+    meaningPinyin: "Shìwù chǎnshēng huò qǔdé de dìfāng.",
+    examplePinyin: "Jiātíng jiàoyù shì zhòngyào de jiàoyù láiyuán.",
+    exampleVi: "Giáo dục gia đình là một nguồn giáo dục quan trọng.",
+  },
+  "深遠": {
+    meaningPinyin: "Yǐngxiǎng hěn dà, hěn jiǔ.",
+    examplePinyin: "Jiātíng jiàoyù duì háizi yǒu shēnyuǎn de yǐngxiǎng.",
+    exampleVi: "Giáo dục gia đình có ảnh hưởng sâu sắc đến trẻ em.",
+  },
+  "一言一行": {
+    meaningPinyin: "Yí jù huà hé yí ge xíngwéi, fànzhǐ rén de yányǔ yǔ xíngdòng.",
+    examplePinyin: "Fùmǔ de yī yán yī xíng dōu shì háizi de bǎngyàng.",
+    exampleVi: "Mỗi lời nói và hành động của cha mẹ đều là tấm gương cho con cái.",
+  },
+  "形形色色": {
+    meaningZh: "形容種類繁多，各式各樣。",
+    meaningPinyin: "Xíngróng zhǒnglèi fánduō, gèshì gèyàng.",
+    examplePinyin: "Shèhuì shàng yǒu xíngxíngsèsè de rén.",
+    exampleVi: "Trong xã hội có đủ kiểu người khác nhau.",
+  },
+  "現象": {
+    meaningPinyin: "Kěyǐ guānchá dào de qíngkuàng.",
+    examplePinyin: "Gāolínghuà shì xiàndài shèhuì chángjiàn de xiànxiàng.",
+    exampleVi: "Già hóa dân số là hiện tượng phổ biến trong xã hội hiện đại.",
+  },
+  "正面": {
+    meaningPinyin: "Hǎo de, jījí de yí miàn.",
+    examplePinyin: "Méitǐ yě néng dàilái zhèngmiàn de jiàoyù xiàoguǒ.",
+    exampleVi: "Truyền thông cũng có thể mang lại hiệu quả giáo dục tích cực.",
+  },
+  "負面": {
+    meaningPinyin: "Bù hǎo de, xiāojí de yí miàn.",
+    examplePinyin: "Bù hǎo de xíguàn huì dàilái fùmiàn yǐngxiǎng.",
+    exampleVi: "Những thói quen xấu có thể gây ảnh hưởng tiêu cực.",
+  },
+  "依賴": {
+    meaningPinyin: "Kàozhe biérén huò mǒu jiàn shìwù.",
+    examplePinyin: "Bú yào guòdù yīlài biérén.",
+    exampleVi: "Đừng quá phụ thuộc vào người khác.",
+  },
+  "迷失": {
+    meaningPinyin: "Mílù huò shīqù fāngxiàng.",
+    examplePinyin: "Tā zài sēnlín lǐ míshī le fāngxiàng.",
+    exampleVi: "Anh ấy bị mất phương hướng trong rừng.",
+  },
+  "教材": {
+    meaningPinyin: "Jiàoxué yòng de cáiliào.",
+    examplePinyin: "Lǎoshī zhǔnbèi xǔduō jiàocái.",
+    exampleVi: "Giáo viên chuẩn bị nhiều tài liệu giảng dạy.",
+  },
+  "理論": {
+    meaningPinyin: "Yǒu xìtǒng de zhīshi huò yuánzé.",
+    examplePinyin: "Lǐlùn hé shíjì xūyào pèihé.",
+    exampleVi: "Lý thuyết và thực tế cần đi đôi với nhau.",
+  },
+  "實際": {
+    meaningPinyin: "Zhēnshí de qíngkuàng.",
+    examplePinyin: "Shíjì qíngkuàng hé xiǎngxiàng bùtóng.",
+    exampleVi: "Tình hình thực tế khác với tưởng tượng.",
+  },
+  "培養": {
+    meaningPinyin: "Xùnliàn, yǎngchéng.",
+    examplePinyin: "Jiàoyù yào péiyǎng jiějué wèntí de nénglì.",
+    exampleVi: "Giáo dục cần bồi dưỡng năng lực giải quyết vấn đề.",
+  },
+  "打打殺殺": {
+    meaningZh: "形容經常打鬥、殺戮或充滿暴力的情況。",
+    meaningPinyin: "Xíngróng jīngcháng dǎdòu, shālù huò chōngmǎn bàolì de qíngkuàng.",
+    examplePinyin: "Dǎdǎshāshā de xīnwén bù shìhé xiǎohái kàn.",
+    exampleVi: "Những bản tin đầy cảnh đánh giết không phù hợp cho trẻ em xem.",
+  },
+  "唯一": {
+    meaningPinyin: "Zhǐyǒu yí ge.",
+    examplePinyin: "Zhè shì wéiyī de bànfǎ.",
+    exampleVi: "Đây là cách duy nhất.",
+  },
+  "成就": {
+    meaningPinyin: "Nǔlì hòu dédào de chéngguǒ.",
+    examplePinyin: "Bāngzhù biérén yě néng dàilái chéngjiùgǎn.",
+    exampleVi: "Giúp đỡ người khác cũng có thể đem lại cảm giác thành tựu.",
+  },
+  "吸收": {
+    meaningZh: "接納、理解並取得知識或資訊。",
+    meaningPinyin: "Jiēnà, lǐjiě bìng qǔdé zhīshi huò zīxùn.",
+    examplePinyin: "Duō yuèdú kěyǐ xīshōu xīnzhī.",
+    exampleVi: "Đọc nhiều giúp tiếp thu kiến thức mới.",
+  },
+  "新知": {
+    meaningPinyin: "Xīn de zhīshi, yě kě zhǐ xīn péngyou.",
+    examplePinyin: "Wǎnglù ràng wǒmen xīshōu xīnzhī.",
+    exampleVi: "Internet giúp chúng ta tiếp thu kiến thức mới.",
+  },
+  "充實": {
+    meaningZh: "使內容豐富；也形容生活過得豐富而有意義。",
+    meaningPinyin: "Shǐ nèiróng fēngfù; yě xíngróng shēnghuó guò de fēngfù ér yǒu yìyì.",
+    examplePinyin: "Jiàqī guò de hěn chōngshí.",
+    exampleVi: "Kỳ nghỉ trôi qua thật phong phú và ý nghĩa.",
+  },
+  "視訊": {
+    meaningPinyin: "Tòuguò yǐngxiàng tōnghuà huò chuánshū de fāngshì gōutōng.",
+    examplePinyin: "Tā hé jiārén yòng shìxùn liáotiān.",
+    exampleVi: "Cô ấy trò chuyện qua video với gia đình.",
+  },
+  "佩服": {
+    meaningPinyin: "Jìngzhòng, xīnshǎng.",
+    examplePinyin: "Wǒ hěn pèifú tā de jīngshén.",
+    exampleVi: "Tôi rất khâm phục tinh thần của anh ấy.",
+  },
+  "活到老學到老": {
+    meaningZh: "指人一生都持續學習，即使年老也不停止。",
+    meaningPinyin: "Zhǐ rén yìshēng dōu chíxù xuéxí, jíshǐ nián lǎo yě bù tíngzhǐ.",
+    examplePinyin: "Yéye yuànyì xué diànnǎo, zhēn yǒu huó dào lǎo xué dào lǎo de jīngshén.",
+    exampleVi: "Ông sẵn lòng học máy tính, thật đúng là có tinh thần ‘sống đến già, học đến già’.",
+  },
+  "保持": {
+    meaningPinyin: "Wéichí, bù gǎibiàn.",
+    examplePinyin: "Bǎochí xuéxí de rèqíng.",
+    exampleVi: "Hãy giữ nhiệt huyết học tập.",
+  },
+  "實現": {
+    meaningPinyin: "Shǐ lǐxiǎng huò jìhuà biànchéng shìshí.",
+    examplePinyin: "Tā shíxiàn le chūguó liúxué de mèngxiǎng.",
+    exampleVi: "Anh ấy đã thực hiện được ước mơ du học.",
+  },
+  "意義": {
+    meaningPinyin: "Yìsi huò jiàzhí.",
+    examplePinyin: "Zhōngshēn xuéxí yǒu hěn zhòngyào de yìyì.",
+    exampleVi: "Học tập suốt đời có ý nghĩa rất quan trọng.",
+  },
+  "價值": {
+    meaningPinyin: "Yǒuyòng huò zhòngyào de chéngdù.",
+    examplePinyin: "Měi ge rén yǒu bùtóng de rénshēng jiàzhí.",
+    exampleVi: "Mỗi người có những giá trị sống khác nhau.",
+  },
+  "得心應手": {
+    meaningZh: "心裡怎麼想，手就能怎麼做，形容技術熟練、做事順手。",
+    meaningPinyin: "Xīnlǐ zěnme xiǎng, shǒu jiù néng zěnme zuò, xíngróng jìshù shúliàn, zuòshì shùnshǒu.",
+    examplePinyin: "Liànxí zhīhòu, shǐyòng zhè tái jīqì yǐjīng déxīn yìngshǒu.",
+    exampleVi: "Sau khi luyện tập, anh ấy đã sử dụng chiếc máy này rất thành thạo.",
+  },
+  "終身大事": {
+    meaningZh: "關係一生的重要事情，常指結婚。",
+    meaningPinyin: "Guānxì yìshēng de zhòngyào shìqing, cháng zhǐ jiéhūn.",
+    examplePinyin: "Jiéhūn cháng bèi shìwéi rénshēng de zhōngshēn dàshì.",
+    exampleVi: "Kết hôn thường được xem là việc trọng đại của đời người.",
+  },
+  "現階段": {
+    meaningZh: "目前所處的階段。",
+    meaningPinyin: "Mùqián suǒ chǔ de jiēduàn.",
+    examplePinyin: "Xiàn jiēduàn zuì zhòngyào de shì rènzhēn dúshū.",
+    exampleVi: "Ở giai đoạn hiện tại, điều quan trọng nhất là chăm chỉ học tập.",
+  },
+  "高齡": {
+    meaningPinyin: "Niánjì hěn dà, tōngcháng zhǐ chāoguò yìbān gōngzuò huò tuìxiū niánlíng.",
+    examplePinyin: "Gāolíng rénkǒu zēngjiā dàilái gèng duō shèhuì wèntí.",
+    exampleVi: "Sự gia tăng dân số cao tuổi kéo theo nhiều vấn đề xã hội hơn.",
+  },
+  "年齡": {
+    meaningZh: "人從出生到某一時間所經過的年數。",
+    meaningPinyin: "Rén cóng chūshēng dào mǒu yī shíjiān suǒ jīngguò de niánshù.",
+    examplePinyin: "Bùtóng niánlíng yǒu bùtóng de xuéxí xūyào.",
+    exampleVi: "Mỗi độ tuổi có nhu cầu học tập khác nhau.",
+  },
+  "不斷地": {
+    meaningPinyin: "Yìzhí, chíxù de.",
+    examplePinyin: "Tā bùduàn de liànxí Zhōngwén.",
+    exampleVi: "Cô ấy không ngừng luyện tập tiếng Trung.",
+  },
+  "提升": {
+    meaningPinyin: "Shǐ chéngdù, nénglì huò dìwèi tígāo.",
+    examplePinyin: "Yuèdú néng tíshēng xuéxí nénglì.",
+    exampleVi: "Đọc sách có thể nâng cao năng lực học tập.",
+  },
+  "強調": {
+    meaningPinyin: "Tèbié zhǐchū zhòngyàoxìng.",
+    examplePinyin: "Lǎoshī qiángdiào yùxí de zhòngyàoxìng.",
+    exampleVi: "Giáo viên nhấn mạnh tầm quan trọng của việc chuẩn bị bài trước.",
+  },
+  "接觸": {
+    meaningZh: "靠近、碰到，或開始了解某人、某事物。",
+    meaningPinyin: "Kàojìn, pèngdào, huò kāishǐ liǎojiě mǒu rén, mǒu shìwù.",
+    examplePinyin: "Tā jiēchù bùtóng wénhuà hòu jiāo le xǔduō péngyou.",
+    exampleVi: "Sau khi tiếp xúc với các nền văn hóa khác nhau, anh ấy đã kết bạn với nhiều người.",
+  },
+  "放榜": {
+    meaningZh: "公布考試結果或錄取名單。",
+    meaningPinyin: "Gōngbù kǎoshì jiéguǒ huò lùqǔ míngdān.",
+    examplePinyin: "Fàngbǎng de rìzi ràng kǎoshēng hěn jǐnzhāng.",
+    exampleVi: "Ngày công bố kết quả khiến các thí sinh rất căng thẳng.",
+  },
+  "相處": {
+    meaningPinyin: "Hé biérén yìqǐ shēnghuó huò hùdòng.",
+    examplePinyin: "Tóngxué yào xuéhuì hé rén xiāngchǔ.",
+    exampleVi: "Học sinh cần học cách sống hòa hợp với người khác.",
+  },
+  "教養": {
+    meaningPinyin: "Jiàoyù hé péiyǎng, yě zhǐ pǐndé xiūyǎng.",
+    examplePinyin: "Fùmǔ de jiàoyǎng tàidù yǐngxiǎng háizi.",
+    exampleVi: "Thái độ nuôi dạy của cha mẹ ảnh hưởng đến con cái.",
+  },
+  "心靈": {
+    meaningPinyin: "Nèixīn, jīngshén céngmiàn.",
+    examplePinyin: "Yuèdú néng fēngfù xīnlíng.",
+    exampleVi: "Đọc sách có thể làm phong phú tâm hồn.",
+  },
+  "事件": {
+    meaningPinyin: "Fāshēng de shìqing.",
+    examplePinyin: "Xīnwén bàodǎo shèhuì shìjiàn.",
+    exampleVi: "Tin tức đưa tin về các sự kiện xã hội.",
+  },
+  "多變": {
+    meaningPinyin: "Biànhuà hěn duō, bù gùdìng.",
+    examplePinyin: "Xiàndài shèhuì kuàisù duōbiàn.",
+    exampleVi: "Xã hội hiện đại biến đổi nhanh chóng và khó lường.",
+  },
+  "教導": {
+    meaningZh: "教育並指導。",
+    meaningPinyin: "Jiàoyù bìng zhǐdǎo.",
+    examplePinyin: "Fùmǔ nàixīn jiàodǎo háizi.",
+    exampleVi: "Cha mẹ kiên nhẫn dạy dỗ con cái.",
+  },
+  "思考": {
+    meaningPinyin: "Xiǎng, kǎolǜ.",
+    examplePinyin: "Qǐng xiān zǐxì sīkǎo zài huídá.",
+    exampleVi: "Hãy suy nghĩ kỹ rồi mới trả lời.",
+  },
+  "完成": {
+    meaningPinyin: "Bǎ shìqing zuòwán.",
+    examplePinyin: "Wǒ wánchéng le qīmò bàogào.",
+    exampleVi: "Tôi đã hoàn thành báo cáo cuối kỳ.",
+  },
+  "達成": {
+    meaningPinyin: "Wánchéng mùbiāo huò dédào jiéguǒ.",
+    examplePinyin: "Nǔlì cáinéng dáchéng mùbiāo.",
+    exampleVi: "Chỉ có nỗ lực mới đạt được mục tiêu.",
+  },
+  "無家可歸": {
+    meaningZh: "沒有家可以回去，形容失去住所。",
+    meaningPinyin: "Méiyǒu jiā kěyǐ huíqù, xíngróng shīqù zhùsuǒ.",
+    examplePinyin: "Dìzhèn hòu yǒu xǔduō rén wújiā kě guī.",
+    exampleVi: "Sau trận động đất, nhiều người không còn nhà để về.",
+  },
+  "探討": {
+    meaningPinyin: "Shēnrù yánjiū huò tǎolùn.",
+    examplePinyin: "Wǒmen yào tàntǎo xiàndài jiàoyù de mùdì.",
+    exampleVi: "Chúng ta cần tìm hiểu sâu về mục đích của giáo dục hiện đại.",
+  },
+  "發人深省": {
+    meaningPinyin: "Shǐ rén shēnrù sīkǎo.",
+    examplePinyin: "Zhè piān wénzhāng de nèiróng fārénshēnxǐng.",
+    exampleVi: "Nội dung bài viết này khiến người đọc phải suy ngẫm sâu sắc.",
+  },
+  "形成": {
+    meaningPinyin: "Zhújiàn chǎnshēng huò biànchéng.",
+    examplePinyin: "Liánghǎo de xuéxí xíguàn bú shì yì tiān xíngchéng de.",
+    exampleVi: "Thói quen học tập tốt không thể hình thành chỉ trong một ngày.",
+  },
+  "領導": {
+    meaningPinyin: "Dàilǐng huò zhǐdǎo.",
+    examplePinyin: "Lǎoshī lǐngdǎo xuéshēng wánchéng tǎolùn.",
+    exampleVi: "Giáo viên dẫn dắt học sinh hoàn thành buổi thảo luận.",
+  },
+  "自我實現": {
+    meaningPinyin: "Wánchéng zìwǒ lǐxiǎng bìng fāhuī qiánnéng.",
+    examplePinyin: "Xuéxí néng bāngzhù rén zhuīqiú zìwǒ shíxiàn.",
+    exampleVi: "Học tập có thể giúp con người theo đuổi việc hiện thực hóa bản thân.",
+  },
+  "價值連城": {
+    meaningPinyin: "Xíngróng fēicháng zhēnguì, jiàzhí hěn gāo.",
+    examplePinyin: "Liánghǎo de xuéxí tàidù duì rénshēng lái shuō jiàzhíliánchéng.",
+    exampleVi: "Thái độ học tập tốt là vô giá đối với cuộc đời.",
+  },
+};
